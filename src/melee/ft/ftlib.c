@@ -413,7 +413,7 @@ inline void vector_add(Vec* dst, Vec* src, f32 x, f32 y, f32 z)
 void func_80086990(HSD_GObj* gobj, Vec3* v)
 {
     Fighter* fp = gobj->user_data;
-    f32 tmp = 0.5f * (fp->x6F0_collData.xA8 + fp->x6F0_collData.xB0);
+    f32 tmp = 0.5f * (fp->x6F0_collData.xA4_ecbCurrCorrect.top.y + fp->x6F0_collData.xA4_ecbCurrCorrect.bottom.y);
     vector_add(v, &fp->xB0_pos, 0.0f, tmp, 0.0f);
 }
 

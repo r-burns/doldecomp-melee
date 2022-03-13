@@ -210,28 +210,79 @@ typedef struct _CameraBox
   f32 x50;
 } CameraBox;
 
+typedef struct _EcbFlags {
+    u8 b0 : 1;
+    u8 b1234 : 4;
+    u8 b5 : 1;
+    u8 b6 : 1;
+    u8 b7 : 1;
+} EcbFlags;
+
+typedef struct _Ecb {
+    Vec2 top, bottom, right, left;
+} Ecb;
+
 typedef struct _CollData
 {
-    u8 filler_x0[0x40];
-    /* 0x40 */ u32 x40;
-    /* 0x44 */ u32 x44;
-    u8 filler_x48[0xA8-0x48];
-    /* 0xA8 */ f32 xA8;
-    /* 0xAC */ f32 xAC;
-    /* 0xB0 */ f32 xB0;
-    /* 0xB4 */ Vec2 xB4_ecbCurrCorrect_right;
-    /* 0xBC */ Vec2 xBC_ecbCurrCorrect_left;
-    u8 filler_xBC[0x134 - 0xBC - 8];
-    /* 0x134 */ s32 x134_envFlags;
-    u8 filler_x138[0x14C - 0x138];
-    /* 0x14C */ s32 x14C_groundIndex;
-    s32 filler_x150;
-    /* 0x154 */ Vec3 x154_groundNormal; // points out of the ground surface
-    /* 0x160 */ s32 x160_rightwall_index;
-    u8 filler_x160[0x174 - 0x160 - 4];
-    /* 0x174 */ s32 x174_leftwall_index;
-    u8 filler_x174[0x1A0 - 0x174 - 8];
-    s32 x1A0;
+    HSD_GObj* gobj;
+    Vec3 topN_Curr;
+    Vec3 topN_CurrCorrect;
+    Vec3 topN_Prev;
+    Vec3 topN_Proj;
+    EcbFlags x34_flags;
+    EcbFlags x35_flags;
+    s16 x36;
+    u32 x38;
+    u32 x3C;
+    u32 x40;
+    u32 x44;
+    s32 x48;
+    s32 x4C;
+    f32 x50;
+    f32 x54;
+    f32 x58;
+    f32 x5C;
+    f32 x60;
+    Ecb x64_ecbUnk;
+    Ecb x84_ecbCurr; // 0x84
+    Ecb xA4_ecbCurrCorrect;
+    Ecb xC4_ecbPrev;
+    Ecb xE4_ecbProj; // 0xE4
+    s32 x104;
+    union {
+        struct {
+            s32 x108;
+            void* x10C[6];
+            f32 x124;
+            f32 x128;
+            f32 x12C;
+        } type1;
+        struct {
+            f32 x108;
+            f32 x10C;
+            f32 x110;
+            f32 x114;
+            f32 x118;
+        } type2;
+    };
+    int x130_flags; // 0x130
+
+    s32 x134_envFlags;
+    s32 x138_envFlags_prev;
+    u8 filler_x138[0x14C - 0x13C];
+    s32 x14C_groundIndex;
+    s32 ground_info;
+    Vec3 x154_groundNormal;
+    int x160_rightwall_index;
+    int rightwall_unk;
+    Vec3 rightwall_slope;
+    int x174_leftwall_index;
+    int leftwall_unk;
+    Vec3 leftwall_slope;
+    int ceil_index;
+    int ceil_unk;
+    Vec3 ceil_slope; // 0x190
+    int ecb_lock;    // 0x19C
 } CollData;
 
 typedef struct _ftHit
