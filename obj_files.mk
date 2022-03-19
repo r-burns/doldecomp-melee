@@ -398,7 +398,7 @@ TEXT_O_FILES +=\
 	$(BUILD_DIR)/asm/melee/gr/grheal.s.o\
 	$(BUILD_DIR)/asm/melee/gr/grtmario.s.o\
 	$(BUILD_DIR)/asm/melee/gr/grtfalcon.s.o\
-	$(BUILD_DIR)/asm/melee/gr/grtclink.s.o\
+	$(BUILD_DIR)/src/melee/gr/grtclink.c.o\
 	$(BUILD_DIR)/asm/melee/gr/grtdonkey.s.o\
 	$(BUILD_DIR)/asm/melee/gr/grtdrmario.s.o\
 	$(BUILD_DIR)/src/melee/gr/grtfalco.c.o\
