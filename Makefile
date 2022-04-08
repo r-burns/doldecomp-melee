@@ -156,13 +156,13 @@ $(PROFILE_DIR)/%.c.o: %.c $(BUILD_DIR)/%.c.dep
 	@echo "Compiling (profile)" $<
 	$(QUIET) $(CC_EPI) $(CFLAGS) -c -o $@ $<
 
-$(BUILD_DIR)/src/melee/%.c.o: $(VANILLA_DIR)/src/melee/%.c.o $(PROFILE_DIR)/src/melee/%.c.o
+$(BUILD_DIR)/src/melee/%.c.o: $(FRANK) $(VANILLA_DIR)/src/melee/%.c.o $(PROFILE_DIR)/src/melee/%.c.o
 	@echo Frank is fixing $@
-	$(QUIET) $(PYTHON) $(FRANK) $^ $@
+	$(QUIET) $(PYTHON) $^ $@
 
-$(BUILD_DIR)/src/sysdolphin/%.c.o: $(VANILLA_DIR)/src/sysdolphin/%.c.o $(PROFILE_DIR)/src/sysdolphin/%.c.o
+$(BUILD_DIR)/src/sysdolphin/%.c.o: $(FRANK) $(VANILLA_DIR)/src/sysdolphin/%.c.o $(PROFILE_DIR)/src/sysdolphin/%.c.o
 	@echo Frank is fixing $@
-	$(QUIET) $(PYTHON) $(FRANK) $^ $@
+	$(QUIET) $(PYTHON) $^ $@
 endif
 
 -include $(DEP_FILES)
