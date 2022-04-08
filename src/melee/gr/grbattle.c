@@ -386,7 +386,7 @@ static BOOL func_8021A610(s32)
     return FALSE;
 }
 
-static s32 func_8021A618()
+static BOOL func_8021A618(Vec3*, s32, struct _HSD_JObj*)
 {
-    return 1;
+    return TRUE;
 }

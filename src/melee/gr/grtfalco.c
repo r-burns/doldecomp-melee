@@ -194,7 +194,7 @@ static BOOL lbl_80220ACC(s32 arg0)
     return FALSE;
 }
 
-static s32 lbl_80220B78()
+static BOOL lbl_80220B78()
 {
-    return 1;
+    return TRUE;
 }

@@ -175,7 +175,7 @@ static BOOL func_80201F44(s32)
     return FALSE;
 }
 
-static s32 func_80201F4C(Vec3* a, s32 unused, struct _HSD_JObj* joint)
+static BOOL func_80201F4C(Vec3* a, s32 unused, struct _HSD_JObj* joint)
 {
     Vec3 b;
     func_8000B1CC(joint, 0, &b);

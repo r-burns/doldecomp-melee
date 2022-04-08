@@ -170,7 +170,7 @@ static BOOL GrTNess_802228A4(s32)
     return FALSE;
 }
 
-static s32 GrTNess_802228AC(Vec*, s32, struct _HSD_JObj*)
+static BOOL GrTNess_802228AC(Vec*, s32, struct _HSD_JObj*)
 {
     return TRUE;
 }

@@ -24,6 +24,6 @@ static s32 lbl_80220E30(void);
 static void lbl_80220E38(HSD_GObj* gobj);
 static void lbl_80220E58();
 static BOOL lbl_80220E5C(s32 arg0);
-s32 lbl_80220F08();
+static BOOL lbl_80220F08();
 
 #endif

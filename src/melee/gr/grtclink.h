@@ -24,6 +24,6 @@ static s32 lbl_802201EC();
 static void lbl_802201F4(HSD_GObj*);
 static void lbl_80220214();
 static BOOL lbl_80220218(s32);
-static s32 lbl_80220220();
+static BOOL lbl_80220220(Vec*, s32, struct _HSD_JObj*);
 
 #endif

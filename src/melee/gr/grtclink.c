@@ -164,7 +164,7 @@ static BOOL lbl_80220218(s32)
     return FALSE;
 }
 
-static s32 lbl_80220220()
+static BOOL lbl_80220220(Vec*, s32, struct _HSD_JObj*)
 {
-    return 1;
+    return TRUE;
 }

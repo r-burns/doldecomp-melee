@@ -193,7 +193,7 @@ static BOOL lbl_80220E5C(s32 arg0)
     return FALSE;
 }
 
-static s32 lbl_80220F08()
+static BOOL lbl_80220F08()
 {
-    return 1;
+    return TRUE;
 }
