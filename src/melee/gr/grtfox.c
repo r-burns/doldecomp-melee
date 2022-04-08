@@ -1,7 +1,5 @@
 #include "grtfox.h"
 
-extern StageInfo stage_info;
-
 struct {
     BOOL unk0;
     BOOL unk4;

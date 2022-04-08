@@ -2,8 +2,6 @@
 
 #include <melee/lb/lbvector.h>
 
-extern struct _StageInfo stage_info;
-
 struct StructStageIDWithUnks {
     s32 stage_id;
     s32 unk1;

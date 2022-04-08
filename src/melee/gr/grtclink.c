@@ -1,7 +1,5 @@
 #include "grtclink.h"
 
-extern StageInfo stage_info;
-
 static StageCallbacks lbl_803E86D0[4] = {
     {
         lbl_802200D0,

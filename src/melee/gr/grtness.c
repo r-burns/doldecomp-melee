@@ -2,8 +2,6 @@
 
 #include <melee/gr/stage.h>
 
-extern StageInfo stage_info;
-
 static StageCallbacks lbl_803E9030[4] = {
     {
         GrTNess_8022275C,
@@ -82,17 +80,17 @@ static HSD_GObj* GrTNess_80222674(int id)
         gp->x8_callback = NULL;
         gp->xC_callback = NULL;
         GObj_SetupGXLink(gobj, func_801C5DB0, 3, 0);
-        if (cb->callback3 != 0U) {
+        if (cb->callback3 != NULL) {
             gp->x1C_callback = cb->callback3;
         }
-        if (cb->callback0 != 0U) {
+        if (cb->callback0 != NULL) {
             cb->callback0(gobj);
         }
-        if (cb->callback2 != 0U) {
+        if (cb->callback2 != NULL) {
             func_8038FD54(gobj, cb->callback2, 4);
         }
     } else {
-        OSReport("%s:%d: couldn t get gobj(id=%d)\n", "grtness.c", 0xC3, id);
+        OSReport("%s:%d: couldn t get gobj(id=%d)\n", __FILE__, 0xC3, id);
     }
     return gobj;
 }

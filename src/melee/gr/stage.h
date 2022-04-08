@@ -160,6 +160,8 @@ typedef struct _StageInfo {
     u8 x744_pad[0x748 - 0x744];
 } StageInfo;
 
+extern StageInfo stage_info;
+
 typedef struct {
     void (*callback0)(struct _HSD_GObj*);
     s32 (*callback1)();
