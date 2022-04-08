@@ -114,8 +114,8 @@ typedef struct _StageInfo {
         }* ptr;
     }* x12C;
     Vec x130, x13C, x148, x154, x160, x16C;
-    BOOL (*x178)(s32);
-    void* x17C;
+    BOOL (*x178)(s32); // stage hazard collision check
+    BOOL (*x17C)(Vec*, s32, struct _HSD_JObj*);
     struct _HSD_GObj* x180[4];
     u8 x190_pad[0x280 - 0x190];
     struct _HSD_JObj* x280[261];
@@ -179,7 +179,7 @@ typedef struct _StageData {
     void (*callback2)(void);
     void (*callback3)(void);
     s32 (*callback4)();
-    BOOL (*callback5)(s32);
+    BOOL (*callback5)(s32); // stage hazard collision check
     BOOL (*callback6)(Vec*, s32, struct _HSD_JObj*);
     u32 flags2;
     S16Vec* x2C;
