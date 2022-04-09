@@ -1,22 +1,7 @@
-#include "stage.h"
+#include "grtmario.h"
+
 #include <sysdolphin/baselib/gobj.h>
-
-HSD_GObj* func_8021F8E4(int id);
-BOOL lbl_8021FB50(s32 x, HSD_GObj* gobj);
-
-void func_8021FBE8();
-extern void lbl_8021F9CC();
-extern s32 lbl_8021F9F8();
-extern void lbl_8021FA00();
-extern void lbl_8021FA04();
-extern void lbl_8021FAD4();
-extern s32 lbl_8021FB24();
-extern void lbl_8021FB2C();
-extern void lbl_8021FB4C();
-extern void lbl_8021FA34();
-extern s32 lbl_8021FA94();
-extern void lbl_8021FA9C();
-extern void lbl_8021FAD0();
+#include <melee/gr/stage.h>
 
 static StageCallbacks lbl_803E8548[4] = {
     {
@@ -37,14 +22,6 @@ static StageCallbacks lbl_803E8548[4] = {
         0xC0000000
     },
 };
-
-void lbl_8021F844(void);
-void func_8021F840();
-void lbl_8021F8B4();
-void lbl_8021F8B8();
-s32 lbl_8021F8DC();
-BOOL lbl_8021FC50();
-BOOL lbl_8021FC58(Vec*, s32, struct _HSD_JObj*);
 
 StageData lbl_803E85A4 = {
     0x00000028,
@@ -263,7 +240,7 @@ lbl_8021FBCC:
 #endif
 
 extern void func_801C96F8();
-asm void func_8021FBE8()
+static asm void func_8021FBE8()
 {
     nofralloc
 /* 8021FBE8 0021C7C8  7C 08 02 A6 */	mflr r0
@@ -296,12 +273,12 @@ lbl_8021FC3C:
 }
 #pragma peephole on
 
-BOOL lbl_8021FC50()
+static BOOL lbl_8021FC50()
 {
     return FALSE;
 }
 
-BOOL lbl_8021FC58()
+static BOOL lbl_8021FC58()
 {
     return TRUE;
 }

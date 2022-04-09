@@ -400,7 +400,7 @@ TEXT_O_FILES +=\
 	$(BUILD_DIR)/src/melee/gr/grtcaptain.c.o\
 	$(BUILD_DIR)/src/melee/gr/grtclink.c.o\
 	$(BUILD_DIR)/src/melee/gr/grtdonkey.c.o\
-	$(BUILD_DIR)/asm/melee/gr/grtdrmario.s.o\
+	$(BUILD_DIR)/src/melee/gr/grtdrmario.c.o\
 	$(BUILD_DIR)/src/melee/gr/grtfalco.c.o\
 	$(BUILD_DIR)/src/melee/gr/grtfox.c.o\
 	$(BUILD_DIR)/asm/melee/gr/grticeclimber.s.o\
