@@ -682,7 +682,7 @@ void func_801C3BB4();
 struct _HSD_JObj *func_801C3FA4(struct _HSD_GObj *, s32);
 
 s32 func_801C4210(void);
-void func_801C42AC();
+void func_801C42AC(void);
 
 void *func_801C49F8(void); // get stage's "yakumono" ("about"?) param
 
