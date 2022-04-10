@@ -144,7 +144,7 @@ $(BUILD_DIR)/%.c.dep: %.c
 		-MT "$(VANILLA_DIR)/$<.o $(PROFILE_DIR)/$<.o" $< >/dev/null
 
 $(BUILD_DIR)/%.c.o: $(VANILLA_DIR)/%.c.o
-	cp $< $@
+	$(QUIET) cp $< $@
 
 $(VANILLA_DIR)/%.c.o: %.c $(BUILD_DIR)/%.c.dep
 	@echo "Compiling (vanilla)" $<
