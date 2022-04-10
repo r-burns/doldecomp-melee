@@ -11,8 +11,10 @@ import sys
 
 # Byte sequence that marks code size
 CODESIZE_MAGIC = b"\x00\x00\x00\x06\x00\x00\x00\x00\x00\x00\x00\x34"
-BLR_BYTE_SEQ = b"\x4E\x80\x00\x20"
+ADDI_BYTE_SEQ = b"\x38\x21"
 MTLR_BYTE_SEQ = b"\x7C\x08\x03\xA6"
+BLR_BYTE_SEQ = b"\x4E\x80\x00\x20"
+PROFILE_EXTRA_BYTES = b"\x48\x00\x00\x01\x60\x00\x00\x00"
 
 # Byte sequence array for branches to link register
 BLR_BYTE_SEQ_ARRAY = [BLR_BYTE_SEQ,
@@ -43,10 +45,7 @@ if code_size_magic_idx == -1:
         f.write(vanilla_bytes)
     sys.exit(0)
 
-# Remove byte sequence
-profile_bytes = args.profile.read()
-args.profile.close()
-stripped_bytes = profile_bytes.replace(b"\x48\x00\x00\x01\x60\x00\x00\x00", b"")
+saved_len_vanilla = len(vanilla_bytes)
 
 # Find end of code sections in vanilla and stripped bytes
 code_size_offset = code_size_magic_idx + len(CODESIZE_MAGIC)
@@ -55,50 +54,51 @@ code_size = int.from_bytes(code_size_bytes, byteorder='big')
 
 eoc_offset = 0x34 + code_size
 
-# Break if the eoc is not found
-assert(eoc_offset != len(vanilla_bytes))
-
-# Replace 0x34 - eoc in vanilla with bytes from stripped
-final_bytes = vanilla_bytes[:0x34] + stripped_bytes[0x34:eoc_offset] + vanilla_bytes[eoc_offset:]
-
-# Fix branches to link register
-for seq in BLR_BYTE_SEQ_ARRAY:
-    idx = 0
-
-    while idx < len(vanilla_bytes):
-        found_pos = vanilla_bytes.find(seq, idx)
-        if found_pos == -1:
-            break # break while loop when no targets remain
-        if found_pos % 4 != 0: # check 4-byte alignment
-            idx += 4
-            continue
-        final_bytes = final_bytes[:found_pos] + vanilla_bytes[found_pos:found_pos+4] + final_bytes[found_pos+4:]
-        idx = found_pos + len(seq)
-
-# Reunify mtlr/blr instructions, shifting intermediary instructions up
-idx = 0
-
-while idx < len(final_bytes):
-    # Find mtlr position
-    mtlr_found_pos = final_bytes.find(MTLR_BYTE_SEQ, idx)
-    if mtlr_found_pos == -1:
+# Epilogue unscheduling
+#
+# If the epilogue contains addi/mtlr/blr,
+# sift them all to the bottom of the epilogue.
+#
+idx = 0x34
+shift = 0 # difference between vanilla and profile code, due to bl/nops
+while idx < eoc_offset:
+    # Find next epilogue
+    addi_pos = vanilla_bytes.find(ADDI_BYTE_SEQ, idx)
+    if addi_pos == -1:
         break # break while loop when no targets remain
-    if mtlr_found_pos % 4 != 0: # check 4-byte alignment
+    if addi_pos % 4 != 0: # check 4-byte alignment
         idx += 4
         continue
-    # Find paired blr position
-    blr_found_pos = final_bytes.find(BLR_BYTE_SEQ, mtlr_found_pos)
-    if blr_found_pos == -1:
-        break # break while loop when no targets remain
-    if blr_found_pos % 4 != 0: # check 4-byte alignment
-        idx += 4
-        continue
-    if mtlr_found_pos + 4 == blr_found_pos:
-        idx += 4
-        continue # continue if mtlr is followed directly by blr
-    
-    final_bytes = final_bytes[:mtlr_found_pos] + final_bytes[mtlr_found_pos+4:blr_found_pos] + final_bytes[mtlr_found_pos:mtlr_found_pos+4] + final_bytes[blr_found_pos:]
-    idx = mtlr_found_pos + len(MTLR_BYTE_SEQ)
+    addi = vanilla_bytes[addi_pos:addi_pos+4]
+
+    # find paired blr
+    blr_pos = vanilla_bytes.find(BLR_BYTE_SEQ, addi_pos)
+    assert blr_pos != -1
+    assert blr_pos % 4 == 0
+
+    mtlr_pos = vanilla_bytes.find(MTLR_BYTE_SEQ, idx, blr_pos)
+    if mtlr_pos != -1:
+        assert mtlr_pos % 4 == 0
+        mtlr = vanilla_bytes[mtlr_pos:mtlr_pos+4]
+
+        i = min(addi_pos, mtlr_pos)
+        before = vanilla_bytes[:i]
+        epilogue = vanilla_bytes[i+4:blr_pos]
+        i = max(addi_pos, mtlr_pos) - (i + 4)
+        epilogue = epilogue[:i] + epilogue[i+4:]
+    else:
+        before = vanilla_bytes[:addi_pos]
+        mtlr = b""
+        epilogue = vanilla_bytes[addi_pos+4:blr_pos]
+
+
+    epilogue = epilogue + addi + mtlr
+    vanilla_bytes = before + epilogue \
+                  + vanilla_bytes[blr_pos:]
+
+    assert len(vanilla_bytes) == saved_len_vanilla
+
+    idx = blr_pos + 4
 
 with open(args.target, "wb") as f:
-    f.write(final_bytes)
+    f.write(vanilla_bytes)
