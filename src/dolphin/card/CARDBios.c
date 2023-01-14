@@ -7,6 +7,10 @@
 
 CARDControl __CARDBlock[2];
 DVDDiskID __CARDDiskNone;
+#ifdef DOLPHIN_SMB
+const DVDDiskID* __CARDDiskID;
+#define EXIProbe __EXIProbe
+#endif
 
 static bool OnReset(bool f);
 static OSResetFunctionInfo ResetFunctionInfo = { OnReset, 127 };
@@ -26,6 +30,9 @@ void __CARDExtHandler(EXIChannel chan, OSContext* context)
     card = &__CARDBlock[chan];
     if (card->attached) {
         card->attached = false;
+#ifdef DOLPHIN_SMB
+        card->result = CARD_RESULT_NOCARD;
+#endif
         EXISetExiCallback(chan, 0);
         OSCancelAlarm(&card->alarm);
         callback = card->exiCallback;
@@ -35,9 +42,11 @@ void __CARDExtHandler(EXIChannel chan, OSContext* context)
             callback(chan, CARD_RESULT_NOCARD);
         }
 
+#ifndef DOLPHIN_SMB
         if (card->result != CARD_RESULT_BUSY) {
             card->result = CARD_RESULT_NOCARD;
         }
+#endif
 
         callback = card->extCallback;
         if (callback && CARD_MAX_MOUNT_STEP <= card->mountStep) {
@@ -124,6 +133,29 @@ void __CARDUnlockedHandler(EXIChannel chan, OSContext* context)
         callback(chan,
                  EXIProbe(chan) ? CARD_RESULT_UNLOCKED : CARD_RESULT_NOCARD);
     }
+}
+
+int __CARDReadNintendoID(s32 chan, u32* id)
+{
+    u32 cmd;
+    bool err;
+
+    if (!EXISelect(chan, 0, 0)) {
+        return CARD_RESULT_NOCARD;
+    }
+    cmd = 0;
+    err = !EXIImm(chan, &cmd, 2, 1, 0);
+    err |= !EXISync(chan);
+    err |= !EXIImm(chan, id, 4, 0, 0);
+    err |= !EXISync(chan);
+    err |= !EXIDeselect(chan);
+    if (err) {
+        return CARD_RESULT_NOCARD;
+    }
+    if ((*id & 0xFFFF0000) || (*id & 3)) {
+        return CARD_RESULT_WRONGDEVICE;
+    }
+    return CARD_RESULT_READY;
 }
 
 s32 __CARDEnableInterrupt(s32 chan, bool enable)
@@ -309,11 +341,15 @@ static void UnlockedCallback(s32 chan, s32 result)
 
 s32 __CARDStart(s32 chan, CARDCallback txCallback, CARDCallback exiCallback)
 {
+#ifndef DOLPHIN_SMB
     bool enabled;
+#endif
     CARDControl* card;
     s32 result;
 
+#ifndef DOLPHIN_SMB
     enabled = OSDisableInterrupts();
+#endif
 
     card = &__CARDBlock[chan];
     if (!card->attached) {
@@ -343,7 +379,9 @@ s32 __CARDStart(s32 chan, CARDCallback txCallback, CARDCallback exiCallback)
         }
     }
 
+#ifndef DOLPHIN_SMB
     OSRestoreInterrupts(enabled);
+#endif
     return result;
 }
 
@@ -457,7 +495,11 @@ void CARDInit(void)
 {
     int chan;
 
+#ifdef DOLPHIN_SMB
+    if (__CARDDiskID) {
+#else
     if (__CARDBlock[0].diskID && __CARDBlock[1].diskID) {
+#endif
         return;
     }
 
@@ -478,8 +520,12 @@ void CARDInit(void)
 
 void __CARDSetDiskID(const DVDDiskID* id)
 {
+#ifdef DOLPHIN_SMB
+    __CARDDiskID = id ? id : &__CARDDiskNone;
+#else
     __CARDBlock[0].diskID = id ? id : &__CARDDiskNone;
     __CARDBlock[1].diskID = id ? id : &__CARDDiskNone;
+#endif
 }
 
 s32 __CARDGetControlBlock(s32 chan, CARDControl** pcard)
@@ -489,7 +535,11 @@ s32 __CARDGetControlBlock(s32 chan, CARDControl** pcard)
     CARDControl* card;
 
     card = &__CARDBlock[chan];
+#ifdef DOLPHIN_SMB
+    if (chan < 0 || chan >= 2 || __CARDDiskID == NULL) {
+#else
     if (chan < 0 || chan >= 2 || card->diskID == NULL) {
+#endif
         return CARD_RESULT_FATAL_ERROR;
     }
 
@@ -510,13 +560,13 @@ s32 __CARDGetControlBlock(s32 chan, CARDControl** pcard)
 
 s32 __CARDPutControlBlock(CARDControl* card, s32 result)
 {
-    bool enabled;
-
-    enabled = OSDisableInterrupts();
+    bool enabled = OSDisableInterrupts();
     if (card->attached) {
         card->result = result;
+#ifndef DOLPHIN_SMB
     } else if (card->result == CARD_RESULT_BUSY) {
         card->result = result;
+#endif
     }
     OSRestoreInterrupts(enabled);
     return result;

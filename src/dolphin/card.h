@@ -92,7 +92,9 @@ typedef struct CARDFileInfo {
     s32 offset;
     s32 length;
     u16 iBlock;
+#ifndef DOLPHIN_SMB
     u16 __padding;
+#endif
 } CARDFileInfo;
 
 typedef struct CARDDir {
@@ -131,10 +133,15 @@ typedef struct CARDControl {
     u16 vendorID;
     s32 latency;
     u8 id[12];
+#ifdef DOLPHIN_SMB
+        int mountStep;
+        int formatStep;
+#else
     union {
         int mountStep;
         int formatStep;
     };
+#endif
     u32 scramble;
     DSPTaskInfo task;
     void* workArea;
@@ -160,8 +167,10 @@ typedef struct CARDControl {
     CARDCallback eraseCallback;
     CARDCallback unlockCallback;
     OSAlarm alarm;
+#ifndef DOLPHIN_SMB
     u32 cid;
     const DVDDiskID* diskID;
+#endif
 } CARDControl;
 
 extern CARDControl __CARDBlock[2];
