@@ -19,6 +19,7 @@ build/
 *.elf
 *.map
 *.dol
+*.dep
 
 # Temporary files
 *.swp
