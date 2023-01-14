@@ -6,6 +6,10 @@
 #include <dolphin/os/OSTime.h>
 #include <string.h>
 
+#ifdef DOLPHIN_SMB
+extern const DVDDiskID* __CARDDiskID;
+#endif
+
 s32 CARDRenameAsync(s32 chan, const char* old, const char* new,
                     CARDCallback callback)
 {
@@ -38,10 +42,17 @@ s32 CARDRenameAsync(s32 chan, const char* old, const char* new,
             continue;
         }
 
+#ifdef DOLPHIN_SMB
+        if (memcmp(ent->gameName, __CARDDiskID->gameName,
+                   sizeof(ent->gameName)) != 0 ||
+            memcmp(ent->company, __CARDDiskID->company, sizeof(ent->company)) !=
+                0)
+#else
         if (memcmp(ent->gameName, card->diskID->gameName,
                    sizeof(ent->gameName)) != 0 ||
             memcmp(ent->company, card->diskID->company, sizeof(ent->company)) !=
                 0)
+#endif
         {
             continue;
         }
@@ -62,7 +73,11 @@ s32 CARDRenameAsync(s32 chan, const char* old, const char* new,
     }
 
     ent = &dir[oldNo];
+#ifdef DOLPHIN_SMB
+    result = __CARDAccess(ent);
+#else
     result = __CARDAccess(card, ent);
+#endif
     if (result < 0) {
         return __CARDPutControlBlock(card, result);
     }
@@ -75,4 +90,16 @@ s32 CARDRenameAsync(s32 chan, const char* old, const char* new,
         __CARDPutControlBlock(card, result);
     }
     return result;
+}
+
+int CARDRename(s32 chan, const char* old, const char* new, u32 offset)
+{
+    /// @todo Eliminate cast to #CARDCallback.
+    int result =
+        CARDRenameAsync(chan, old, new, (CARDCallback) __CARDSyncCallback);
+
+    if (result < 0)
+        return result;
+
+    return __CARDSync(chan);
 }
