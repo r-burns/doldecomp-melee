@@ -89,13 +89,7 @@ typedef jmp_t jtbl_t[];
 /// A @c void callback with no arguments.
 typedef void (*Event)(void);
 
-#ifndef GEKKO
-#ifdef __PPCGEKKO__
-#define GEKKO
-#endif
-#endif
-
-#if defined(__MWERKS__) && defined(GEKKO)
+#if defined(__MWERKS__) && defined(__PPCGEKKO__)
 #define MWERKS_GEKKO
 #endif
 
@@ -141,7 +135,7 @@ typedef void (*Event)(void);
 #endif
 #endif
 
-#ifdef GEKKO
+#ifdef __PPCGEKKO__
 #define qr0 0
 #define qr1 1
 #define qr2 2
