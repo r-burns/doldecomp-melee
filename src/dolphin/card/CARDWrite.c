@@ -110,7 +110,11 @@ s32 CARDWriteAsync(CARDFileInfo* fileInfo, const void* buf, u32 length,
 
     dir = __CARDGetDirBlock(card);
     ent = &dir[fileInfo->fileNo];
+#if DOLPHIN_SMB
+    result = __CARDAccess(ent);
+#else
     result = __CARDAccess(card, ent);
+#endif
     if (result < 0) {
         return __CARDPutControlBlock(card, result);
     }

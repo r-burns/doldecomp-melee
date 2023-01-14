@@ -12,8 +12,13 @@ struct bb2struct {
 };
 
 typedef struct {
+#ifdef  DOLPHIN_SMB
+    u8 gameName[4];
+    u8 company[2];
+#else
     char gameName[4];
     char company[2];
+#endif
     u8 diskNumber;
     u8 gameVersion;
     u8 streaming;

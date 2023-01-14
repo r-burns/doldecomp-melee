@@ -32,7 +32,11 @@ void OSCreateAlarm(OSAlarm* alarm)
 
 static void SetTimer(OSAlarm* alarm)
 {
+#ifdef DOLPHIN_SMB
+    OSTime delta = alarm->fire - OSGetTime();
+#else
     OSTime delta = alarm->fire - __OSGetSystemTime();
+#endif
     if (delta < 0) {
         PPCMtdec(0);
     } else if (delta < 0x80000000) {
@@ -48,7 +52,11 @@ static void InsertAlarm(OSAlarm* alarm, OSTime fire, OSAlarmHandler handler)
     OSAlarm* prev;
 
     if (0 < alarm->period) {
+#ifdef DOLPHIN_SMB
+        OSTime time = OSGetTime();
+#else
         OSTime time = __OSGetSystemTime();
+#endif
 
         fire = alarm->start;
         if (alarm->start < time) {
@@ -92,8 +100,20 @@ void OSSetAlarm(OSAlarm* alarm, OSTime tick, OSAlarmHandler handler)
 {
     u32 oldInt = OSDisableInterrupts();
     alarm->period = 0;
+#ifdef DOLPHIN_SMB
+    InsertAlarm(alarm, OSGetTime() + tick, handler);
+#else
     InsertAlarm(alarm, __OSGetSystemTime() + tick, handler);
+#endif
     OSRestoreInterrupts(oldInt);
+}
+
+void OSSetAbsAlarm(OSAlarm* alarm, OSTime start, OSAlarmHandler handler)
+{
+    bool enabled = OSDisableInterrupts();
+    alarm->period = 0;
+    InsertAlarm(alarm, start, handler);
+    OSRestoreInterrupts(enabled);
 }
 
 void OSSetPeriodicAlarm(OSAlarm* alarm, OSTime start, OSTime period,
@@ -101,7 +121,11 @@ void OSSetPeriodicAlarm(OSAlarm* alarm, OSTime start, OSTime period,
 {
     bool enabled = OSDisableInterrupts();
     alarm->period = period;
+#ifdef DOLPHIN_SMB
+    alarm->start = start;
+#else
     alarm->start = __OSTimeToSystemTime(start);
+#endif
     InsertAlarm(alarm, 0, handler);
     OSRestoreInterrupts(enabled);
 }
@@ -113,7 +137,7 @@ void OSCancelAlarm(OSAlarm* alarm)
 
     enabled = OSDisableInterrupts();
 
-    if (alarm->handler == 0) {
+    if (alarm->handler == NULL) {
         OSRestoreInterrupts(enabled);
         return;
     }
@@ -144,9 +168,15 @@ static void DecrementerExceptionCallback(register __OSException exception,
     OSAlarm* next;
     OSAlarmHandler handler;
     OSTime time;
+#ifndef DOLPHIN_SMB
     OSContext exceptionContext;
+#endif
 
+#ifdef DOLPHIN_SMB
+    time = OSGetTime();
+#else
     time = __OSGetSystemTime();
+#endif
     alarm = AlarmQueue.head;
     if (alarm == 0) {
         OSLoadContext(context);
@@ -176,11 +206,15 @@ static void DecrementerExceptionCallback(register __OSException exception,
     }
 
     OSDisableScheduler();
+#ifndef DOLPHIN_SMB
     OSClearContext(&exceptionContext);
     OSSetCurrentContext(&exceptionContext);
+#endif
     handler(alarm, context);
+#ifndef DOLPHIN_SMB
     OSClearContext(&exceptionContext);
     OSSetCurrentContext(context);
+#endif
     OSEnableScheduler();
     __OSReschedule();
     OSLoadContext(context);

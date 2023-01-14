@@ -60,6 +60,7 @@ static u8 pad[0x60];
 static DVDCommandBlock DummyCommandBlock;
 static OSAlarm ResetAlarm;
 
+static OSThreadQueue __DVDThreadQueue;
 static DVDCommandBlock* executing;
 static DVDDiskID* currID;
 static OSBootInfo* bootInfo;
@@ -82,7 +83,6 @@ static void (*LastState)(DVDCommandBlock*);
 
 static bool autoInvalidation = true;
 
-extern OSThreadQueue __DVDThreadQueue;
 DVDCommandBlock* __DVDPopWaitingQueue(void);
 
 void DVDInit(void)
@@ -990,6 +990,25 @@ bool DVDStopStreamAtEndAsync(DVDCommandBlock* block, DVDCBCallback callback)
     block->command = 8;
     block->callback = callback;
 
+    idle = issueCommand(1, block);
+    return idle;
+}
+
+bool DVDGetStreamErrorStatusAsync(DVDCommandBlock* block,
+                                  DVDCBCallback callback)
+{
+    bool idle;
+    block->command = 9;
+    block->callback = callback;
+    idle = issueCommand(1, block);
+    return idle;
+}
+
+bool DVDGetStreamPlayAddrAsync(DVDCommandBlock* block, DVDCBCallback callback)
+{
+    bool idle;
+    block->command = 10;
+    block->callback = callback;
     idle = issueCommand(1, block);
     return idle;
 }

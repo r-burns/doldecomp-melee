@@ -158,8 +158,11 @@ void __OSDoHotReset(s32 arg0)
 void OSResetSystem(int reset, u32 resetCode, bool forceMenu)
 {
 #ifdef MUST_MATCH
+#ifndef DOLPHIN_SMB
     u8 unused[12];
 #endif
+#endif
+    bool intr;
 
     // Not initialized in all branches?
     bool disableRecalibration;
@@ -167,13 +170,19 @@ void OSResetSystem(int reset, u32 resetCode, bool forceMenu)
     OSDisableScheduler();
     __OSStopAudioSystem();
 
+#ifndef DOLPHIN_SMB
     if (reset == OS_RESET_SHUTDOWN)
         disableRecalibration = __PADDisableRecalibration(true);
+#endif
 
     while (!__OSCallResetFunctions(false))
         continue;
 
+#ifdef DOLPHIN_SMB
+    if (reset != OS_RESET_RESTART && forceMenu) {
+#else
     if (reset == OS_RESET_HOTRESET && forceMenu) {
+#endif
         OSSram* sram = __OSLockSram();
         sram->flags |= (1 << 6);
 
@@ -183,18 +192,28 @@ void OSResetSystem(int reset, u32 resetCode, bool forceMenu)
             continue;
     }
 
-    OSDisableInterrupts();
+    intr = OSDisableInterrupts();
     __OSCallResetFunctions(true);
+#ifndef DOLPHIN_SMB
     LCDisable();
+#endif
 
     if (reset == OS_RESET_HOTRESET) {
         __OSDoHotReset(resetCode);
-    } else if (reset == OS_RESET_RESTART) {
+    } else
+#ifndef DOLPHIN_SMB
+        if (reset == OS_RESET_RESTART)
+#endif
+    {
         KillThreads();
         OSEnableScheduler();
         __OSReboot(resetCode, forceMenu);
     }
 
+#ifdef DOLPHIN_SMB
+    OSRestoreInterrupts(intr);
+    OSEnableScheduler();
+#else
     KillThreads();
     memset(OSPhysicalToCached(0x40), 0, 0xCC - 0x40);
     memset(OSPhysicalToCached(0xD4), 0, 0xE8 - 0xD4);
@@ -203,6 +222,7 @@ void OSResetSystem(int reset, u32 resetCode, bool forceMenu)
     memset(OSPhysicalToCached(0x30C8), 0, 0xD4 - 0xC8);
 
     __PADDisableRecalibration(disableRecalibration);
+#endif
 }
 
 extern volatile u8 DAT_800030e2 AT_ADDRESS(0x800030E2);

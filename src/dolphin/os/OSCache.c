@@ -168,7 +168,11 @@ asm void DCZeroRange(register void* addr, register size_t nbytes)
     srwi nbytes, nbytes, 5
     mtctr nbytes
 @2:
+#ifdef DOLPHIN_SMB
+    dcbst r0, addr
+#else
     dcbz r0, addr
+#endif
     addi addr, addr, 32
     bdnz @2
 } // clang-format on

@@ -5,7 +5,11 @@
 #include <dolphin/os/OSExi.h>
 
 bool __CARDCompareFileName(CARDDir* ent, const char* filename);
+#ifdef DOLPHIN_SMB
+s32 __CARDAccess(CARDDir* ent);
+#else
 s32 __CARDAccess(CARDControl* card, CARDDir* ent);
+#endif
 bool __CARDIsOpened(CARDControl* card, s32 fileno);
 s32 __CARDGetFileNo(CARDControl* card, const char* filename, s32* pfileno);
 s32 CARDFastOpen(EXIChannel chan, s32 fileno, CARDFileInfo* fileinfo);

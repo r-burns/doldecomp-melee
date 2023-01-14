@@ -134,7 +134,11 @@ s32 CARDReadAsync(CARDFileInfo* fileInfo, void* buf, s32 length, s32 offset,
 
     dir = __CARDGetDirBlock(card);
     ent = &dir[fileInfo->fileNo];
+#ifdef DOLPHIN_SMB
+    result = __CARDAccess(ent);
+#else
     result = __CARDAccess(card, ent);
+#endif
 
     if (result == CARD_RESULT_NOPERM)
         result = __CARDIsPublic(ent);
@@ -173,4 +177,19 @@ int CARDRead(CARDFileInfo* fileinfo, void* buf, u32 length, u32 offset)
         return result;
 
     return __CARDSync(fileinfo->chan);
+}
+
+enum_t CARDCancel(CARDFileInfo* fileinfo)
+{
+    bool enabled = OSDisableInterrupts();
+    enum_t result = 0;
+    CARDControl* card = &__CARDBlock[fileinfo->chan];
+    if (!card->attached) {
+        result = -3;
+    } else if (card->result == -1 && card->fileInfo == fileinfo) {
+        fileinfo->length = -1;
+        result = -14;
+    }
+    OSRestoreInterrupts(enabled);
+    return result;
 }
