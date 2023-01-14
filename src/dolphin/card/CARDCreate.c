@@ -7,6 +7,10 @@
 #include <Runtime/__mem.h>
 #include <string.h>
 
+#ifdef DOLPHIN_SMB
+extern const DVDDiskID* __CARDDiskID;
+#endif
+
 #define CARDSetIconSpeed(stat, n, f)                                           \
     ((stat)->iconSpeed =                                                       \
          (((stat)->iconSpeed & ~(CARD_STAT_SPEED_MASK << (2 * (n)))) |         \
@@ -28,8 +32,13 @@ static void CreateCallbackFat(s32 chan, s32 result)
 
     dir = __CARDGetDirBlock(card);
     ent = &dir[card->freeNo];
+#if DOLPHIN_SMB
+    memcpy(ent->gameName, __CARDDiskID->gameName, sizeof(ent->gameName));
+    memcpy(ent->company, __CARDDiskID->company, sizeof(ent->company));
+#else
     memcpy(ent->gameName, card->diskID->gameName, sizeof(ent->gameName));
     memcpy(ent->company, card->diskID->company, sizeof(ent->company));
+#endif
     ent->permission = CARD_ATTR_PUBLIC;
     ent->copyTimes = 0;
     ent->startBlock = card->startBlock;
@@ -91,10 +100,17 @@ s32 CARDCreateAsync(s32 chan, const char* fileName, u32 size,
             if (freeNo == (u16) -1) {
                 freeNo = fileNo;
             }
+#ifdef DOLPHIN_SMB
+        } else if (memcmp(ent->gameName, __CARDDiskID->gameName,
+                          sizeof(ent->gameName)) == 0 &&
+                   memcmp(ent->company, __CARDDiskID->company,
+                          sizeof(ent->company)) == 0 &&
+#else
         } else if (memcmp(ent->gameName, card->diskID->gameName,
                           sizeof(ent->gameName)) == 0 &&
                    memcmp(ent->company, card->diskID->company,
                           sizeof(ent->company)) == 0 &&
+#endif
                    __CARDCompareFileName(ent, fileName))
         {
             return __CARDPutControlBlock(card, CARD_RESULT_EXIST);
