@@ -5,6 +5,10 @@
 
 extern DVDDiskID __CARDDiskNone;
 
+#ifdef DOLPHIN_SMB
+extern const DVDDiskID* __CARDDiskID;
+#endif
+
 #define CARDIsValidBlockNo(card, iBlock)                                       \
     (CARD_NUM_SYSTEM_BLOCK <= (iBlock) && (iBlock) < (card)->cBlock)
 
@@ -32,15 +36,25 @@ bool __CARDCompareFileName(CARDDir* ent, const char* filename)
     return false;
 }
 
+#ifdef DOLPHIN_SMB
+s32 __CARDAccess(CARDDir* ent)
+#else
 s32 __CARDAccess(CARDControl* card, CARDDir* ent)
+#endif
 {
     if (ent->gameName[0] == 0xFF) {
         return CARD_RESULT_NOFILE;
     }
 
+#ifdef DOLPHIN_SMB
+    if (__CARDDiskID == &__CARDDiskNone ||
+        (memcmp(ent->gameName, __CARDDiskID->gameName, 4) == 0 &&
+         memcmp(ent->company, __CARDDiskID->company, 2) == 0))
+#else
     if (card->diskID == &__CARDDiskNone ||
         (memcmp(ent->gameName, card->diskID->gameName, 4) == 0 &&
          memcmp(ent->company, card->diskID->company, 2) == 0))
+#endif
     {
         return CARD_RESULT_READY;
     }
@@ -75,7 +89,11 @@ s32 __CARDGetFileNo(CARDControl* card, const char* filename, s32* pfileno)
     dir = __CARDGetDirBlock(card);
     for (fileno = 0; fileno < CARD_MAX_FILE; fileno++) {
         ent = &dir[fileno];
+#ifdef DOLPHIN_SMB
+        result = __CARDAccess(ent);
+#else
         result = __CARDAccess(card, ent);
+#endif
         if (result < 0) {
             continue;
         }
@@ -106,7 +124,11 @@ s32 CARDFastOpen(EXIChannel chan, s32 fileno, CARDFileInfo* fileinfo)
 
     dir = __CARDGetDirBlock(card);
     ent = &dir[fileno];
+#ifdef DOLPHIN_SMB
+    result = __CARDAccess(ent);
+#else
     result = __CARDAccess(card, ent);
+#endif
     if (result == CARD_RESULT_NOPERM) {
         result = __CARDIsPublic(ent);
     }
