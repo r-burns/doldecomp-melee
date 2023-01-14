@@ -994,6 +994,25 @@ bool DVDStopStreamAtEndAsync(DVDCommandBlock* block, DVDCBCallback callback)
     return idle;
 }
 
+bool DVDGetStreamErrorStatusAsync(DVDCommandBlock* block,
+                                  DVDCBCallback callback)
+{
+    bool idle;
+    block->command = 9;
+    block->callback = callback;
+    idle = issueCommand(1, block);
+    return idle;
+}
+
+bool DVDGetStreamPlayAddrAsync(DVDCommandBlock* block, DVDCBCallback callback)
+{
+    bool idle;
+    block->command = 10;
+    block->callback = callback;
+    idle = issueCommand(1, block);
+    return idle;
+}
+
 bool DVDInquiryAsync(DVDCommandBlock* block, void* addr, DVDCBCallback callback)
 {
     bool idle;
