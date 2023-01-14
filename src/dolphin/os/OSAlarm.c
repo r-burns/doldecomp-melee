@@ -113,7 +113,7 @@ void OSCancelAlarm(OSAlarm* alarm)
 
     enabled = OSDisableInterrupts();
 
-    if (alarm->handler == 0) {
+    if (alarm->handler == NULL) {
         OSRestoreInterrupts(enabled);
         return;
     }
