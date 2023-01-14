@@ -1,11 +1,10 @@
 #ifndef MELEE_IT_TYPES_H
 #define MELEE_IT_TYPES_H
 
-#include "sysdolphin/baselib/gobjproc.h"
 #include <common_structs.h>
 #include <dolphin/mtx/mtxtypes.h>
 #include <math.h>
-#include <melee/ft/fighter.h>
+#include <melee/ft/types.h>
 #include <melee/gr/stage.h>
 #include <melee/it/itCommonItems.h>
 #include <melee/it/itkind.h>
@@ -17,6 +16,7 @@
 #include <sysdolphin/baselib/controller.h>
 #include <sysdolphin/baselib/gobj.h>
 #include <sysdolphin/baselib/gobjgxlink.h>
+#include <sysdolphin/baselib/gobjproc.h>
 #include <sysdolphin/baselib/gobjuserdata.h>
 #include <sysdolphin/baselib/jobj.h>
 #include <sysdolphin/baselib/random.h>
@@ -177,26 +177,34 @@ typedef struct ItemAttr {
     Vec2 x30_unk;        // 0x34
     Vec2 x38_grab_range; // 0x38
     ECB x40;
-    s32 x50;             // 0x50
-    s32 x54;             // 0x54
-    s32 x58;             // 0x58
-    s32 x5c;             // 0x5c
-    f32 x60_scale;       // 0x60, does not affect hitboxes
-    s32 x64_destroy_gfx; // 0x64, ID of a gfx to play on destroy
-    s32 x68;             // 0x68
-    s32 x6C;             // 0x6c
-    s32 x70;             // 0x70
-    s32 x74;             // 0x74
-    s32 x78_destroySFX;  // 0x78
-    s32 x7C;             // 0x7c
-    s32 x80;             // 0x80
-    s32 x84;             // 0x84
-    s32 x88;             // 0x88
-    s32 x8C;             // 0x8c
-    s32 x90;             // 0x90
-    s32 x94;             // 0x94
-    s32 x98;             // 0x98
-    s32 x9C;             // 0x9c
+    s32 x50;       // 0x50
+    s32 x54;       // 0x54
+    s32 x58;       // 0x58
+    s32 x5c;       // 0x5c
+    f32 x60_scale; // 0x60, does not affect hitboxes
+
+    /// @at{64} @sz{4}
+    /// @brief GFX to play on destroy.
+    enum_t destroy_gfx;
+
+    s32 x68; // 0x68
+    s32 x6C; // 0x6c
+    s32 x70; // 0x70
+    s32 x74; // 0x74
+
+    /// @at{78} @sz{4}
+    /// @brief SFX that plays when this item is destroyed
+    enum_t destroy_sfx;
+
+    s32 x7C; // 0x7c
+    s32 x80; // 0x80
+    s32 x84; // 0x84
+    s32 x88; // 0x88
+    s32 x8C; // 0x8c
+    s32 x90; // 0x90
+    s32 x94; // 0x94
+    s32 x98; // 0x98
+    s32 x9C; // 0x9c
 } ItemAttr;
 
 typedef struct ItemDynamicsDesc {
@@ -512,13 +520,13 @@ typedef struct Item {
     s32 xD10;
 
     /// @at{D14} @sz{4}
-    HSD_GObjPredicate if_anim;
+    HSD_GObjPredicate animated;
 
     /// @at{D18} @sz{4}
-    HSD_GObjEvent on_phys;
+    HSD_GObjEvent physics_updated;
 
     /// @at{D1C} @sz{4}
-    HSD_GObjPredicate if_coll;
+    HSD_GObjPredicate collided;
 
     /// @at{D20} @sz{4}
     /// @todo What does this mean?
@@ -526,24 +534,24 @@ typedef struct Item {
 
     /// @at{D24} @sz{4}
     /// @brief Runs when an entity is detected by this item's inert hibox.
-    HSD_GObjPredicate if_touched;
+    HSD_GObjPredicate touched;
 
     /// @at{D28} @sz{4}
     /// @brief Runs after applying hitlag in damage.
     /// @todo What function is @c 8026a62c?
-    HSD_GObjEvent on_enter_hitlag;
+    HSD_GObjEvent entered_hitlag;
 
     // 0xd2c, runs after exiting hitlag in hitlag, update proc 8026a200
-    HSD_GObjEvent on_exit_hitlag;
+    HSD_GObjEvent exited_hitlag;
 
     /// @at{D28} @sz{4}
     /// @brief Runs when the item is jumped on.
     /// @todo What function is @c 80269bac?
-    HSD_GObjPredicate if_jumped_on;
+    HSD_GObjPredicate jumped_on;
 
     /// @at{D34} @sz{4}
     /// @brief When grabbing a fighter, run this function on self.
-    HSD_GObjEvent on_grab;
+    HSD_GObjEvent grab_dealt;
 
     /** @at{D38} @sz{4}
      * @brief When grabbing a fighter, run this function on them.
@@ -551,7 +559,7 @@ typedef struct Item {
      * @p gobj0 - The victim of the grab. \n
      * @p gobj1 - This item's entity.
      */
-    HSD_GObjInteraction on_grabbed_for_victim;
+    HSD_GObjInteraction grabbed_for_victim;
 
     f32 xD3C_spinSpeed;
     f32 xD40;
@@ -563,14 +571,25 @@ typedef struct Item {
     s32 xD54_throwNum; // Number of times this item has been thrown
     s32 xD58;
     s32 xD5C;
-    enum_t xD60_destroyType; // has to do with OnDestroy GFX?
-    enum_t xD64;             // item SFX ID
-    enum_t xD68;             // item SFX ID
+
+    /// @at{D60} @sz{4}
+    enum_t destroy_type;
+
+    /// @at{D64} @sz{4}
+    enum_t sfx_unk1;
+
+    /// @at{D68} @sz{4}
+    enum_t sfx_unk2;
+
     s32 xD6C;
     s32 xD70;
     s32 xD74;
     s32 xD78;
-    s32 xD7C_destroySFX; // SFX that plays when this item is destroyed
+
+    /// @at{D7C} @sz{4}
+    /// @brief SFX that plays when this item is destroyed
+    enum_t destroy_sfx;
+
     s32 xD80;
     s32 xD84;
     s32 xD88_attackID; // ???
