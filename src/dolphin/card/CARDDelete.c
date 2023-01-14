@@ -48,7 +48,11 @@ s32 CARDFastDeleteAsync(s32 chan, s32 fileNo, CARDCallback callback)
 
     dir = __CARDGetDirBlock(card);
     ent = &dir[fileNo];
+#ifdef DOLPHIN_SMB
+    result = __CARDAccess(ent);
+#else
     result = __CARDAccess(card, ent);
+#endif
     if (result < 0) {
         return __CARDPutControlBlock(card, result);
     }
@@ -103,4 +107,16 @@ s32 CARDDeleteAsync(s32 chan, const char* fileName, CARDCallback callback)
         __CARDPutControlBlock(card, result);
     }
     return result;
+}
+
+int CARDDelete(s32 chan, const char* filename)
+{
+    /// @todo Eliminate cast to #CARDCallback.
+    int result = CARDDeleteAsync(chan, filename,
+                                 (CARDCallback) __CARDSyncCallback);
+
+    if (result < 0)
+        return result;
+
+    return __CARDSync(chan);
 }
