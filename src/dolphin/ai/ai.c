@@ -48,6 +48,20 @@ void AIStartDMA(void)
     __DSPRegs[27] |= 0x8000;
 }
 
+AISCallback AIRegisterStreamCallback(AISCallback callback)
+{
+    AISCallback ret = __AIS_Callback;
+    s32 oldInts = OSDisableInterrupts();
+    __AIS_Callback = callback;
+    OSRestoreInterrupts(oldInts);
+    return ret;
+}
+
+u32 AIGetStreamSampleCount(void)
+{
+    return __AIRegs[2];
+}
+
 void AIResetStreamSampleCount(void)
 {
     __AIRegs[0] = (__AIRegs[0] & ~0x20) | 0x20;
@@ -247,6 +261,7 @@ static void __AIDHandler(__OSInterrupt interrupt, struct OSContext* context)
     OSSetCurrentContext(context);
 }
 
+#ifdef __MWERKS__
 static asm void __AICallbackStackSwitch(register AIDCallback cb)
 { // clang-format off
     fralloc
@@ -274,6 +289,7 @@ static asm void __AICallbackStackSwitch(register AIDCallback cb)
     frfree
     blr
 } // clang-format on
+#endif
 
 static void __AI_SRC_INIT(void)
 {
