@@ -112,7 +112,11 @@ s32 CARDGetStatus(s32 chan, s32 fileNo, CARDStat* stat)
 
     dir = __CARDGetDirBlock(card);
     ent = &dir[fileNo];
+#if DOLPHIN_SMB
+    result = __CARDAccess(ent);
+#else
     result = __CARDAccess(card, ent);
+#endif
     if (result == CARD_RESULT_NOPERM) {
         result = __CARDIsPublic(ent);
     }
@@ -158,7 +162,11 @@ s32 CARDSetStatusAsync(s32 chan, s32 fileNo, CARDStat* stat,
 
     dir = __CARDGetDirBlock(card);
     ent = &dir[fileNo];
+#if DOLPHIN_SMB
+    result = __CARDAccess(ent);
+#else
     result = __CARDAccess(card, ent);
+#endif
     if (result < 0) {
         return __CARDPutControlBlock(card, result);
     }
