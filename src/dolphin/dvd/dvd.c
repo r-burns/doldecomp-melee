@@ -60,6 +60,7 @@ static u8 pad[0x60];
 DVDCommandBlock DummyCommandBlock;
 OSAlarm ResetAlarm;
 
+static OSThreadQueue __DVDThreadQueue;
 static DVDCommandBlock* executing;
 static DVDDiskID* currID;
 static OSBootInfo* bootInfo;
@@ -82,7 +83,6 @@ static void (*LastState)(DVDCommandBlock*);
 
 static bool autoInvalidation = true;
 
-extern OSThreadQueue __DVDThreadQueue;
 DVDCommandBlock* __DVDPopWaitingQueue(void);
 
 void DVDInit(void)

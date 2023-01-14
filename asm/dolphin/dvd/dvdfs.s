@@ -409,6 +409,3 @@ currentDirectory:
 .global __DVDLongFileNameFlag
 __DVDLongFileNameFlag:
     .skip 0x4
-.global __DVDThreadQueue
-__DVDThreadQueue:
-    .skip 0x8
