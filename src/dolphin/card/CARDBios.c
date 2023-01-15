@@ -408,20 +408,27 @@ s32 __CARDReadSegment(s32 chan, CARDCallback callback)
 
     result = __CARDStart(chan, callback, 0);
     if (result == CARD_RESULT_BUSY) {
-        result = CARD_RESULT_READY;
-    } else if (result >= 0) {
+        return CARD_RESULT_READY;
+    }
+#ifdef DOLPHIN_SMB
+    if (result < 0) {
+        return result;
+    } else
+#else
+    if (result >= 0)
+#endif
+    {
         if (!EXIImmEx(chan, card->cmd, card->cmdlen, 1) ||
             !EXIImmEx(chan, (u8*) card->workArea + sizeof(CARDID),
-                      card->latency,
-                      1) || // XXX use DMA if possible
+                      card->latency, 1) || // XXX use DMA if possible
             !EXIDma(chan, card->buffer, 512, card->mode, __CARDTxHandler))
         {
             card->txCallback = 0;
             EXIDeselect(chan);
             EXIUnlock(chan);
-            result = CARD_RESULT_NOCARD;
+            return CARD_RESULT_NOCARD;
         } else {
-            result = CARD_RESULT_READY;
+            return CARD_RESULT_READY;
         }
     }
     return result;
@@ -444,22 +451,63 @@ s32 __CARDWritePage(s32 chan, CARDCallback callback)
 
     result = __CARDStart(chan, 0, callback);
     if (result == CARD_RESULT_BUSY) {
-        result = CARD_RESULT_READY;
-    } else if (result >= 0) {
+        return CARD_RESULT_READY;
+    }
+#ifdef DOLPHIN_SMB
+    if (result < 0)
+        return result;
+#else
+    if (result >= 0)
+#endif
+    {
         if (!EXIImmEx(chan, card->cmd, card->cmdlen, 1) ||
             !EXIDma(chan, card->buffer, 128, card->mode, __CARDTxHandler))
         {
             card->exiCallback = 0;
             EXIDeselect(chan);
             EXIUnlock(chan);
-            result = CARD_RESULT_NOCARD;
+            return CARD_RESULT_NOCARD;
         } else {
-            result = CARD_RESULT_READY;
+            return CARD_RESULT_READY;
         }
     }
     return result;
 }
 
+#ifdef DOLPHIN_SMB // TODO merge these functions
+s32 __CARDEraseSector(s32 chan, u32 addr, CARDCallback callback)
+{
+    s32 result;
+    CARDControl *card;
+    s32 status;
+
+    card = &__CARDBlock[chan];
+    card->cmd[0] = 0xF1;
+    card->cmd[1] = AD1(addr);
+    card->cmd[2] = AD2(addr);
+    card->cmdlen = 3;
+    card->mode = -1;
+    card->retry = 3;
+
+    status = __CARDStart(chan, 0, callback);
+
+    if (status == CARD_RESULT_BUSY) {
+        return CARD_RESULT_READY;
+    }
+    if (status < 0) {
+        return status;
+    }
+    result = CARD_RESULT_READY;
+    if (!EXIImmEx(chan, card->cmd, card->cmdlen, 1)) {
+        card->exiCallback = NULL;
+        result = CARD_RESULT_NOCARD;
+    }
+
+    EXIDeselect(chan);
+    EXIUnlock(chan);
+    return result;
+}
+#else
 s32 __CARDEraseSector(s32 chan, u32 addr, CARDCallback callback)
 {
     CARDControl* card;
@@ -490,6 +538,7 @@ s32 __CARDEraseSector(s32 chan, u32 addr, CARDCallback callback)
     }
     return result;
 }
+#endif
 
 void CARDInit(void)
 {
@@ -534,16 +583,19 @@ s32 __CARDGetControlBlock(s32 chan, CARDControl** pcard)
     s32 result;
     CARDControl* card;
 
-    card = &__CARDBlock[chan];
 #ifdef DOLPHIN_SMB
     if (chan < 0 || chan >= 2 || __CARDDiskID == NULL) {
 #else
+    card = &__CARDBlock[chan];
     if (chan < 0 || chan >= 2 || card->diskID == NULL) {
 #endif
         return CARD_RESULT_FATAL_ERROR;
     }
 
     enabled = OSDisableInterrupts();
+#ifdef DOLPHIN_SMB
+    card = &__CARDBlock[chan];
+#endif
     if (!card->attached) {
         result = CARD_RESULT_NOCARD;
     } else if (card->result == CARD_RESULT_BUSY) {
