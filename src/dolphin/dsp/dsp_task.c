@@ -24,8 +24,7 @@ void __DSPHandler(__OSInterrupt intr, OSContext* ctx)
     while (DSPCheckMailFromDSP() == 0)
         continue;
     msg = DSPReadMailFromDSP();
-    if ((__DSP_curr_task->flags & (1 << (31 - 0x1E))) &&
-        (msg + 0x232F0000) == 2)
+    if ((__DSP_curr_task->flags & (1 << 1)) && msg == 0xDCD10002)
         msg = 0xDCD10003;
     switch (msg) {
     case 0xDCD10000:
@@ -43,19 +42,19 @@ void __DSPHandler(__OSInterrupt intr, OSContext* ctx)
             if (__DSP_curr_task == __DSP_rude_task) {
                 DSPSendMailToDSP(0xCDD10003);
                 while (DSPCheckMailToDSP() != 0)
-                    ;
+                    continue;
                 __DSP_rude_task = NULL;
-                __DSP_rude_task_pending = 0;
+                __DSP_rude_task_pending = false;
                 if (__DSP_curr_task->res_cb != NULL)
                     __DSP_curr_task->res_cb(__DSP_curr_task);
             } else {
                 DSPSendMailToDSP(0xCDD10001);
                 while (DSPCheckMailToDSP() != 0)
-                    ;
+                    continue;
                 __DSP_exec_task(__DSP_curr_task, __DSP_rude_task);
                 __DSP_curr_task->state = 2;
                 __DSP_curr_task = __DSP_rude_task;
-                __DSP_rude_task_pending = 0;
+                __DSP_rude_task_pending = false;
                 __DSP_rude_task = NULL;
             }
         } else {
@@ -94,7 +93,7 @@ void __DSPHandler(__OSInterrupt intr, OSContext* ctx)
             __DSP_exec_task(NULL, __DSP_rude_task);
             __DSP_remove_task(__DSP_curr_task);
             __DSP_curr_task = __DSP_rude_task;
-            __DSP_rude_task_pending = 0;
+            __DSP_rude_task_pending = false;
             __DSP_rude_task = NULL;
         } else {
             if (__DSP_curr_task->next == NULL) {
@@ -238,9 +237,9 @@ void __DSP_boot_task(DSPTaskInfo* task)
     DSPSendMailToDSP(task->dsp_init_vector);
     while (DSPCheckMailToDSP() != 0)
         continue;
-    __DSP_debug_printf("DSP is booting task: 0x%08X\n", (u32) task);
+    __DSP_debug_printf("DSP is booting task: 0x%08X\n", task);
     __DSP_debug_printf("__DSP_boot_task()  : IRAM MMEM ADDR: 0x%08X\n",
-                       (u32) task->iram_mmem_addr);
+                       task->iram_mmem_addr);
     __DSP_debug_printf("__DSP_boot_task()  : IRAM DSP ADDR : 0x%08X\n",
                        task->iram_addr);
     __DSP_debug_printf("__DSP_boot_task()  : IRAM LENGTH   : 0x%08X\n",
@@ -254,8 +253,7 @@ void __DSP_boot_task(DSPTaskInfo* task)
 #ifdef MUST_MATCH
 #pragma push
 #pragma force_active on
-char string___DSP_add_task_____Added_task______0x_08X_n[] =
-    "__DSP_add_task() : Added task    : 0x%08X\n";
+static char unused[] = "__DSP_add_task() : Added task    : 0x%08X\n";
 #pragma pop
 #endif
 
@@ -300,17 +298,16 @@ void __DSP_remove_task(DSPTaskInfo* task)
         if (task->next != NULL) {
             __DSP_first_task = task->next;
             task->next->prev = NULL;
-        } else
+        } else {
             __DSP_first_task = __DSP_last_task = __DSP_curr_task = NULL;
-        return;
-    }
-    if (__DSP_last_task == task) {
+        }
+    } else if (__DSP_last_task == task) {
         __DSP_last_task = task->prev;
         task->prev->next = NULL;
         __DSP_curr_task = __DSP_first_task;
-        return;
+    } else {
+        __DSP_curr_task = task->next;
+        task->prev->next = task->next;
+        task->next->prev = task->prev;
     }
-    __DSP_curr_task = task->next;
-    task->prev->next = task->next;
-    task->next->prev = task->prev;
 }
