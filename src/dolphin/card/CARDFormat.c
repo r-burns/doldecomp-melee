@@ -60,7 +60,11 @@ error:
     callback(chan, result);
 }
 
+#if DOLPHIN_SMB
+s32 __CARDFormatRegionAsync(s32 chan, CARDCallback callback)
+#else
 s32 __CARDFormatRegionAsync(s32 chan, u16 encode, CARDCallback callback)
+#endif
 {
     CARDControl* card;
     CARDID* id;
@@ -83,7 +87,11 @@ s32 __CARDFormatRegionAsync(s32 chan, u16 encode, CARDCallback callback)
     memset(id, 0xff, CARD_SYSTEM_BLOCK_SIZE);
     viDTVStatus = __VIRegs[55];
 
+#if DOLPHIN_SMB
+    id->encode = OSGetFontEncode();
+#else
     id->encode = encode;
+#endif
 
     sram = __OSLockSram();
     *(u32*) &id->serial[20] = sram->counterBias;
@@ -150,5 +158,9 @@ s32 __CARDFormatRegionAsync(s32 chan, u16 encode, CARDCallback callback)
 
 s32 CARDFormatAsync(s32 chan, CARDCallback callback)
 {
+#if DOLPHIN_SMB
+    return __CARDFormatRegionAsync(chan, callback);
+#else
     return __CARDFormatRegionAsync(chan, OSGetFontEncode(), callback);
+#endif
 }

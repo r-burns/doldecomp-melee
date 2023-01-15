@@ -41,9 +41,11 @@ s32 CARDProbeEx(EXIChannel chan, s32* memSize, s32* sectorSize)
         return CARD_RESULT_FATAL_ERROR;
     }
 
+#ifndef DOLPHIN_SMB
     if (GameChoice & 0x80) {
         return CARD_RESULT_NOCARD;
     }
+#endif
 
     card = &__CARDBlock[chan];
     enabled = OSDisableInterrupts();
@@ -69,7 +71,22 @@ s32 CARDProbeEx(EXIChannel chan, s32* memSize, s32* sectorSize)
         result = CARD_RESULT_WRONGDEVICE;
     } else if (!EXIGetID(chan, 0, &id)) {
         result = CARD_RESULT_BUSY;
-    } else if ((id == 0x80000004 && __CARDVendorID != 0xFFFF) ||
+#ifdef DOLPHIN_SMB // TODO can this be simplified?
+    } else if ((id & 0xFFFF0000) || (id & 3)) {
+        result = CARD_RESULT_WRONGDEVICE;
+    } else {
+        if (memSize) {
+            *memSize = (s32) (id & 0xfc);
+        }
+        if (sectorSize) {
+            *sectorSize = SectorSizeTable[(id & 0x00003800) >> 11];
+        }
+        result = CARD_RESULT_READY;
+    }
+#else
+    } else if (
+               (id == 0x80000004
+                && __CARDVendorID != 0xFFFF) ||
                (!(id & 0xFFFF0000) && !(id & 3)))
     {
         if (memSize) {
@@ -82,6 +99,7 @@ s32 CARDProbeEx(EXIChannel chan, s32* memSize, s32* sectorSize)
     } else {
         result = CARD_RESULT_WRONGDEVICE;
     }
+#endif
 
     OSRestoreInterrupts(enabled);
     return result;
@@ -103,10 +121,21 @@ s32 DoMount(EXIChannel chan)
     card = &__CARDBlock[chan];
 
     if (card->mountStep == 0) {
+#ifdef DOLPHIN_SMB
+        __CARDReadNintendoID(chan, &result);
+#else
         if (EXIGetID(chan, 0, &id) == 0) {
             result = CARD_RESULT_NOCARD;
-        } else if ((id == 0x80000004 && __CARDVendorID != 0xFFFF) ||
-                   (!(id & 0xFFFF0000) && !(id & 3)))
+        } else
+#endif
+        if (
+#ifndef DOLPHIN_SMB
+                (id == 0x80000004 && __CARDVendorID != 0xFFFF) ||
+                   (!(id & 0xFFFF0000) && !(id & 3))
+#else
+                   1
+#endif
+                   )
         {
             result = CARD_RESULT_READY;
         } else {
@@ -116,7 +145,9 @@ s32 DoMount(EXIChannel chan)
             goto error;
         }
 
+#ifndef DOLPHIN_SMB
         card->cid = id;
+#endif
 
         card->size = (id & 0xFC);
         card->sectorSize = SectorSizeTable[(id & 0x00003800) >> 11];
@@ -136,7 +167,11 @@ s32 DoMount(EXIChannel chan)
             goto error;
         }
 
+#ifdef DOLPHIN_SMB
+        if (!__EXIProbe(chan)) {
+#else
         if (!EXIProbe(chan)) {
+#endif
             result = CARD_RESULT_NOCARD;
             goto error;
         }
@@ -173,7 +208,9 @@ s32 DoMount(EXIChannel chan)
     }
 
     if (card->mountStep == 1) {
-        if (card->cid == 0x80000004) {
+#ifndef DOLPHIN_SMB
+        if (card->cid == 0x80000004)
+        {
             u16 vendorID;
 
             sram = __OSLockSramEx();
@@ -185,6 +222,7 @@ s32 DoMount(EXIChannel chan)
                 goto error;
             }
         }
+#endif
         card->mountStep = 2;
 
         result = __CARDEnableInterrupt(chan, true);
@@ -263,9 +301,11 @@ s32 CARDMountAsync(s32 chan, void* workArea, CARDCallback detachCallback,
     if (chan < 0 || 2 <= chan) {
         return CARD_RESULT_FATAL_ERROR;
     }
+#ifndef DOLPHIN_SMB
     if (GameChoice & 0x80) {
         return CARD_RESULT_NOCARD;
     }
+#endif
     card = &__CARDBlock[chan];
 
     enabled = OSDisableInterrupts();
@@ -317,6 +357,15 @@ s32 CARDMountAsync(s32 chan, void* workArea, CARDCallback detachCallback,
     card->unlockCallback = 0;
 
     return DoMount(chan);
+}
+
+s32 CARDMount(s32 chan, void* workArea, CARDCallback detachCallback)
+{
+    s32 result = CARDMountAsync(chan, workArea, detachCallback, (CARDCallback) __CARDSyncCallback);
+    if (result < 0) {
+        return result;
+    }
+    return __CARDSync(chan);
 }
 
 static void DoUnmount(s32 chan, s32 result)
