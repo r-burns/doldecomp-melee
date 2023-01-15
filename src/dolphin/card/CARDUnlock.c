@@ -409,7 +409,11 @@ static void DoneCallback(void* _task)
         return;
     }
     result = __CARDReadStatus(chan, &unk);
+#ifdef DOLPHIN_SMB
+    if (!__EXIProbe(chan)) {
+#else
     if (!EXIProbe(chan)) {
+#endif
         EXIUnlock(chan);
         __CARDMountCallback(chan, CARD_RESULT_NOCARD);
         return;

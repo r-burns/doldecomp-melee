@@ -133,15 +133,10 @@ typedef struct CARDControl {
     u16 vendorID;
     s32 latency;
     u8 id[12];
-#ifdef DOLPHIN_SMB
-        int mountStep;
-        int formatStep;
-#else
     union {
         int mountStep;
         int formatStep;
     };
-#endif
     u32 scramble;
     DSPTaskInfo task;
     void* workArea;
