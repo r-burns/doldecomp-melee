@@ -67,6 +67,11 @@ void AIResetStreamSampleCount(void)
     __AIRegs[0] = (__AIRegs[0] & ~0x20) | 0x20;
 }
 
+u32 AIGetStreamTrigger(void)
+{
+    return __AIRegs[3];
+}
+
 void AISetStreamTrigger(u32 trigger)
 {
     __AIRegs[3] = trigger;

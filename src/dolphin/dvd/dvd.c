@@ -57,8 +57,8 @@ extern volatile struct _IO {
 static DVDBuffer tmpBuffer;
 
 static u8 pad[0x60];
-DVDCommandBlock DummyCommandBlock;
-OSAlarm ResetAlarm;
+static DVDCommandBlock DummyCommandBlock;
+static OSAlarm ResetAlarm;
 
 static OSThreadQueue __DVDThreadQueue;
 static DVDCommandBlock* executing;
