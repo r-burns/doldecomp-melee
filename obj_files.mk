@@ -599,6 +599,12 @@ TEXT_O_FILES +=\
     $(BUILD_DIR)/asm/melee/it/items/itnesspkfirepillar.s.o\
     $(BUILD_DIR)/asm/melee/it/items/itnesspkflush.s.o\
     $(BUILD_DIR)/asm/melee/it/items/itnesspkthunderball.s.o\
+    $(BUILD_DIR)/asm/melee/it/items/itnesspkthundertrail.s.o\
+    $(BUILD_DIR)/asm/melee/it/items/itkoopaflame.s.o\
+    $(BUILD_DIR)/asm/melee/it/items/itnessbat.s.o\
+    $(BUILD_DIR)/asm/melee/it/items/itunk1.s.o\
+    $(BUILD_DIR)/asm/melee/it/items/itkirbyhammer.s.o\
+    $(BUILD_DIR)/asm/melee/it/items/itfoxblaster.s.o\
     $(BUILD_DIR)/asm/melee/it/it_803F5468.s.o\
     $(BUILD_DIR)/asm/melee/it/it_27CF.s.o\
 

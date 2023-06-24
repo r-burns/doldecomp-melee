@@ -955,7 +955,7 @@ struct ItemLogicTable it_803F3100[118] = {
         NULL,
         NULL,
     },
-    {
+    { // Fox blaster
         it_803F6CA8,
         NULL,
         NULL,
@@ -972,7 +972,7 @@ struct ItemLogicTable it_803F3100[118] = {
         NULL,
         it_802AF184,
     },
-    {
+    { // Falco blaster
         it_803F6CA8,
         NULL,
         NULL,
@@ -989,7 +989,7 @@ struct ItemLogicTable it_803F3100[118] = {
         NULL,
         it_802AF184,
     },
-    {
+    { // Link bow
         it_803F6E98,
         NULL,
         it_802AF298,
@@ -1006,7 +1006,7 @@ struct ItemLogicTable it_803F3100[118] = {
         NULL,
         it_802AF920,
     },
-    {
+    { // Young Link bow
         it_803F6E98,
         NULL,
         it_802AF298,
@@ -1023,7 +1023,7 @@ struct ItemLogicTable it_803F3100[118] = {
         NULL,
         it_802AF920,
     },
-    {
+    { // Ness PK flush explode
         it_803F6F40,
         NULL,
         it_802AFA2C,
@@ -1040,7 +1040,7 @@ struct ItemLogicTable it_803F3100[118] = {
         it_802AFD64,
         it_802AFD6C,
     },
-    {
+    { // Sheik needle thrown
         it_803F6F50,
         NULL,
         it_802AFEF8,
@@ -1057,7 +1057,7 @@ struct ItemLogicTable it_803F3100[118] = {
         it_802B16E4,
         it_802B1890,
     },
-    {
+    { // Sheik needle held
         it_803F70A8,
         NULL,
         NULL,
@@ -1074,7 +1074,7 @@ struct ItemLogicTable it_803F3100[118] = {
         NULL,
         it_802B1C40,
     },
-    {
+    { // Pikachu thunder
         it_803F70C8,
         NULL,
         it_802B202C,
@@ -1091,7 +1091,7 @@ struct ItemLogicTable it_803F3100[118] = {
         it_802B2510,
         it_802B2528,
     },
-    {
+    { // Pichu thunder
         it_803F70C8,
         NULL,
         it_802B202C,
@@ -1108,7 +1108,7 @@ struct ItemLogicTable it_803F3100[118] = {
         it_802B2510,
         it_802B2528,
     },
-    {
+    { // Mario cape
         it_803F70F8,
         NULL,
         it_802B2644,
@@ -1125,7 +1125,7 @@ struct ItemLogicTable it_803F3100[118] = {
         NULL,
         it_802B2870,
     },
-    {
+    { // Dr Mario cape
         it_803F70F8,
         NULL,
         it_802B2644,
@@ -1142,7 +1142,7 @@ struct ItemLogicTable it_803F3100[118] = {
         NULL,
         it_802B2870,
     },
-    {
+    { // Sheik vanish
         it_803F70B8,
         NULL,
         NULL,
@@ -1159,7 +1159,7 @@ struct ItemLogicTable it_803F3100[118] = {
         NULL,
         it_802B1DCC,
     },
-    {
+    { // Yoshi egg throw
         it_803F7118,
         NULL,
         NULL,
@@ -1176,7 +1176,7 @@ struct ItemLogicTable it_803F3100[118] = {
         it_802B2E7C,
         it_802B2FA8,
     },
-    {
+    { // Yoshi egg lay
         it_803F94A0,
         NULL,
         NULL,
@@ -1193,7 +1193,7 @@ struct ItemLogicTable it_803F3100[118] = {
         NULL,
         it_802F3374,
     },
-    {
+    { // Yoshi star
         it_803F7158,
         NULL,
         NULL,
@@ -1210,7 +1210,7 @@ struct ItemLogicTable it_803F3100[118] = {
         it_802B30E4,
         it_802B3348,
     },
-    {
+    { // Pikachu tjolt ground
         it_803F7190,
         NULL,
         it_802B34E4,
@@ -1227,7 +1227,7 @@ struct ItemLogicTable it_803F3100[118] = {
         it_802B3D0C,
         it_802B3EDC,
     },
-    {
+    { // Pikachu tjolt air
         it_803F71D8,
         NULL,
         NULL,
@@ -1244,7 +1244,7 @@ struct ItemLogicTable it_803F3100[118] = {
         it_802B4A18,
         it_802B4AA8,
     },
-    {
+    { // Pichu tjolt ground
         it_803F7190,
         NULL,
         it_802B34E4,
@@ -1261,7 +1261,7 @@ struct ItemLogicTable it_803F3100[118] = {
         it_802B3D0C,
         it_802B3EDC,
     },
-    {
+    { // Pichu tjolt air
         it_803F71D8,
         NULL,
         NULL,
@@ -1278,7 +1278,7 @@ struct ItemLogicTable it_803F3100[118] = {
         it_802B4A18,
         it_802B4AA8,
     },
-    {
+    { // Samus bomb
         it_803F7220,
         NULL,
         NULL,
@@ -1295,7 +1295,7 @@ struct ItemLogicTable it_803F3100[118] = {
         it_802B5320,
         it_802B54E4,
     },
-    {
+    { // Samus charge shot
         it_803F7288,
         NULL,
         it_802B58D8,
@@ -1312,7 +1312,7 @@ struct ItemLogicTable it_803F3100[118] = {
         it_802B613C,
         it_802B62B0,
     },
-    {
+    { // Samus missile
         it_803F7340,
         NULL,
         NULL,
@@ -1329,7 +1329,7 @@ struct ItemLogicTable it_803F3100[118] = {
         it_802B6CD0,
         it_802B7104,
     },
-    {
+    { // Samus grapple beam
         it_803F73A8,
         it_802B7150,
         NULL,
@@ -1346,7 +1346,7 @@ struct ItemLogicTable it_803F3100[118] = {
         NULL,
         it_802BAEA0,
     },
-    {
+    { // Sheik  chain
         it_803F7438,
         NULL,
         NULL,
@@ -1363,7 +1363,7 @@ struct ItemLogicTable it_803F3100[118] = {
         NULL,
         it_802BD10C,
     },
-    {
+    { // Peach explode
         it_803F7488,
         NULL,
         NULL,
@@ -1380,7 +1380,7 @@ struct ItemLogicTable it_803F3100[118] = {
         NULL,
         it_802BD30C,
     },
-    {
+    { // Peach turnip
         it_803F74A8,
         NULL,
         it_802BD47C,
@@ -1397,7 +1397,7 @@ struct ItemLogicTable it_803F3100[118] = {
         it_802BD9C0,
         it_802BDA08,
     },
-    {
+    { // Bowser flame
         it_803F6C58,
         NULL,
         NULL,
@@ -1414,7 +1414,7 @@ struct ItemLogicTable it_803F3100[118] = {
         it_802AD450,
         it_802AD458,
     },
-    {
+    { // Ness bat
         it_803F6C68,
         NULL,
         NULL,
