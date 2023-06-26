@@ -215,6 +215,10 @@ $(VANILLA_DIR)/%.c.o: %.c $(BUILD_DIR)/%.c.dep
 	@echo "Compiling (vanilla)" $<
 	$(QUIET) $(CC) $(CFLAGS) -c -o $@ $<
 
+$(BUILD_DIR)/%.o: %.cpp
+	@echo "Compiling (runtime)" $<
+	$(QUIET) $(CC) $(CFLAGS) -c -o $@ $<
+
 # Overrides for targets using frank to simulate patched MWCC 1.2.5
 ifeq ($(EPILOGUE_PROCESS),1)
 $(PROFILE_DIR)/%.c.o: %.c $(BUILD_DIR)/%.c.dep

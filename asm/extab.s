@@ -1,4 +1,4 @@
-.section extab_, "wa"  # 0x80005520 - 0x800056C0
+.section extab, "a"  # 0x80005520 - 0x800056C0
 
 .global extab_80005520
 extab_80005520:

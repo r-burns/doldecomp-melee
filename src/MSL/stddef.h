@@ -3,7 +3,9 @@
 #ifndef __STDDEF_H__
 #define __STDDEF_H__
 
+#ifndef __cplusplus
 typedef unsigned short wchar_t;
+#endif
 typedef signed int ssize_t;
 
 /// @deprecated Use #usize_t.
