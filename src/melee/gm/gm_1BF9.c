@@ -57,6 +57,11 @@ enum {
 
 void gm_801BF9A8(MinorScene* data)
 {
+#ifdef MELEE_DEMO
+    gm_801A4330(lb_8001CE78);
+    // Boot to title screen
+    gm_801A42F8(0);
+#else
     struct sceneData* scene_data = gm_801A4284(data);
 
     if (!un_803048C0(TROPHY_PIKMIN)) {
@@ -76,6 +81,7 @@ void gm_801BF9A8(MinorScene* data)
     // Enter major scene
     // Gekko "boot to CSS" code changes scene_id to a hardcoded 2
     gm_801A42F8(scene_data->scene_id);
+#endif
 }
 
 MinorScene gm_803DFE18_MinorScenes[] = {
