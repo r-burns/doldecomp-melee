@@ -20,3 +20,13 @@ f32 splGetHelmite(f32 fterm, f32 time, f32 p0, f32 p1, f32 d0, f32 d1)
                                     ((p0 * (1.0f + (_2t3_T3 - _3t2_T2))) +
                                      (p1 * (-_2t3_T3 + _3t2_T2))));
 }
+
+void splGetSplinePoint(s32, s32)
+{
+    NOT_IMPLEMENTED;
+}
+
+void splArcLengthPoint(Vec3*, HSD_Spline*, f32)
+{
+    NOT_IMPLEMENTED;
+}
