@@ -10,7 +10,6 @@ typedef struct _Handle {
     void* x4_lo;
     // is this hi or size?
     void* x8_hi;
-    struct _Handle* xC_prev;
 } Handle;
 
 /* 014E24 */ Handle* lbMemory_80014E24(void* lo, void* hi);
