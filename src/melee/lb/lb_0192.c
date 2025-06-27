@@ -13,6 +13,7 @@
 #include <sysdolphin/baselib/initialize.h>
 #include <sysdolphin/baselib/sislib.h>
 #include <sysdolphin/baselib/video.h>
+#include <dolphin/os/OSAlarm.h>
 
 static struct strings {
     const char* x0;
@@ -98,6 +99,8 @@ struct lb_804329F0_t {
     int x48;
     OSAlarm alarm;
 };
+
+extern f32 lb_804D7CA0;
 
 /* 4329F0 */ static struct lb_804329F0_t lb_804329F0;
 
@@ -222,6 +225,87 @@ void fn_800195FC(void)
     HSD_PadRenewRawStatus(0);
     lb_8001C600();
     lbSnap_8001D2BC();
+}
+
+void lb_80019628(void)
+{
+    s32 temp_r4;
+    s32 temp_r4_2;
+    s32 temp_r4_3;
+    s32 temp_r5;
+    u32 var_r28;
+    u32 var_r28_2;
+    s64 temp_ret;
+    u64 temp_ret_2;
+    u64 var_r29;
+
+    if (lb_804329F0.x38 == lb_804329F0.x0[0].x0) {
+        return;
+    }
+    lb_804329F0.x0[0].x0 = lb_804329F0.x38;
+
+    if (lb_804329F0.x0[0].x8 >= lb_804329F0.x0[0].x0) {
+        lb_804329F0.x0[0].x8 = 0;
+    }
+    var_r28 = temp_ret = OS_TIMER_CLOCK - 1.0;
+    if (temp_ret < 0) {
+        temp_ret = lb_804329F0.x0[0].x0;
+    }
+
+    if (lb_804329F0.x0[1].x8 >= lb_804329F0.x0[1].x0) {
+        lb_804329F0.x0[1].x8 = 0;
+    }
+
+#if 0
+    temp_ret = __cvt_dbl_usll((f64) (f32) ((u32) *(u32* )0x800000F8 >> 2U));
+    var_r28 = (u32) temp_ret;
+    var_r29 = temp_ret;
+    temp_r4_2 = lb_804329F0.unk0 ^ 0x80000000;
+    if (-((temp_r4_2 - temp_r4_2) - !M2C_CARRY) != 0) {
+        var_r28 = lb_804329F0.unk4;
+        var_r29 = (u64) lb_804329F0.unk0;
+    }
+    temp_r4_3 = lb_804329F0.unk18 ^ 0x80000000;
+    if (-((temp_r4_3 - temp_r4_3) - !M2C_CARRY) != 0) {
+        var_r28 = lb_804329F0.unk1C;
+        var_r29 = (u64) lb_804329F0.unk18;
+    }
+    __cvt_dbl_usll((f64) (lb_804D7CA0 * (f32) ((u32) *(void* )0x800000F8 >> 2U)));
+    temp_r5 = var_r29 ^ 0x80000000;
+    if (-((temp_r5 - temp_r5) - !M2C_CARRY) == 0) {
+        temp_ret_2 = __cvt_dbl_usll((f64) (lb_804D7CA0 * (f32) ((u32) *(void* )0x800000F8 >> 2U)));
+        var_r28 = (u32) temp_ret_2;
+        var_r29 = temp_ret_2;
+    }
+#endif
+
+    if (lb_804329F0.x40 == temp_ret) {
+        return;
+    }
+
+    lb_804329F0.x40 = temp_ret;
+
+    var_r28_2 = OSTicksToMilliseconds(lb_804329F0.x40);
+
+    if (var_r28_2 > 0xB) {
+        var_r28_2 = 0xB;
+    }
+
+    if (lb_804329F0.x4 != var_r28_2) {
+        PADSetSamplingRate(var_r28_2);
+        lb_804329F0.x4 = var_r28_2;
+    }
+
+    if (lb_804329F0.x48) {
+        OSCancelAlarm(&lb_804329F0.alarm);
+    }
+
+    OSCreateAlarm(&lb_804329F0.alarm);
+    OSSetPeriodicAlarm(&lb_804329F0.alarm,
+            lb_804329F0.x40, lb_804329F0.x40,
+            (void*) fn_800195FC);
+
+    lb_804329F0.x48 = true;
 }
 
 void lb_80019880(u64 arg0)

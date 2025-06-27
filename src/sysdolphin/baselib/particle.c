@@ -320,7 +320,15 @@ void fn_8039710C(void) {}
 
 /// #fn_80397814
 
-/// #hsd_80397DA4
+static u8 hsd_804CF8E8[0x2000];
+
+void hsd_80397DA4(OSContext* arg0)
+{
+    OSThread sp10;
+
+    OSCreateThread(&sp10, fn_80397814, arg0, hsd_804CF8E8 + 0xFFC, 0x1000, 0, 1);
+    OSResumeThread(&sp10);
+}
 
 void Exception_StoreDebugLevel(int arg0)
 {
