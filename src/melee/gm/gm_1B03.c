@@ -1884,7 +1884,7 @@ void fn_801B5AA8(int arg0)
 
 /// #gm_801B5FB4
 
-void gm_801B607C(void)
+void gm_801B607C(MinorScene* scene)
 {
     gm_801A42E8(1);
     gm_801A42D4();
