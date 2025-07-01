@@ -1,5 +1,6 @@
 #include <baselib/gobj.h>
 #include <baselib/cobj.h>
+#include <baselib/wobj.h>
 #include <melee/sc/types.h>
 #include <melee/gm/types.h>
 
@@ -66,5 +67,30 @@ struct gm_804D6804_t {
 /* 4D6848 */ static s32 gm_804D6848;
 /* 4D684C */ static s32 gm_804D684C;
 
-/* 3DD0F0 */ static HSD_CObjDesc gm_803DD0F0;
+static HSD_WObjDesc gm_803DD0C8 = { 0, { 0, 0, 1 } };
+static HSD_WObjDesc gm_803DD0DC = { 0, { 0, 0, 1 } };
+
+static HSD_CameraDescPerspective gm_803DD0F0 = {
+    NULL,
+    0,
+    1,
+    { 0 },
+    { 0 },
+    //0x00000280,
+    //0x000001E0,
+    //0x00000280,
+    //0x000001E0,
+    &gm_803DD0C8,
+    &gm_803DD0DC,
+    0x00000000,
+    0x00000000,
+    0x3F800000,
+    0x461C4000,
+    0x42A00000,
+    0x3F9BBBBF,
+};
+#ifndef M2CTX
+STATIC_ASSERT(sizeof(gm_803DD0F0) == 0x38);
+#endif
+
 /* 3DD2C0 */ extern int gm_803DD2C0[74];
