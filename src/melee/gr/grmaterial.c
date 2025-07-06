@@ -230,7 +230,86 @@ void grMaterial_801C8E74(void)
 
 /// #fn_801C8EF8
 
-/// #grMaterial_801C92C0
+void grMaterial_801C92C0(HSD_JObj* arg0)
+{
+    HSD_JObj* var_r31;
+    HSD_DObj* var_r0_3;
+    HSD_DObj* var_r29;
+    HSD_DObj* var_r29_2;
+    HSD_JObj* var_r0_4;
+    HSD_JObj* var_r0_6;
+    HSD_JObj* var_r29_3;
+    HSD_MObj* var_r0_2;
+    HSD_MObj* var_r3;
+    u8 _[0x18];
+
+    if (arg0 != NULL) {
+        if (union_type_dobj(arg0)) {
+            var_r29 = HSD_JObjGetDObj(arg0);
+            while (var_r29 != NULL) {
+                if (var_r29 != NULL) {
+                    var_r0_2 = var_r29->mobj;
+                } else {
+                    var_r0_2 = NULL;
+                }
+                if (var_r0_2 != NULL) {
+#ifndef MELEE_DEMO
+                    hsdChangeClass(var_r0_2, &grMaterial_803E0A20);
+#endif
+                }
+                var_r29 = var_r29 != NULL ? var_r29->next : NULL;
+            }
+        }
+        var_r31 = arg0 == NULL ? NULL : arg0->child;
+        while (var_r31 != NULL) {
+#if 0
+            grMaterial_801C92C0(var_r31);
+#else
+            if (var_r31 != NULL) {
+                if (union_type_dobj(var_r31)) {
+                    var_r29_2 = HSD_JObjGetDObj(var_r31);
+                    while (var_r29_2 != NULL) {
+                        if (var_r29_2 != NULL) {
+                            var_r3 = var_r29_2->mobj;
+                        } else {
+                            var_r3 = NULL;
+                        }
+                        if (var_r3 != NULL) {
+#ifndef MELEE_DEMO
+                            hsdChangeClass(var_r3, &grMaterial_803E0A20);
+#endif
+                        }
+                        if (var_r29_2 != NULL) {
+                            var_r29_2 = var_r29_2->next;
+                        } else {
+                            var_r29_2 = NULL;
+                        }
+                    }
+                }
+                if (var_r31 == NULL) {
+                    var_r29_3 = NULL;
+                } else {
+                    var_r29_3 = var_r31->child;
+                }
+                while (var_r29_3 != NULL) {
+                    grMaterial_801C92C0(var_r29_3);
+                    if (var_r29_3 == NULL) {
+                        var_r29_3 = NULL;
+                    } else {
+                        var_r29_3 = var_r29_3->next;
+                    }
+                }
+            }
+            if (var_r31 == NULL) {
+                var_r0_6 = NULL;
+            } else {
+                var_r0_6 = var_r31->next;
+            }
+            var_r31 = var_r0_6;
+#endif
+        }
+    }
+}
 
 /// #grMaterial_801C9470
 
