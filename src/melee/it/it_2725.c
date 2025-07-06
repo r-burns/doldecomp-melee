@@ -8228,22 +8228,21 @@ void it_80278574(HSD_GObj* gobj, GXColor* arg1)
     }
 }
 
-#if 0
-// load ItCo.dat/usd ?
+static Article* it_804D6D20;
+
 void it_8027870C(s32 arg0) {
-    if (lbLang_IsSettingUS() != 0) {
-        lbArchive_80017040(0, &it_803F1EE4, &it_804D6D20, &it_803F1EF0, 0);
+    if (lbLang_IsSettingUS()) {
+        lbArchive_80017040(0, "ItCo.usd", &it_804D6D20, "itPublicData", 0);
     } else {
-        lbArchive_80017040(0, &it_803F1ED8, &it_804D6D20, &it_803F1EF0, 0);
+        lbArchive_80017040(0, "ItCo.dat", &it_804D6D20, "itPublicData", 0);
     }
-    it_804D6D28 = it_804D6D20->unk0;
-    it_804D6D24 = it_804D6D20->unk4;
-    it_804D6D38 = it_804D6D20->unk8;
-    it_804D6D30 = it_804D6D20->unkC;
-    it_804D6D40 = it_804D6D20->unk10;
-    it_804D6D04 = it_804D6D20->unk14;
+    it_804D6D28 = (void*) it_804D6D20->x0_common_attr;
+    it_804D6D24 = it_804D6D20->x4_specialAttributes;
+    it_804D6D38 = it_804D6D20->x8_hurtbox;
+    it_804D6D30 = (void*) it_804D6D20->xC_itemStates;
+    it_804D6D40 = (void*) it_804D6D20->x10_modelDesc;
+    it_804D6D04 = (void*) it_804D6D20->x14_dynamics;
 }
-#endif
 
 void it_802787B4(Item_GObj* item_gobj, s32 arg1)
 {
