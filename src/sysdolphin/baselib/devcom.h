@@ -29,8 +29,8 @@ void HSD_DevComARAMCallback(ARQRequest*);
 UNK_RET HSD_DevComARAMWakeUp(UNK_PARAMS);
 UNK_RET HSD_DevComDVDStdCallback(UNK_PARAMS);
 UNK_RET HSD_DevComDVDARAMEndCallback(UNK_PARAMS);
-UNK_RET HSD_DevComDVDMemCallback(UNK_PARAMS);
-UNK_RET HSD_DevComDVDCallback(UNK_PARAMS);
+UNK_RET HSD_DevComDVDMemCallback(s32, struct DVDFileInfo*);
+UNK_RET HSD_DevComDVDCallback(s32, struct DVDFileInfo*);
 UNK_RET HSD_DevComDVDWakeUp(UNK_PARAMS);
 int HSD_DevComRequest(int file, u32 src, u32 dest, size_t size, int type,
                       int pri, HSD_DevComCallback callback, void* args);

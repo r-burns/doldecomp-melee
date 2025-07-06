@@ -10,11 +10,16 @@ static ARQRequest devComARQR[2][2];
 static HSD_DevCom* devComStatus[4];
 static HSD_DevCom* HSD_DevCom_804C6330[4];
 static u8 HSD_DevCom_804C6330_bufs[2][DEVCOM_BUF_SIZE];
+static DVDFileInfo info;
 
 static HSD_DevCom* HSD_DevCom_804D77F0; // next devcom
 static u8 aramstate;
 static HSD_DevCom* HSD_DevCom_804D7808;
 static u8 devComRelayBufFlag[2];
+static u8 HSD_DevCom_804D77F5;
+static u8 HSD_DevCom_804D77F6;
+static HSD_DevCom* HSD_DevCom_804D77F8;
+static int HSD_DevCom_804D7804;
 
 static int HSD_DevCom_804D6050 = 4;
 
@@ -115,11 +120,127 @@ static char assert_msg_2[] = "dvdDC->callback";
 
 /// #HSD_DevComDVDARAMEndCallback
 
-/// #HSD_DevComDVDMemCallback
+void HSD_DevComDVDMemCallback(s32 arg0, DVDFileInfo* arg1)
+{
+    HSD_DevCom* temp_r31;
+    s32 temp_r3_2;
+
+    if (arg0 == -1) {
+        HSD_DevCom_804D7804 = 1;
+    }
+    if ((u32) HSD_DevCom_804D77F8->size > 0x80000U) {
+        HSD_DevCom_804D77F8->src += 0x80000;
+        HSD_DevCom_804D77F8->dest += 0x80000;
+        HSD_DevCom_804D77F8->size += 0xFFF80000;
+        HSD_DevCom_804D77F5 = 0;
+        HSD_DevComDVDWakeUp();
+        return;
+    }
+    if ((HSD_DevCom_804D77F8->callback != NULL) && ((s32) HSD_DevCom_804D7804 == 0)) {
+        HSD_DevCom_804D77F8->callback((void* ) HSD_DevCom_804D77F8->dcReq, (s32) HSD_DevCom_804D77F8->args, NULL, (s32) HSD_DevCom_804D77F8->cancelflag);
+    }
+    HSD_DevComUnlink(HSD_DevCom_804D77F8);
+    temp_r31 = HSD_DevCom_804D77F8;
+    temp_r3_2 = OSDisableInterrupts();
+    temp_r31->next = HSD_DevCom_804D77F0;
+    HSD_DevCom_804D77F0 = temp_r31;
+    OSRestoreInterrupts(temp_r3_2);
+    HSD_DevCom_804D77F5 = 0;
+    HSD_DevComDVDWakeUp();
+}
 
 /// #HSD_DevComDVDCallback
 
-/// #HSD_DevComDVDWakeUp
+void HSD_DevComDVDWakeUp(void)
+{
+    HSD_DevCom* temp_r0;
+    HSD_DevCom** var_r29;
+    s32 temp_r30;
+    s32 var_ctr;
+    s32 var_r28;
+    int var_r4;
+    u32 var_r5;
+    u32 var_r5_2;
+    u8* var_r3;
+    void (*temp_r12)(void*, int, void*, int);
+    int i;
+
+    temp_r30 = OSDisableInterrupts();
+    if ((u8) HSD_DevCom_804D77F5 != 0) {
+        OSRestoreInterrupts(temp_r30);
+        return;
+    }
+    var_r28 = 0;
+    var_r29 = devComStatus;
+loop_3:
+    temp_r0 = *var_r29;
+    HSD_DevCom_804D77F8 = temp_r0;
+    if (temp_r0 != NULL) {
+        if (HSD_DevCom_804D77F8->cancelflag != 0) {
+            if (HSD_DevCom_804D77F8->callback != NULL) {
+                HSD_DevCom_804D77F8->callback((void* ) HSD_DevCom_804D77F8->dcReq, (s32) HSD_DevCom_804D77F8->args, NULL, 1);
+            }
+            HSD_DevComUnlink(HSD_DevCom_804D77F8);
+            OSRestoreInterrupts(temp_r30);
+            HSD_DevComDVDWakeUp();
+            return;
+        }
+        DVDFastOpen(HSD_DevCom_804D77F8->file, &info);
+        if ((u16) HSD_DevCom_804D77F8->type == 0x21) {
+            var_r5 = HSD_DevCom_804D77F8->size;
+            if (var_r5 < 0x80000U) {
+
+            } else {
+                var_r5 = 0x80000;
+            }
+            DVDReadAsyncPrio(&info, (void* ) HSD_DevCom_804D77F8->dest, (s32) var_r5, (s32) HSD_DevCom_804D77F8->src, HSD_DevComDVDMemCallback, 2);
+            HSD_DevCom_804D77F5 = 1;
+            OSRestoreInterrupts(temp_r30);
+            return;
+        }
+        var_ctr = 2;
+        var_r4 = 0;
+        var_r3 = &devComRelayBufFlag[0];
+loop_14:
+        if ((u8) *var_r3 == 0) {
+            devComRelayBufFlag[var_r4] = 1;
+        } else {
+            var_r3 += 1;
+            var_r4 += 1;
+            var_ctr -= 1;
+            if (var_ctr == 0) {
+                var_r4 = -1;
+            } else {
+                goto loop_14;
+            }
+        }
+        if (var_r4 >= 0) {
+            HSD_DevCom_804D77F6 = var_r4;
+            var_r5_2 = HSD_DevCom_804D77F8->size;
+            if (var_r5_2 < 0x4000U) {
+
+            } else {
+                var_r5_2 = 0x4000;
+            }
+            DVDReadAsyncPrio(&info,
+                    HSD_DevCom_804C6330_bufs[var_r4],
+                    //&devComARQR + (var_r4 << 0xE) + 0xA0,
+                    (s32) var_r5_2, (s32) HSD_DevCom_804D77F8->src, HSD_DevComDVDCallback, 2);
+            HSD_DevCom_804D77F5 = 1;
+            OSRestoreInterrupts(temp_r30);
+            return;
+        }
+        goto block_23;
+    }
+block_23:
+    var_r28 += 1;
+    var_r29 += 1;
+    if (var_r28 >= 3) {
+        OSRestoreInterrupts(temp_r30);
+        return;
+    }
+    goto loop_3;
+}
 
 static inline int HSD_DevComGetDestType(int type)
 {
