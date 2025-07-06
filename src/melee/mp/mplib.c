@@ -11,6 +11,8 @@
 #include <baselib/texp.h>
 #include <sysdolphin/baselib/gobj.h>
 #include <sysdolphin/baselib/gobjproc.h>
+#include <sysdolphin/baselib/jobj.h>
+#include <sysdolphin/baselib/memory.h>
 
 int mpLib_8004D164(void)
 {
@@ -261,7 +263,117 @@ bool mpLib_80054ED8(int line)
 
 /// #mpLib_80054F68
 
-/// #mpLib_800552B0
+void mpLib_800552B0(s16 x, HSD_JObj* arg1, s16 z)
+{
+    HSD_JObj* var_r0;
+    HSD_JObj* var_r0_2;
+    HSD_JObj* var_r0_3;
+    HSD_JObj* var_r0_4;
+    HSD_JObj* var_r0_5;
+    HSD_JObj* var_r0_6;
+    HSD_JObj* var_r0_7;
+    HSD_JObj* var_r0_8;
+    HSD_JObj* var_r0_9;
+    HSD_JObj* var_r4;
+    HSD_JObj* var_r4_2;
+    HSD_JObj* var_r7;
+    s32 var_r6;
+
+    if (arg1 == NULL) {
+        var_r0 = NULL;
+    } else {
+        var_r0 = arg1->child;
+    }
+    var_r7 = var_r0;
+    var_r6 = 0;
+loop_45:
+    if ((var_r7 != NULL) && (var_r6 != z)) {
+        if (!(var_r7->flags & 0x1000)) {
+            if (var_r7 == NULL) {
+                var_r0_2 = NULL;
+            } else {
+                var_r0_2 = var_r7->child;
+            }
+            if (var_r0_2 != NULL) {
+                if (var_r7 == NULL) {
+                    var_r0_3 = NULL;
+                } else {
+                    var_r0_3 = var_r7->child;
+                }
+                var_r7 = var_r0_3;
+            } else {
+                goto block_13;
+            }
+        } else {
+block_13:
+            if (var_r7 == NULL) {
+                var_r0_4 = NULL;
+            } else {
+                var_r0_4 = var_r7->next;
+            }
+            if (var_r0_4 != NULL) {
+                if (var_r7 == NULL) {
+                    var_r0_5 = NULL;
+                } else {
+                    var_r0_5 = var_r7->next;
+                }
+                var_r7 = var_r0_5;
+            } else {
+loop_21:
+                if (var_r7 == NULL) {
+                    var_r0_6 = NULL;
+                } else {
+                    var_r0_6 = var_r7->parent;
+                }
+                if (var_r0_6 == NULL) {
+                    var_r7 = NULL;
+                } else {
+                    if (var_r7 == NULL) {
+                        var_r4 = NULL;
+                    } else {
+                        var_r4 = var_r7->parent;
+                    }
+                    if (var_r4 == NULL) {
+                        var_r0_7 = NULL;
+                    } else {
+                        var_r0_7 = var_r4->next;
+                    }
+                    if (var_r0_7 != NULL) {
+                        if (var_r7 == NULL) {
+                            var_r4_2 = NULL;
+                        } else {
+                            var_r4_2 = var_r7->parent;
+                        }
+                        if (var_r4_2 == NULL) {
+                            var_r0_8 = NULL;
+                        } else {
+                            var_r0_8 = var_r4_2->next;
+                        }
+                        var_r7 = var_r0_8;
+                    } else {
+                        if (var_r7 == NULL) {
+                            var_r0_9 = NULL;
+                        } else {
+                            var_r0_9 = var_r7->parent;
+                        }
+                        var_r7 = var_r0_9;
+                        goto loop_21;
+                    }
+                }
+            }
+        }
+        var_r6 += 1;
+        goto loop_45;
+    }
+    if (var_r7 != NULL) {
+#ifdef MELEE_DEMO
+        if (mpLib_804D64C0 == NULL) {
+            mpLib_804D64C0 = HSD_MemAlloc(0x100);
+        }
+#endif
+        mpLib_804D64C0[x].x20 = var_r7;
+    }
+}
 
 /// #mpLib_8005541C
 
