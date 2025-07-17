@@ -17,7 +17,6 @@
 /* 0C0764 */ UNK_RET ftCo_800C0764(UNK_PARAMS);
 /* 0C07F8 */ void ftCo_800C07F8(UNK_T arg0, int arg1, int arg2);
 /* 459A68 */ extern struct ftDeviceUnk3 ft_80459A68[4];
-/* 459A74 */ extern struct ftDeviceUnk5 ftDevice_BuryThings[2];
 /* 459A8C */ extern UNK_T ft_80459A8C;
 /* 4D6574 */ extern int ftDevice_BuryThingCount;
 /* 4D6578 */ extern struct ftDeviceUnk4 ft_804D6578;

@@ -180,7 +180,9 @@ void ftCo_800C7220(ftCo_GObj* gobj)
     if (fp->kind != FTKIND_KIRBY) {
         inlineB2(gobj);
     } else {
-        ftCo_800C7070(gobj);
+        Fighter_ChangeMotionState(gobj, ftCo_MS_Wait, 0, 0, 1, 0, NULL);
+        fp->x2219_b2 = true;
+        fp->x2219_b1 = true;
     }
 }
 
@@ -190,7 +192,9 @@ void ftCo_800C7294(ftCo_GObj* gobj)
     if (fp->kind != FTKIND_KIRBY) {
         inlineB2(gobj);
     } else {
-        ftCo_800C7070(gobj);
+        Fighter_ChangeMotionState(gobj, ftCo_MS_WalkSlow, 0, 0, 1, 0, NULL);
+        fp->x2219_b2 = true;
+        fp->x2219_b1 = true;
     }
 }
 
@@ -200,7 +204,9 @@ void ftCo_800C7308(ftCo_GObj* gobj)
     if (fp->kind != FTKIND_KIRBY) {
         inlineB2(gobj);
     } else {
-        ftCo_800C7070(gobj);
+        Fighter_ChangeMotionState(gobj, ftCo_MS_WalkMiddle, 0, 0, 1, 0, NULL);
+        fp->x2219_b2 = true;
+        fp->x2219_b1 = true;
     }
 }
 

@@ -20,6 +20,39 @@ static int ft_804D6570;
 struct ftDeviceUnk4 ft_804D6578;
 int ftDevice_BuryThingCount;
 
+UnkCostumeStruct ft_8045A6A8[7];
+UnkCostumeStruct ft_8045A690[7];
+UnkCostumeStruct ft_8045A678[7];
+UnkCostumeStruct ft_8045A660[7];
+UnkCostumeStruct ft_8045A648[7];
+UnkCostumeStruct ft_8045A630[7];
+UnkCostumeStruct ft_8045A5B8[7];
+UnkCostumeStruct ft_8045A540[7];
+UnkCostumeStruct ft_8045A4E0[7];
+UnkCostumeStruct ft_8045A480[7];
+UnkCostumeStruct ft_8045A420[7];
+UnkCostumeStruct ft_8045A3A8[7];
+UnkCostumeStruct ft_8045A330[7];
+UnkCostumeStruct ft_8045A2D0[7];
+UnkCostumeStruct ft_8045A270[7];
+UnkCostumeStruct ft_8045A1F8[7];
+UnkCostumeStruct ft_8045A168[7];
+UnkCostumeStruct ft_8045A0F0[7];
+UnkCostumeStruct ft_8045A090[7];
+UnkCostumeStruct ft_8045A000[7];
+UnkCostumeStruct ft_80459F88[7];
+UnkCostumeStruct ft_80459F28[7];
+UnkCostumeStruct ft_80459EC8[7];
+UnkCostumeStruct ft_80459E68[7];
+UnkCostumeStruct ft_80459DF0[7];
+UnkCostumeStruct ft_80459D90[7];
+UnkCostumeStruct ft_80459D18[7];
+UnkCostumeStruct ft_80459CA0[7];
+UnkCostumeStruct ft_80459C10[7];
+UnkCostumeStruct ft_80459B28[4];
+UnkCostumeStruct ft_80459A98[6];
+struct ftDeviceUnk5 ftDevice_BuryThings[2];
+
 ftDeviceUnk2* ftCo_800C0658(Fighter* fp)
 {
     return (int) fp->x408.x28 != 0 ? &fp->x408 : &fp->x488;

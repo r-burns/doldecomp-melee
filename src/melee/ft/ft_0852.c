@@ -6,7 +6,7 @@
 #include <baselib/gobj.h>
 #include <baselib/jobj.h>
 
-extern UnkCostumeStruct lbl_804599F0;
+UnkCostumeStruct lbl_804599F0[5];
 extern UnkCostumeStruct ft_80459A98;
 extern UnkCostumeStruct ft_80459B28;
 extern UnkCostumeStruct ft_80459C10;
@@ -40,9 +40,11 @@ extern UnkCostumeStruct ft_8045A678;
 extern UnkCostumeStruct ft_8045A690;
 extern UnkCostumeStruct ft_8045A6A8;
 
+ftData* gFtDataList[FTKIND_MAX];
+
 struct UnkCostumeList CostumeListsForeachCharacter[FTKIND_MAX] = {
     {
-        &lbl_804599F0,
+        lbl_804599F0,
         0x05,
     },
     {

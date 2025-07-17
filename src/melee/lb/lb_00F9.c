@@ -187,7 +187,12 @@ bool lb_80013BB0(void)
 
 /// #lb_800144C8
 
-/// #lb_80014534
+UNK_T lb_804D63C0;
+
+void lb_80014534(void)
+{
+    lbArchive_80017040(NULL, "LbRb.dat", &lb_804D63C0, "lbRumbleData", 0);
+}
 
 /// #lb_80014574
 

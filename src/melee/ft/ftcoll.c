@@ -1402,6 +1402,8 @@ void ftColl_GetWindOffsetVec(HSD_GObj* gobj, Vec3* out_wind)
     }
 }
 
+extern struct ftDeviceUnk5 ftDevice_BuryThings[];
+
 void ftColl_8007BA0C(Fighter_GObj* gobj)
 {
     if (!GET_FIGHTER(gobj)->x2219_b1) {
