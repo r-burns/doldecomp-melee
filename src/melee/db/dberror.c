@@ -57,6 +57,7 @@ static void fn_OSErrorHandler(u16 error, OSContext* ctx, ...)
 
 void db_SetupCrashHandler(void)
 {
+#ifndef MELEE_DEMO
     u16 x;
     if (DBIsDebuggerPresent() == 0) {
         void* mem = OSAllocFromArenaLo(0x2000, 4);
@@ -74,4 +75,5 @@ void db_SetupCrashHandler(void)
             }
         }
     }
+#endif
 }
