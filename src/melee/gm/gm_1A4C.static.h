@@ -93,4 +93,4 @@ static HSD_CameraDescPerspective gm_803DD0F0 = {
 STATIC_ASSERT(sizeof(gm_803DD0F0) == 0x38);
 #endif
 
-/* 3DD2C0 */ extern int gm_803DD2C0[74];
+/* 3DD2C0 */ static int gm_803DD2C0[74];
