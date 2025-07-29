@@ -4,12 +4,12 @@
 #include <placeholder.h>
 
 /* 388330 */ void* HSD_AudioMalloc(size_t);
-/* 38838C */ UNK_RET HSD_AudioFree(UNK_PARAMS);
+/* 38838C */ void HSD_AudioFree(void*);
 /* 3883B4 */ UNK_RET HSD_SynthSFXSampleLoadCallback(UNK_PARAMS);
-/* 3887DC */ UNK_RET HSD_SynthSFXHeaderLoadCallback(UNK_PARAMS);
+/* 3887DC */ void HSD_SynthSFXHeaderLoadCallback(void*, int, void*, int);
 /* 38893C */ UNK_RET HSD_SynthSFXLoadNewProc(UNK_PARAMS);
-/* 3889B8 */ UNK_RET HSD_SynthSFXLoad(UNK_PARAMS);
-/* 388B0C */ UNK_RET HSD_Synth_80388B0C(UNK_PARAMS);
+/* 3889B8 */ int HSD_SynthSFXLoad(const char* filename, int arg1, int arg2, int arg3);
+/* 388B0C */ void HSD_Synth_80388B0C(void (*arg0)(void));
 /* 388B50 */ s32 HSD_Synth_80388B50(void);
 /* 388B60 */ UNK_RET HSD_Synth_80388B60(UNK_PARAMS);
 /* 388CB0 */ UNK_RET HSD_Synth_80388CB0(UNK_PARAMS);

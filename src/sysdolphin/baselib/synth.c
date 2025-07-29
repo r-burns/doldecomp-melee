@@ -1,18 +1,54 @@
 #include "synth.static.h"
 
-/// #HSD_AudioMalloc
+#include <dolphin/os.h>
+#include <sysdolphin/baselib/devcom.h>
 
-/// #HSD_AudioFree
+static int HSD_Synth_804D6018 = -1;
+static int HSD_Synth_804D6028[2] = { 0 };
+extern s32 HSD_Synth_804C2A60[0x18];
+
+static u8 HSD_Synth_804C2AC0[0x20];
+
+void* HSD_AudioMalloc(size_t arg0)
+{
+    void* temp_r3;
+
+    temp_r3 = OSAllocFromHeap(HSD_Synth_804D6018, arg0);
+    if (temp_r3 == NULL) {
+        OSReport("audio heap overflow.\n");
+        __assert("synth.c", 0x29U, "p");
+    }
+    return temp_r3;
+}
+
+void HSD_AudioFree(void* arg0)
+{
+    OSFreeToHeap(HSD_Synth_804D6018, arg0);
+}
 
 /// #HSD_SynthSFXSampleLoadCallback
 
 /// #HSD_SynthSFXHeaderLoadCallback
 
-/// #HSD_SynthSFXLoadNewProc
+void HSD_SynthSFXLoadNewProc(void)
+{
+    s32 temp_r31;
+
+    if (HSD_Synth_804D772C != 0) {
+        temp_r31 = OSDisableInterrupts();
+        HSD_Synth_804D6028[0] = HSD_DevComRequest(*HSD_Synth_804C2A60, 0U, (u32) HSD_Synth_804C2AC0, 0x20U, 0x21, 1, HSD_SynthSFXHeaderLoadCallback, NULL);
+        OSRestoreInterrupts(temp_r31);
+    }
+}
 
 /// #HSD_SynthSFXLoad
 
-/// #HSD_Synth_80388B0C
+void HSD_Synth_80388B0C(void (*arg0)(void))
+{
+    while (HSD_Synth_804D772C != 0) {
+        arg0();
+    }
+}
 
 s32 HSD_Synth_80388B50(void)
 {
