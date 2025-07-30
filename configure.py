@@ -143,12 +143,21 @@ parser.add_argument(
     help="builds equivalent (but non-matching) or modded objects",
 )
 parser.add_argument(
+    "--demo",
+    dest="demo",
+    action="store_true",
+    help="builds heavily stubbed DOL for minimum functionality demo",
+)
+parser.add_argument(
     "--no-progress",
     dest="progress",
     action="store_false",
     help="disable progress calculation",
 )
 args = parser.parse_args()
+
+if args.demo:
+    args.non_matching = True
 
 config = ProjectConfig()
 config.version = str(args.version)
@@ -167,8 +176,7 @@ config.progress = args.progress
 if not is_windows():
     config.wrapper = args.wrapper
 # Don't build asm unless we're --non-matching
-if not config.non_matching:
-    config.asm_dir = None
+config.asm_dir = None
 
 # Tool versions
 config.binutils_tag = "2.42-1"
@@ -237,6 +245,9 @@ cflags_base = [
     f"-DBUILD_VERSION={version_num}",
     f"-DVERSION_{config.version}",
 ]
+
+if args.demo:
+    cflags_base.append("-DMELEE_DEMO")
 
 # Debug flags
 if args.debug:
@@ -426,6 +437,9 @@ Equivalent = (
     config.non_matching
 )  # Object should be linked when configured with --non-matching
 
+# Object may be insufficiently implemented for full game functionality,
+# but is currently functional enough for a basic gameplay demo.
+DemoFunctional = args.demo
 
 # Object is only matching for specific versions
 def MatchingFor(*versions):
@@ -1027,7 +1041,7 @@ config.libs = [
             Object(NonMatching, "melee/mn/mninfo.c"),
             Object(NonMatching, "melee/mn/mninfobonus.c"),
             Object(NonMatching, "melee/mn/mnsnap.c"),
-            Object(NonMatching, "melee/mn/mngallery.c"),
+            Object(DemoFunctional, "melee/mn/mngallery.c"),
             Object(NonMatching, "melee/mn/mnstagesel.c"),
             Object(NonMatching, "melee/mn/mncharsel.c"),
         ],
@@ -1593,6 +1607,8 @@ config.libs = [
             Object(NonMatching, "sysdolphin/baselib/hsd_3B34.c"),
         ],
     ),
+    MeleeLib( "manual stubs", [ Object(Matching, "manualstubs.c"), ]),
+    Lib( "stubs", [ Object(Matching, "stubs.c"), ]),
 ]
 
 
@@ -1605,13 +1621,14 @@ def link_order_callback(module_id: int, objects: List[str]) -> List[str]:
     # Don't modify the link order for matching builds
     if not config.non_matching:
         return objects
+    return objects + ["manualstubs.c", "stubs.c"]
     if module_id == 0:  # DOL
         return objects + ["dummy.c"]
     return objects
 
 
 # Uncomment to enable the link order callback.
-# config.link_order_callback = link_order_callback
+config.link_order_callback = link_order_callback
 
 
 # Extra categories for progress tracking

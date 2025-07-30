@@ -1007,7 +1007,12 @@ def generate_build_ninja(
                 link_step.add(built_obj_path)
             elif obj_path is not None:
                 # Use the original (extracted) object
-                link_step.add(Path(obj_path))
+                if obj_path.endswith("OSSerial.o") \
+                or obj_path.endswith("texpdag.o") \
+                or obj_path.endswith("lb_0192.o"):
+                    link_step.add(Path(obj_path))
+                elif not config.non_matching:
+                    link_step.add(Path(obj_path))
 
         # Add DOL link step
         link_step = LinkStep(build_config)
