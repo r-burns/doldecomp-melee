@@ -407,6 +407,7 @@ MajorScene gm_803DACA4[] = {
         gm_801A5598_OnInit,
         gm_803DD9A0_MinorScenes,
     },
+#ifndef MELEE_DEMO
     {
         1, MJ_CLASSIC,
         gm_801B2F78_OnLoad,
@@ -484,6 +485,7 @@ MajorScene gm_803DACA4[] = {
         NULL,
         gm_803DFA78_MinorScenes,
     },
+#endif
     {
         0, MJ_DEBUG_VS,
         NULL,
@@ -491,6 +493,7 @@ MajorScene gm_803DACA4[] = {
         NULL,
         gm_803DDA78_MinorScenes,
     },
+#ifndef MELEE_DEMO
     {
         1, MJ_TARGET_TEST,
         gm_801B6808_OnLoad,
@@ -533,6 +536,7 @@ MajorScene gm_803DACA4[] = {
         NULL,
         gm_803DFE48_MinorScenes,
     },
+#endif
     {
         1, MJ_MENU,
         NULL,
@@ -540,6 +544,7 @@ MajorScene gm_803DACA4[] = {
         NULL,
         gm_803DD8B8_MinorScenes,
     },
+#ifndef MELEE_DEMO
     {
         0, MJ_CLASSIC_GOVER,
         gm_801A50B8_OnLoad,
@@ -673,6 +678,7 @@ MajorScene gm_803DACA4[] = {
         NULL,
         gm_803DFDA8_MinorScenes,
     },
+#endif
     {
         1, MJ_BOOT,
         NULL,
@@ -680,6 +686,7 @@ MajorScene gm_803DACA4[] = {
         NULL,
         gm_803DFDD8_MinorScenes,
     },
+#ifndef MELEE_DEMO
     {
         1, MJ_MEMCARD,
         NULL,
@@ -708,6 +715,7 @@ MajorScene gm_803DACA4[] = {
         gm_801BA2C4_OnInit,
         gm_803DF2B8_MinorScenes,
     },
+#endif
     {
         0, MJ_COUNT,
         NULL,
