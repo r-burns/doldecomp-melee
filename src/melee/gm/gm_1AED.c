@@ -244,6 +244,9 @@ void gm_801AF568_OnFrame(void)
 
     switch (gm_80480DA8.unk14) {
     case 0:
+#ifdef MELEE_DEMO
+        goto no_memcard;
+#endif
         temp_r29 = lb_8001CBBC();
         gmMainLib_8015FA34(temp_r29);
         if (temp_r29 == 0 || temp_r29 == 2) {
@@ -385,6 +388,7 @@ void gm_801AF568_OnFrame(void)
     case 18:
         if (!gm_801AF0D4() && gm_801AEDC8_flag_check()) {
             if (gm_80480DA8.unk1C == 0) {
+no_memcard:
                 gm_80480DA8.unk8.unk0 = 0;
                 gm_80480DA8.unk14 = 0x14;
                 lb_8001CBAC(4);
