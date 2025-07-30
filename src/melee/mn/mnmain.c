@@ -11,6 +11,7 @@
 #include <sysdolphin/baselib/gobjplink.h>
 #include <sysdolphin/baselib/gobjproc.h>
 #include <sysdolphin/baselib/jobj.h>
+#include <sysdolphin/baselib/lobj.h>
 #include <sysdolphin/baselib/mobj.h>
 #include <melee/gm/gm_unsplit.h>
 #include <melee/gm/gmmain_lib.h>
@@ -1678,7 +1679,27 @@ void mn_8022BEDC(HSD_GObj* gobj)
     mn_804D6BB4 = HSD_SisLib_803A611C(0, temp_r3, 7, 8, 0x80, 7, 0x80, 0);
 }
 
-/// #mn_8022BFBC
+static GXColor mn_804D4B50 = { 0x5A, 0x73, 0xFF, 0xFF };
+static GXColor mn_804D4B54 = { 0xFF, 0x5A, 0x41, 0xFF };
+static GXColor mn_804D4B58 = { 0x0E, 0xD2, 0x41, 0xFF };
+static GXColor mn_804D4B5C = { 0xF0, 0xC8, 0x5A, 0xFF };
+static GXColor mn_804D4B60 = { 0x9B, 0x41, 0xFF, 0xFF };
+
+GXColor* mn_8022BFBC(int arg0)
+{
+    switch (arg0) {
+    case 0:
+        return &mn_804D4B50;
+    case 1:
+        return &mn_804D4B54;
+    case 2:
+        return &mn_804D4B58;
+    case 3:
+        return &mn_804D4B5C;
+    case 4:
+        return &mn_804D4B60;
+    }
+}
 
 #pragma push
 #pragma dont_inline on
@@ -1730,7 +1751,42 @@ int mn_8022C010(int arg0, int arg1)
 }
 #pragma pop
 
-/// #mn_8022C068
+void mn_8022C068(HSD_LObj* arg0, int arg1, int arg2)
+{
+    HSD_LObj* var_r3;
+    int temp_r0;
+    int temp_r0_2;
+    int temp_r0_3;
+    u8 temp_r6;
+    u8 temp_r6_2;
+    u8 temp_r6_3;
+
+    var_r3 = arg0;
+    while (!(var_r3->flags & 2)) {
+        var_r3 = var_r3->next;
+    }
+    if (arg2 != 0) {
+        temp_r6 = var_r3->color.r;
+        temp_r0 = mn_804A04F0.x14->r - temp_r6;
+        if (temp_r0 != 0) {
+            var_r3->color.r = temp_r6 + (temp_r0 / arg2);
+        }
+        temp_r6_2 = var_r3->color.g;
+        temp_r0_2 = mn_804A04F0.x14->g - temp_r6_2;
+        if (temp_r0_2 != 0) {
+            var_r3->color.g = temp_r6_2 + (temp_r0_2 / arg2);
+        }
+        temp_r6_3 = var_r3->color.b;
+        temp_r0_3 = mn_804A04F0.x14->b - temp_r6_3;
+        if (temp_r0_3 != 0) {
+            var_r3->color.b = temp_r6_3 + (temp_r0_3 / arg2);
+        }
+        return;
+    }
+    var_r3->color.r = mn_804A04F0.x14->r;
+    var_r3->color.g = mn_804A04F0.x14->g;
+    var_r3->color.b = mn_804A04F0.x14->b;
+}
 
 /// #fn_8022C128
 
@@ -1899,7 +1955,7 @@ static inline void mn_8022DDA8_inline(u16* sp2B4)
     HSD_GObjObject_80390A70(gobj, HSD_GObj_804D784A, lobj);
     mn_804A04F0.x12 = 0;
     temp_r29 = mn_8022C010(mn_804A04F0.x0, *sp2B4);
-    mn_804A04F0.x14 = mn_8022BFBC();
+    mn_804A04F0.x14 = mn_8022BFBC(temp_r29);
     mn_8022C068(lobj, temp_r29, mn_804A04F0.x12);
 }
 
