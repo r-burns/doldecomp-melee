@@ -4703,7 +4703,7 @@ static ItCmd it_804D51C8[2] = {
 
 // s8 it_804D6D00; // Not sure of type
 struct r13_ColAnimStruct* it_804D6D04;
-// s32 it_804D6D08; // Not sure of type
+s32 it_804D6D08; // Not sure of type
 // s32 it_804D6D0C; // Not sure of type
 // u32 it_804D6D10; // Not sure of type
 // u32it_804D6D14; // Not sure of type
