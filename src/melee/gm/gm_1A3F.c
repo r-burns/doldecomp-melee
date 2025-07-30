@@ -29,6 +29,7 @@ static GameState gm_80479D30;
 
 void gm_801A3F48(MinorScene* scene)
 {
+#ifndef MELEE_DEMO
     PreloadCacheScene* temp_r31;
 
     lbDvd_80018CF4(scene->preload);
@@ -57,6 +58,7 @@ void gm_801A3F48(MinorScene* scene)
     lbSnap_8001E27C();
     un_803127D4();
     un_8031C8B8();
+#endif
 }
 
 inline u8 matchMinor(MinorScene* scenes)
