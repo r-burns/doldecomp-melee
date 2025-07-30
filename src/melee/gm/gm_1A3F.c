@@ -91,6 +91,9 @@ inline MinorScene* getScene(MinorScene* scene)
             }
         }
     }
+#ifdef MELEE_DEMO
+    OSReport("Minor scene not found, curr minor is %d\n", gm_80479D30.nums.curr_minor);
+#endif
     return NULL;
 }
 
@@ -252,6 +255,10 @@ inline MajorScene* findSceneMatching(u8 idx)
             return cur;
         }
     }
+#ifdef MELEE_DEMO
+    OSReport("Failed to find major scene with index %d\n", idx);
+    OSReport("Curr major/minor is  %d/%d\n", gm_80479D30.nums.curr_major, gm_80479D30.nums.curr_minor);
+#endif
     return NULL;
 }
 
@@ -269,10 +276,17 @@ u8 gm_801A43A0(u8 arg0)
     gm_80479D30.nums.curr_minor = 0;
     gm_80479D30.nums.prev_minor = 0;
     gm_80479D30.nums.pending_minor = 0;
+
+#ifdef MELEE_DEMO
+    OSReport("Current major/minor scene is 0x%x/0x%x\n",
+            gm_80479D30.nums.curr_major,
+            gm_80479D30.nums.curr_minor);
+#else
     lbDvd_80018F58(var_r30->preload);
     if (var_r30->Load != NULL) {
         var_r30->Load();
     }
+#endif
     while (!gamestate->pending) {
         if (gm_80479D30.data != NULL &&
             (temp_r3 = gm_80479D30.data(), temp_r3 != MJ_COUNT))
