@@ -419,7 +419,14 @@ GXColor gm_80160968(u8 arg0)
 
 /// #gm_80162B4C
 
-/// #gm_80162B98
+void gm_80162B98(void)
+{
+    u32 temp_r0;
+    u32 var_r4;
+    u32* temp_r3 = gmMainLib_8015CD8C();
+    temp_r0 = *temp_r3 + 1;
+    *temp_r3 = temp_r0 > -1 ? -1 : temp_r0;
+}
 
 /// #gm_80162BD8
 
