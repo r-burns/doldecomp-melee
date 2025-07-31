@@ -53,10 +53,10 @@
 };
 
 // .bss
-/* 4A1FD8 */ static DevText devtext_pool[32];
+/* 4A1FD8 */ DevText devtext_pool[32];
 
 // .sbss
-/* 4D6E18 */ static DevText* devtext_drawlist;
+/* 4D6E18 */ DevText* devtext_drawlist;
 /* 4D6E1C */ static HSD_GObj* devtext_gobj;
 /* 4D6E20 */ static HSD_CObj* devtext_cobj;
 /* 4D6E24 */ static int devtext_setup_classifier;
@@ -64,7 +64,7 @@
 /* 4D6E2C */ static int devtext_setup_priority;
 /* 4D6E30 */ static int devtext_setup_gx_link;
 /* 4D6E34 */ static int devtext_setup_render_priority;
-/* 4D6E38 */ static DevText* devtext_poolhead;
+/* 4D6E38 */ DevText* devtext_poolhead;
 
 int DevText_StrLen(char* str)
 {
