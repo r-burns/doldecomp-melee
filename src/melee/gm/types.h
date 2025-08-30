@@ -8,6 +8,7 @@
 
 #include "dolphin/types.h"
 
+#include "lb/forward.h"
 #include <melee/gm/forward.h> // IWYU pragma: export
 #include <melee/gr/forward.h>
 #include <melee/pl/forward.h>
@@ -101,7 +102,7 @@ struct gmm_x1CB0 {
     /* +10 */ u8 rumble[4];
     /* +14 */ u8 sound_balance;
     /* +15 */ u8 deflicker;
-    /* +16 */ u8 saved_language; /* 0x1CC6 */
+    /* +16 */ enum Language saved_language; /* 0x1CC6 */
     /* +18 */ u32 stage_mask;
     /* +1C */ u8 padding_x16[0x1];
 };

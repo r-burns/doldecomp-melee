@@ -1,6 +1,3 @@
-ftNs_SpecialLwHit_Anim | fuzzy_match  | 100.00% ->  98.97%
-ftNs_SpecialLwHit_Coll | fuzzy_match  | 100.00% ->  96.00%
-ftNs_SpecialAirLwHit_Coll | fuzzy_match  | 100.00% ->  96.00%
 ftNs_AbsorbThink_DecideAction | fuzzy_match  | 100.00% ->  98.65%
 ftNs_SpecialLwEnd_Coll | fuzzy_match  | 100.00% ->  96.00%
 ftNs_SpecialAirLwEnd_Coll | fuzzy_match  | 100.00% ->  96.00%

@@ -81,6 +81,12 @@ typedef enum HurtHeight {
     HurtHeight_High,
 } HurtHeight;
 
+enum Language {
+    Language_Japanese,
+    Language_English,
+    Language_Max,
+};
+
 typedef void (*RefractCallbackTypeA)(struct lbRefract_CallbackData*, s32, u32,
                                      s8, s8);
 typedef void (*RefractCallbackTypeB)(struct lbRefract_CallbackData*, s32, u32,

@@ -3,14 +3,14 @@
 #include "gm/gmmain_lib.h"
 #include "gm/types.h"
 
-enum_t lbLang_GetLanguageSetting(void)
+enum Language lbLang_GetLanguageSetting(void)
 {
     return gmMainLib_804D3EE0->language;
 }
 
-enum_t lbLang_SetLanguageSetting(enum_t language)
+enum Language lbLang_SetLanguageSetting(enum Language language)
 {
-    if (language >= 0 && language < 2) {
+    if (language >= Language_Japanese && language < Language_Max) {
         gmMainLib_804D3EE0->language = language;
     }
 
@@ -27,14 +27,16 @@ bool lbLang_IsSettingUS(void)
     return (gmMainLib_804D3EE0->language) == 1 ? true : false;
 }
 
-enum_t lbLang_GetSavedLanguage(void)
+enum Language lbLang_GetSavedLanguage(void)
 {
     return gmMainLib_8015CC58()->saved_language;
 }
 
-void lbLang_SetSavedLanguage(enum_t language)
+void lbLang_SetSavedLanguage(enum Language language)
 {
-    if (language >= 0 && language < 2) {
+    if ((int) language >= (int) Language_Japanese &&
+        (int) language < (int) Language_English)
+    {
         gmMainLib_8015CC58()->saved_language = language;
     }
 }
