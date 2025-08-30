@@ -77,9 +77,9 @@ typedef union UnkFlagStruct {
     };
 } UnkFlagStruct;
 
-typedef enum GroundOrAir {
-    GA_Ground,
-    GA_Air,
-} GroundOrAir;
+typedef int GroundOrAir;
+
+#define GA_Ground 0
+#define GA_Air 1
 
 #endif
