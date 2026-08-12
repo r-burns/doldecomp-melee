@@ -127,7 +127,7 @@ s32 lbFile_800163D8(const char* basename)
 
 #define ROUND_UP_32(x) (((x) + 31) & ~31)
 
-void lbFile_800164A4(s32 file, u32 dest, size_t* size, s32 pri,
+void lbFile_800164A4(s32 file, uintptr_t dest, uintptr_t* size, s32 pri,
                      HSD_DevComCallback callback, void* args)
 {
     int type;
