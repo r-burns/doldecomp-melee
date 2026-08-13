@@ -34,7 +34,7 @@
 #include "mn/inlines.h"
 #include "mn/mnmain.h"
 #include "mn/mnsoundtest.h"
-#include "MSL/math.h"
+#include "math.h"
 #include "sc/types.h"
 #include "ty/toy.h"
 #include "ty/types.h"

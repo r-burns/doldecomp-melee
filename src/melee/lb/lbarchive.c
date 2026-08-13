@@ -104,7 +104,7 @@ HSD_Archive* lbArchive_LoadSymbols(const char* filename, void* symbols, ...)
     va_list sections;
     HSD_Archive* archive;
     void* data;
-    u32 length;
+    size_t length;
     u8 _[8];
 
     va_start(sections, symbols);
@@ -124,7 +124,7 @@ HSD_Archive* lbArchive_80016DBC(const char* filename, void* symbols, ...)
     va_list sections;
     HSD_Archive* archive;
     void* data;
-    u32 length;
+    size_t length;
     u8 _[8];
 
     va_start(sections, symbols);

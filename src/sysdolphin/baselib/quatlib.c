@@ -3,7 +3,7 @@
 #include <placeholder.h>
 
 #include <trigf.h>
-#include <MSL/math.h>
+#include <math.h>
 
 inline float sqrtf(float x)
 {

@@ -31,6 +31,7 @@
 
 #include <m2c_macros.h>
 #include <printf.h>
+#include <string.h>
 #include <dolphin/os.h>
 #include <baselib/controller.h>
 #include <baselib/dobj.h>

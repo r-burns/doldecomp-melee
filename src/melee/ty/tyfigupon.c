@@ -43,7 +43,7 @@
 #include "lb/lbvector.h"
 #include "mn/inlines.h"
 #include "mn/mnmain.h"
-#include "MSL/math.h"
+#include "math.h"
 #include "sc/types.h"
 #include "ty/inlines.h"
 #include "ty/toy.h"

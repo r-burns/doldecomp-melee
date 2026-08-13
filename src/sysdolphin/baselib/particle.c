@@ -24,6 +24,7 @@ typedef struct {
 #include <math.h>
 #include <math_ppc.h>
 #include <trigf.h>
+#include <string.h>
 #include <dolphin/gx.h>
 #include <dolphin/gx/GXGeometry.h>
 #include <dolphin/mcc.h>

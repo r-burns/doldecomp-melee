@@ -13,6 +13,7 @@
 #include <dolphin/gx.h>
 #include <dolphin/mtx.h>
 #include <MetroTRK/intrinsics.h>
+#include <string.h>
 
 #define FLT_EPSILON 1.00000001335e-10F
 

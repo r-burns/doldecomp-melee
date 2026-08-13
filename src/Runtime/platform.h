@@ -1,6 +1,30 @@
 #ifndef RUNTIME_PLATFORM_H
 #define RUNTIME_PLATFORM_H
 
+#include <stdint.h>
+
+#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
+
+float sqrtf__Ff(float);
+
+#define SIGNF(x) ((x) > 0.0f ? 1.0f : -1.0f)
+
+#define M_TAU 6.283185307179586
+#define M_PI_2 (M_PI / 2)
+#define M_PI_3 (M_PI / 3)
+
+#define M_PI_F 3.14159265358979323846F
+#define M_TAU_F 6.283185307179586F
+#define M_PI_2_F (M_PI_F / 2.0F)
+#define M_PI_3_F (M_PI_F / 3.0F)
+
+#define M_PI_L 3.14159265358979323846L
+#define M_TAU_L 6.283185307179586L
+#define M_PI_2_L (M_PI_L / 2.0L)
+#define M_PI_3_L (M_PI_L / 3.0L)
+
+#define ABS(x) ((x) > 0 ? (x) : -(x))
+
 #include <stdbool.h>       // IWYU pragma: export
 #include <stddef.h>        // IWYU pragma: export
 #include <dolphin/types.h> // IWYU pragma: export
@@ -150,5 +174,8 @@ typedef bool (*Predicate)(void);
 #define DATA
 #define WEAK
 #endif
+
+#define deg_to_rad (M_PI / 180)
+#define rad_to_deg (180 / M_PI)
 
 #endif

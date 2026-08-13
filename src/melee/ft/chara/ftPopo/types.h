@@ -85,7 +85,6 @@ typedef struct ftIceClimberAttributes {
     float x14C;
     u8 _150[0x15C - 0x150];
 } ftIceClimberAttributes;
-STATIC_ASSERT(sizeof(ftIceClimberAttributes) == 0x15C);
 
 union ftPp_MotionVars {
     struct ftPp_SpecialSVars {

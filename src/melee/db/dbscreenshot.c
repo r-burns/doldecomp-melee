@@ -7,6 +7,8 @@
 #include <baselib/hsd_3933.h>
 #include <baselib/video.h>
 
+#include <string.h>
+
 /* 4D6B94 */ int db_ScreenshotNumber;
 /* 4D6B90 */ unsigned int db_ScreenshotPending;
 /* 4D6B8C */ UnkFlagStruct db_5xSpeedStatus;

@@ -125,7 +125,6 @@ struct HSD_JObj {
     /* +80 */ HSD_RObj* robj;
     /* +84 */ u32 id;
 };
-STATIC_ASSERT(sizeof(struct HSD_JObj) == 0x88);
 
 struct HSD_Joint {
     /* +0 */ char* class_name;

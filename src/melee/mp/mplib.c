@@ -1657,7 +1657,7 @@ bool mpCheckFloor(float ax, float ay, float bx, float by, float y_offset,
             }
 
             if (line_id_skip ==
-                (line_offset = (s32) line_r26 - (s32) groundCollLine) / 8)
+                (line_offset = (intptr_t) line_r26 - (intptr_t) groundCollLine) / 8)
             {
                 continue;
             }

@@ -138,7 +138,7 @@ StageData grNBa_StageData = {
     0,
 };
 
-void grBattle_OnDemoInit(bool arg0)
+static void grBattle_OnDemoInit(bool arg0)
 {
     isDemoFight = true;
 }

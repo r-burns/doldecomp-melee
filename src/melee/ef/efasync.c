@@ -16,6 +16,10 @@
 #include "lb/lbarchive.h"
 #include "lb/lbdvd.h"
 
+#include <stdarg.h>
+
+#define M_TAU (2 * M_PI)
+
 HSD_ObjAllocData efAsync_AllocData;
 
 static inline void efAsync_SetEffectRotationY(EF_Effect* effect, f32 rotation)
@@ -1457,7 +1461,7 @@ void efAsync_Spawn(HSD_GObj* gobj, void* queue_head, u32 spawn_kind,
         HSD_ASSERTREPORT(0xF6U, 0, "[EfASync] unknown type %d\n", spawn_kind);
         break;
     }
-    va_end(sp80);
+    va_end(vlist);
     if ((HSD_GObj_804D7838 != NULL) && (HSD_GObj_804D7838->s_link < 9U)) {
         queued->next = ((EF_QueuedEffect*) queue_head)->next;
         ((EF_QueuedEffect*) queue_head)->next = queued;

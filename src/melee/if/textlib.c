@@ -26,7 +26,7 @@
 #include <baselib/memory.h>
 #include <baselib/particle.h>
 #include <baselib/sislib.h>
-#include <MSL/math.h>
+#include <math.h>
 #include <MSL/stdio.h>
 #include <MSL/string.h>
 

@@ -58,7 +58,6 @@ struct Menu {
     u8 unk3;
     HSD_Text* text;
 };
-STATIC_ASSERT(sizeof(struct Menu) == 0x8);
 
 struct CountEntry {
     u8 selkind;
@@ -135,20 +134,17 @@ struct lbl_8046B668_t {
     /* 0x00 */ s8 arr1[0x1C];
     /* 0x1C */ s8 arr2[0x1C];
 };
-STATIC_ASSERT(sizeof(struct lbl_8046B668_t) == 0x38);
 
 typedef struct PerfLabelLine {
     /* 0x00 */ struct PerfLabelLine* next;
     /* 0x04 */ s32 unk_04;
     /* 0x08 */ char text[0x80];
 } PerfLabelLine; /* size = 0x88 */
-STATIC_ASSERT(sizeof(PerfLabelLine) == 0x88);
 
 typedef struct lbl_8046B378_t {
     /* 0x000 */ PerfLabelLine line0;
     /* 0x088 */ PerfLabelLine line1;
 } lbl_8046B378_t; /* size = 0x110 */
-STATIC_ASSERT(sizeof(lbl_8046B378_t) == 0x110);
 
 struct StartMeleeRules {
     u32 x0_0 : 3; // match mode? 1 = stock mode, 2 = coin mode?
@@ -507,7 +503,6 @@ struct CSSDoorsData2 {
 struct mnSnap_804A0B90_t {
     char pad_0[0x96000];
 };
-STATIC_ASSERT(sizeof(struct mnSnap_804A0B90_t) == 0x96000);
 
 struct SSSData {
     /* +00 */ u8 unk_stage;

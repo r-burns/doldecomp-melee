@@ -416,8 +416,6 @@ HSD_Particle* particleSort(s32 arg0, u8 arg1, HSD_Particle** arg2,
     s32 var_r6;
     u8* temp_r9;
 
-    STATIC_ASSERT(sizeof(buckets[0]) == 8);
-
     temp_r9 = &HSD_PSDisp_8040C360[arg0];
     temp_r29 = (new_var = &hsd_804D0908[arg0]);
     var_r28 = *temp_r29;

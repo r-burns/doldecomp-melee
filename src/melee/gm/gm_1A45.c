@@ -299,7 +299,7 @@ void gm_801A4D34(void (*on_frame)(void), GameSceneInfo* arg1)
             HSD_PerfSetStartTime();
             lb_800198E0();
             if (DbLevel >= 3) {
-                gm_801A4970(temp_r25->unk_10.x4);
+                gm_801A4970((void*) temp_r25->unk_10.x4);
             }
             if (gm_801A46B8(0) || !gm_801A45E8(0)) {
                 temp_r25->unk_10.unk_38_0 = true;

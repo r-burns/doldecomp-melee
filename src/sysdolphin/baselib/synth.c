@@ -5,6 +5,7 @@
 #include "synth.static.h"
 
 #include <math_ppc.h>
+#include <string.h>
 #include <dolphin/ai.h>
 #include <dolphin/ar.h>
 #include <dolphin/os.h>
@@ -47,7 +48,7 @@ static inline s32 SfxLoadStreamDataSize(s32 size)
 }
 
 void HSD_SynthSFXSampleLoadCallback(int result, int length, void* addr,
-                                    int cancelflag)
+                                    bool cancelflag)
 {
     BOOL intr;
     s32 i;
@@ -156,7 +157,7 @@ void HSD_SynthSFXSampleLoadCallback(int result, int length, void* addr,
 }
 
 static void HSD_SynthSFXHeaderLoadCallback(int result, int length, void* addr,
-                                           int cancelflag)
+                                           bool cancelflag)
 {
     AXVPB** unused;
     s32 header_size;
@@ -190,7 +191,7 @@ static void HSD_SynthSFXHeaderLoadCallback(int result, int length, void* addr,
         return;
     }
     HSD_Synth_804D7730 = NULL;
-    HSD_SynthSFXSampleLoadCallback(NULL, 0, NULL, 0);
+    HSD_SynthSFXSampleLoadCallback(0, 0, NULL, 0);
 }
 
 void HSD_SynthSFXLoadNewProc(void)
@@ -356,7 +357,7 @@ void HSD_Synth_80388E08(int sfx_id)
 }
 
 static void HSD_SynthSFXGroupDataReaddressCallback(void* result, int length,
-                                                   void* addr, int cancelflag)
+                                                   void* addr, bool cancelflag)
 {
     HSD_ASSERT(0x182, sfxGroupDataReaddressCounter > 0);
     sfxGroupDataReaddressCounter--;
@@ -1364,7 +1365,7 @@ extern u32 HSD_Synth_804D7770;
 extern u32 HSD_Synth_804D7774;
 
 void HSD_SynthPStreamHeaderCallback(int arg0, int arg1, void* arg2,
-                                    int cancelflag)
+                                    bool cancelflag)
 {
     u32* entry = arg2;
     struct HSD_SynthSFXNode* node;

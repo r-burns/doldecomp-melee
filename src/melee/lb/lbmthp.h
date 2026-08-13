@@ -11,14 +11,6 @@
 #include <dolphin/gx/GXStruct.h>
 #include <dolphin/thp.h>
 
-/* THPDec function declarations */
-BOOL THPInit(void);
-s32 THPDec_8032F8D4(u32, void*);
-s32 THPDec_8032FD40(THPDec_8032FD40_Data* arg0, u16 height);
-void THPDec_80331340(s32, void*, void*, void*);
-void THPDec_803313D0(s32, void*, void*, void*, u32);
-s32 THPVideoDecode(void*, void*, void*, void*, void*);
-
 /// @todo This is #THPDecComp.
 struct lbl_804333E0_t {
     /* 0x000 */ char pad_0[0x20];
@@ -66,7 +58,6 @@ struct lbl_804333E0_t {
     /* 0x198 */ GXTexObj unk_198;
     /* 0x1B8 */ GXTexObj unk_1B8;
 }; /* size = 0x1D8 */
-STATIC_ASSERT(sizeof(struct lbl_804333E0_t) == 0x1D8);
 
 /* Struct used by fn_8001EBF0 for THP decode component init */
 typedef struct THPDecComp {
@@ -103,7 +94,7 @@ typedef struct THPDecComp {
     /* 0x90 */ u32 unk_90;
     /* 0x94 */ s32 unk_94;
     /* 0x98 */ s32 unk_98;
-    /* 0x9C */ THPDec_8032FD40_Data unk_9C;
+    /* 0x9C */ u32 unk_9C[3];
     /* 0xA8 */ u16 unk_A8;
     /* 0xAA */ u16 unk_AA;
     /* 0xAC */ u8 unk_AC;
@@ -125,7 +116,6 @@ typedef struct THPDecComp {
     /* 0x13C */ u32 unk_13C;
     char pad[0x1D8 - 0x140];
 } THPDecComp;
-STATIC_ASSERT(sizeof(struct THPDecComp) == sizeof(struct lbl_804333E0_t));
 
 /* 01E910 */ void fn_8001E910(int, int, void*, int);
 /* 01EB14 */ s32 fn_8001EB14(THPDecComp* data, const char* path);

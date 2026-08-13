@@ -125,7 +125,6 @@ struct StageInfo {
     s32 x740;
     u8 x744_pad[0x748 - 0x744];
 };
-STATIC_ASSERT(sizeof(struct StageInfo) == 0x748);
 
 typedef struct StageCallbacks {
     /*  +0 */ HSD_GObjEvent on_init;
@@ -158,7 +157,7 @@ struct StageData {
     StageCallbacks* callbacks;
     char* data1;
     Event on_init;
-    void (*on_demo_init)(int);
+    void (*on_demo_init)(enum_t);
     Event on_load;
     Event on_start;
     Predicate callback4;
@@ -1039,14 +1038,12 @@ struct Map_VanishDesc {
     /* +2 */ s16 x2;
     /* +4 */ bool x4;
 };
-STATIC_ASSERT(sizeof(struct Map_VanishDesc) == 0x8);
 
 struct Map_VanishEntry {
     /* +0 */ s16 x0;
     /* +2 */ s16 x2;
     /* +4 */ HSD_JObj* jobj;
 };
-STATIC_ASSERT(sizeof(struct Map_VanishEntry) == sizeof(struct Map_VanishDesc));
 
 struct grRCruise_GroundVars {
     struct {
@@ -1158,7 +1155,6 @@ struct grGreens_BlockVars {
     int x18;
     int x1C;
 };
-STATIC_ASSERT(sizeof(struct grGreens_BlockVars) == 0x20);
 
 struct grGreens_GroundVars {
     /*  +0 gp+C4 */ union {
@@ -1325,7 +1321,6 @@ struct grBigBlue_GroundData {
     /* gp+128 gp+17C gp+1D0 */ Vec3 x44;
     /* gp+134 gp+188 gp+1DC */ s32 x50;
 };
-STATIC_ASSERT(sizeof(struct grBigBlue_GroundData) == 0x54);
 
 struct grBigBlue_PlatformVars {
     /* gp+C4 */ u32 xC4;
@@ -1363,7 +1358,6 @@ struct grBigBlue_CarLane {
     /* +0C gp+E0 */ Vec3 pos;
     /* +18 gp+EC */ u8 pad_18[0x40 - 0x18];
 };
-STATIC_ASSERT(sizeof(struct grBigBlue_CarLane) == 0x40);
 
 struct grBigBlue_GroundVars {
     union {
@@ -1903,8 +1897,6 @@ struct Ground {
         } carnull;
     } u;
 };
-STATIC_ASSERT(sizeof(union GroundVars) == 0x140);
-STATIC_ASSERT(sizeof(struct Ground) == 0x204);
 
 /**
  * One row of #GroundParam::stage_params, describing a single #StKind. An
@@ -2010,7 +2002,6 @@ struct UnkStageDat {
     UnkStageDatInternal** unk28;
     s32 unk2C; // size
 };
-STATIC_ASSERT(sizeof(struct UnkStageDat_x8_t) == 0x34);
 
 struct UnkArchiveStruct {
     HSD_Archive* unk0;

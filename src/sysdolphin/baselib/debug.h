@@ -9,6 +9,9 @@
 typedef void (*ReportCallback)(const unsigned char*, size_t);
 typedef void (*PanicCallback)(OSContext*, ...);
 
+typedef unsigned long __file_handle;
+typedef void (*__idle_proc)(void);
+
 ATTRIBUTE_NORETURN void __assert(char*, u32, char*);
 
 void HSD_LogInit(void);

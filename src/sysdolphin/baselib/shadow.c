@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <trigf.h>
+#include <string.h>
 #include <dolphin/gx.h>
 #include <dolphin/mtx.h>
 

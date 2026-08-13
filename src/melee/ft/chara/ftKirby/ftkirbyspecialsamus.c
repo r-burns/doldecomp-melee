@@ -17,9 +17,9 @@
 #include "it/items/itsamuschargeshot.h"
 #include "lb/lb_00B0.h"
 
-#include <MSL/math.h>
+#include <math.h>
 
-long ftKb_SpecialNSs_800FCC14(Fighter_GObj* gobj, long* out1, long* out2)
+s32 ftKb_SpecialNSs_800FCC14(Fighter_GObj* gobj, s32* out1, s32* out2)
 {
     Fighter* fp;
     ftKb_DatAttrs* da;

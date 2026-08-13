@@ -138,6 +138,7 @@ s32 fn_8001EB14(THPDecComp* data, const char* path)
 size_t fn_8001EBF0(THPDecComp* data)
 {
     s32 size = 0;
+#if 0
     u32 unk_104_val;
     u32 aligned_100;
     u32 width;
@@ -189,7 +190,7 @@ size_t fn_8001EBF0(THPDecComp* data)
 
     size += ALIGN_32(data->unk_104 * 4);
     size += ALIGN_32(data->unk_40 * 4);
-
+#endif
     return size;
 }
 

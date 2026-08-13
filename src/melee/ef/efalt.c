@@ -6,9 +6,10 @@
 #include "baselib/gobj.h"
 #include "baselib/jobj.h"
 #include "baselib/particle.h"
-#include "MSL/math.h"
+#include "math.h"
 
-#define EFALT_VA_ARG(t) (*((t*) __va_arg(vlist_arg, _var_arg_typeof(t))))
+///#define EFALT_VA_ARG(t) (*((t*) __va_arg(vlist_arg, _var_arg_typeof(t))))
+#define EFALT_VA_ARG(t) (va_arg(vlist_arg, typeof(t)))
 
 extern volatile u32 efLib_LoadKind;
 extern volatile s32 efLib_AnimCount;
@@ -23,9 +24,9 @@ void* efAlt_Spawn(s32 gfx_id, HSD_GObj* gobj, va_list vlist)
     Vec3 scale;
     f32* value_ptr;
     void* ret_obj;
-    void* vlist_arg;
 
-    vlist_arg = vlist;
+#define vlist_arg vlist
+
     ret_obj = NULL;
     efLib_LoadKind = EF_LOADKIND_SYNC;
     PAD_STACK(80);

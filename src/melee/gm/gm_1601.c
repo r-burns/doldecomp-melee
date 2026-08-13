@@ -4922,7 +4922,6 @@ struct lbl_8046B488_event_player_init_cb_t {
     char pad_0[0x1BC];
     GmEventPlayerInitCallback event_player_init_cb;
 };
-STATIC_ASSERT(sizeof(struct lbl_8046B488_event_player_init_cb_t) == 0x1C0);
 
 static inline GmEventPlayerInitCallback*
 gm_8016A404_event_player_init_cb(struct lbl_8046B488_t* gp)

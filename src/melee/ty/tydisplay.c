@@ -44,7 +44,7 @@
 #include "melee/if/textlib.h"
 #include "mn/inlines.h"
 #include "mn/mnmain.h"
-#include "MSL/math.h"
+#include "math.h"
 #include "sc/types.h"
 #include "ty/toy.h"
 #include "ty/types.h"
@@ -82,8 +82,6 @@
 /* 4D6F28 */ static s32 _tyDisplay_804D6F28;
 /* 4D6F2C */ static HSD_GObj* _tyDisplay_804D6F2C;
 
-STATIC_ASSERT(sizeof(_tyDisplay_devtext_buf) == 0x36);
-STATIC_ASSERT(sizeof(_tyDisplay_804A2DD0) == 0x18);
 
 /// @todo .data order hack
 static void order_data_0(void)

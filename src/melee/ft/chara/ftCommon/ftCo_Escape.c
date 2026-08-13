@@ -118,7 +118,7 @@ void ftCo_80099314(Fighter_GObj* gobj, FtMotionId msid, bool arg2)
     fp->mv.co.escape.x0 = arg2;
 }
 
-void ftCo_80099390(Fighter_GObj* gobj, int msid, int arg2)
+void ftCo_80099390(Fighter_GObj* gobj, FtMotionId msid, bool arg2)
 {
     u8 _[8] = { 0 };
     Fighter* fp = gobj->user_data;
@@ -129,7 +129,7 @@ void ftCo_80099390(Fighter_GObj* gobj, int msid, int arg2)
     fp->coll_cb = ftCo_80099754;
 }
 
-void ftCo_80099438(Fighter_GObj* gobj, int msid, int arg2)
+void ftCo_80099438(Fighter_GObj* gobj, FtMotionId msid, bool arg2)
 {
     u8 _[8] = { 0 };
     Fighter* fp = gobj->user_data;
@@ -230,7 +230,7 @@ bool ftCo_80099794(Fighter_GObj* gobj)
     return false;
 }
 
-int ftCo_8009980C(Fighter_GObj* gobj)
+bool ftCo_8009980C(Fighter_GObj* gobj)
 {
     Fighter* fp = gobj->user_data;
     if (inlineB0(fp) || ftCo_800DF8E8(fp)) {
@@ -254,7 +254,7 @@ void ftCo_80099894(Fighter_GObj* gobj)
     ftCommon_8007EBAC(fp, 23, 0);
 }
 
-void ftCo_800998EC(Fighter_GObj* gobj)
+static void ftCo_800998EC(Fighter_GObj* gobj)
 {
     Fighter* fp = gobj->user_data;
     Fighter_ChangeMotionState(gobj, ftCo_MS_EscapeN, Ft_MF_None, 0, 1, 0,

@@ -254,7 +254,7 @@ bool ftpickupitem_80094790(Fighter_GObj* gobj)
     return false;
 }
 
-void ftpickupitem_80094818(Fighter_GObj* gobj, int arg1)
+void ftpickupitem_80094818(Fighter_GObj* gobj, bool arg1)
 {
     Fighter* fp = gobj->user_data;
     PAD_STACK(8);

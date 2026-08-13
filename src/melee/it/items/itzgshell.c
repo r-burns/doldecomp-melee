@@ -1,6 +1,5 @@
 #include "itzgshell.h"
 
-#include "dolphin.h"
 #include "inlines.h"
 
 #include "baselib/random.h"
@@ -21,7 +20,7 @@
 #include "lb/lb_00B0.h"
 #include "mp/mpcoll.h"
 
-#include <MSL/math.h>
+#include <math.h>
 
 typedef struct itGShell_Attrs {
     float x0;

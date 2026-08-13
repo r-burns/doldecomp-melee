@@ -20,7 +20,7 @@
 /* 12CD28 */ float ftYs_SpecialN_GetExtAttr2C(void);
 /* 12CD40 */ float ftYs_SpecialN_8012CD40(void);
 /* 12CD58 */ float ftYs_SpecialN_GetExtAttr34(void);
-/* 12CD70 */ bool ftYs_SpecialN_GetExtAttr38(void);
+/* 12CD70 */ int ftYs_SpecialN_GetExtAttr38(void);
 /* 12CD88 */ void ftYs_SpecialN_8012CD88(Vec3*);
 /* 12CDB4 */ float ftYs_SpecialN_8012CDB4(void);
 /* 12CDD4 */ HSD_Joint* ftYs_SpecialN_8012CDD4(Fighter_GObj* gobj);

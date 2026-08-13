@@ -33,7 +33,7 @@
 #include <stddef.h>
 #include <baselib/gobj.h>
 #include <baselib/random.h>
-#include <MSL/math.h>
+#include <math.h>
 
 /* 3B7570 */ static Vec3 const ftKb_Init_803B7570 = { 0.0f, 4.0f, 0.0f };
 /* 3B757C */ static Vec3 const ftKb_Init_803B757C = { 0.0f, 4.0f, 0.0f };
@@ -167,7 +167,7 @@ void ftKb_SpecialNMt_80107130(Fighter_GObj* gobj)
     Fighter* fp;
     Fighter* fp2;
     ftKb_DatAttrs* da;
-    if (gobj == (NULL & 0xFFFFFFFFu)) {
+    if (gobj == (0 & 0xFFFFFFFFu)) {
         return;
     }
     fp = GET_FIGHTER(gobj);

@@ -4,7 +4,7 @@
 #include "gmmain_lib.h"
 
 #include "db/db.h"
-#include "dolphin/vi/vifuncs.h"
+#include "dolphin/vi.h"
 #include "gm/gmscdata.h"
 #include "lb/lbaudio_ax.h"
 #include "lb/lbdvd.h"

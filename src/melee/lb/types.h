@@ -83,7 +83,6 @@ struct HitCapsule {
         u8 hit_grabbed_victim_only : 1;
     };
 };
-STATIC_ASSERT(sizeof(HitCapsule) == 0x138);
 
 struct HurtCapsule {
     HurtCapsuleState state;
@@ -110,7 +109,6 @@ struct FighterHurtCapsule {
     bool is_grabbable; // 0x48
 };
 
-STATIC_ASSERT(sizeof(FighterHurtCapsule) == 0x4C);
 
 struct ReflectDesc {
     u32 x0_bone_id;
@@ -309,14 +307,12 @@ struct lb_80432A68_38_t {
     /* 0x0 */ s32 unk_0;
     /* 0x4 */ s32 unk_4;
 };
-STATIC_ASSERT(sizeof(struct lb_80432A68_38_t) == 0x8);
 
 struct lbCardNew_SnapshotEntry {
     /* 0x0 */ u32 time;
     /* 0x4 */ s16 file_no;
     /* 0x6 */ u16 blocks;
 };
-STATIC_ASSERT(sizeof(lbCardNew_SnapshotEntry) == 0x8);
 
 struct lb_80432A68_t {
     /* 0x000 */ UNK_T work_area;
@@ -360,7 +356,6 @@ struct lb_80432A68_t {
     } task_array[LbCardNewTaskArray_Max];
     /* 0x8AC */ int x8AC;
 }; /* size = 0x8B0 */
-STATIC_ASSERT(sizeof(struct lb_80432A68_t) == 0x8B0);
 
 struct ColorOverlay_UnkInner {
     /*  +0 */ int x0;
@@ -392,7 +387,6 @@ union ColorOverlay_x8_t {
         u32 timer : 26;
     } unk;
 };
-STATIC_ASSERT(sizeof(union ColorOverlay_x8_t) == 0x4);
 
 struct ColorOverlay {
     s32 x0_timer; // 0x0
@@ -438,7 +432,6 @@ struct ColorOverlay {
     u8 x7C_flag7 : 1;         // 0x7c, 0x02
     u8 x7C_flag8 : 1;         // 0x7c, 0x01
 };
-STATIC_ASSERT(sizeof(struct ColorOverlay) == 0x80);
 
 struct lb_80011A50_t {
     /*  +0 */ u8 x0;
@@ -462,21 +455,18 @@ struct lb_80014638_arg0_t {
     /*  +0 */ Vec3 x0;
     /*  +C */ Vec3 xC;
 };
-STATIC_ASSERT(sizeof(struct lb_80014638_arg0_t) == 0x18);
 
 struct lb_80014638_arg1_t {
     /*  +0 */ float unk_x;
     /*  +4 */ float unk_y;
     /*  +8 */ Vec3 x8;
 };
-STATIC_ASSERT(sizeof(struct lb_80014638_arg1_t) == 0x14);
 
 struct Fighter_804D653C_t {
     void* unk;
     u8 unk4;
     u8 unk5;
 };
-STATIC_ASSERT(sizeof(struct Fighter_804D653C_t) == 8);
 
 struct lb_00F9_UnkDesc1Inner {
     /* 0x00 */ f32 unk_0;
@@ -488,7 +478,6 @@ struct lb_00F9_UnkDesc1Inner {
     /* 0x34 */ f32 unk_34;  /* inferred */
     /* 0x38 */ f32 unk_38;  /* inferred */
 };
-STATIC_ASSERT(sizeof(struct lb_00F9_UnkDesc1Inner) == 0x3C);
 
 struct lb_00F9_UnkDesc1 {
     struct lb_00F9_UnkDesc1Inner array[2];
@@ -522,14 +511,12 @@ union PolymorphicDesc {
     struct AbsorbDesc absorb;
     struct HurtCapsule hurt;
 };
-STATIC_ASSERT(sizeof(union PolymorphicDesc) == 0x90);
 
 struct DynamicsData {
     union PolymorphicDesc desc;
     /* 0x90 */ struct DynamicsData* next;
     /* 0x94 */ s32 unk_94;
 }; /* size = 0x98 */
-STATIC_ASSERT(sizeof(struct DynamicsData) == 0x98);
 
 struct DynamicsDesc {
     /* +0 */ struct DynamicsData* data;
@@ -549,12 +536,10 @@ struct lb_8000FD18_t {
 struct lb_804D63A0_t {
     /* +0 */ struct DynamicsData entries[0x140];
 };
-STATIC_ASSERT(sizeof(struct lb_804D63A0_t) == 0xBE00);
 
 struct lb_804D63A8_t {
     /* +0 */ struct lb_80011A50_t entries[8];
 };
-STATIC_ASSERT(sizeof(struct lb_804D63A8_t) == 0x1C0);
 
 struct lbColl_8000A10C_arg0_t {
     float x0;

@@ -3,6 +3,7 @@
 #include "texp.h"
 #include "tobj.h"
 
+#include <string.h>
 #include "baselib/debug.h"
 
 int assign_reg(int num, u32* unused, HSD_TExpDag* list, int* order)
