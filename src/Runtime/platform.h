@@ -125,6 +125,12 @@ typedef bool (*Predicate)(void);
 #endif
 #ifdef M2CTX
 #define STATIC_ASSERT(cond)
+#elif defined(MELEE_PC)
+// The PC build cannot satisfy these. They pin struct layouts to the GameCube
+// ABI, but aurora deliberately redefines the opaque GX types (GXTexObj and
+// friends) with different sizes for its PC backend, so any melee struct
+// embedding one changes size
+#define STATIC_ASSERT(cond)
 #elif defined(__MWERKS__)
 #define STATIC_ASSERT(cond)                                                   \
     struct {                                                                  \
@@ -132,6 +138,68 @@ typedef bool (*Predicate)(void);
     };
 #else
 #define STATIC_ASSERT(cond) _Static_assert((cond), "(" #cond ") failed")
+#endif
+
+#ifdef MELEE_PC
+#include <melee_pc_dat_types.h> // IWYU pragma: export
+
+/// @brief Reads or writes a 32-bit value that is stored big-endian, as
+/// everything inside a DAT archive is. Identity on the GameCube, which is
+/// big-endian already.
+#define MELEE_PC_BE32(x) __builtin_bswap32(x)
+
+/// @brief Byte-swaps a DAT archive header in place. Nothing elsewhere.
+struct HSD_ArchiveHeader;
+void melee_pc_archive_header_be(struct HSD_ArchiveHeader* h);
+#define MELEE_PC_ARCHIVE_HEADER_BE(h) melee_pc_archive_header_be(h)
+
+/// @brief Converts a structure read straight out of a DAT archive into host
+/// layout: byte order, field offsets and struct size all differ from the
+/// GameCube's. Idempotent, so nested loads that pass an already-converted
+/// pointer are left alone. Expands to the pointer unchanged everywhere else.
+void* melee_pc_dat_root(const void* p, int type);
+#define MELEE_PC_DAT(T, p) ((p) = melee_pc_dat_root((p), DAT_T_##T))
+
+/// @brief As #MELEE_PC_DAT, for a symbol that is a NULL-terminated *table* of
+/// pointers rather than a single structure (LightList** and friends).
+void* melee_pc_dat_root_ptrnull(const void* p, int type);
+#define MELEE_PC_DAT_PTRNULL(T, p)                                            \
+    ((p) = melee_pc_dat_root_ptrnull((p), DAT_T_##T))
+
+/// @brief True when an address is NOT main RAM -- i.e. an ARAM or physical
+/// address. On GameCube main RAM starts at 0x80000000, so anything below that
+/// is not it. On PC, MEM1 is mapped below 2GB (so that pointers round-trip
+/// through the game's signed 32-bit slots), which makes the literal comparison
+/// classify every main-RAM address as ARAM. Ask the compat layer where MEM1
+/// actually is instead.
+bool melee_pc_in_mem1(const void* p);
+#define MELEE_PC_IS_NOT_MAINRAM(a)                                            \
+    (!melee_pc_in_mem1((const void*) (uintptr_t) (a)))
+#define MELEE_PC_IS_MAINRAM(a)                                                \
+    (melee_pc_in_mem1((const void*) (uintptr_t) (a)))
+
+/// @brief 32-byte alignment for objects used as DMA destinations.
+/// HSD_DevComRequest asserts `dest % 32 == 0` (devcom.c:411). On GameCube
+/// these objects are 32-byte aligned by their fixed addresses; on PC the
+/// compiler only aligns them to what the type needs. Expands to nothing
+/// elsewhere, so the matching build's text is unchanged.
+#define MELEE_PC_ALIGN32 ATTRIBUTE_ALIGN(32)
+
+/// @brief Tells the PC build's relocating DAT loader that an archive's memory
+/// is going away, so it can drop the structures it converted out of it.
+/// Expands to nothing everywhere else.
+void melee_pc_dat_forget(const void* base, u32 size);
+#define MELEE_PC_ON_ARCHIVE_FREE(base, size)                                  \
+    melee_pc_dat_forget((base), (size))
+#else
+/// Identity on the GameCube, which is big-endian already.
+#define MELEE_PC_BE32(x) (x)
+#define MELEE_PC_DAT(T, p)
+#define MELEE_PC_DAT_PTRNULL(T, p)
+#define MELEE_PC_ON_ARCHIVE_FREE(base, size) ((void) 0)
+#define MELEE_PC_IS_NOT_MAINRAM(a) ((u32) (a) < 0x80000000U)
+#define MELEE_PC_IS_MAINRAM(a) ((u32) (a) >= 0x80000000U)
+#define MELEE_PC_ALIGN32
 #endif
 
 #define RETURN_IF(cond)                                                       \

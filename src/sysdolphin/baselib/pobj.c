@@ -313,6 +313,9 @@ static s32 PObjLoad(HSD_PObj* pobj, HSD_PObjDesc* desc)
 
 HSD_PObj* HSD_PObjLoadDesc(HSD_PObjDesc* pobjdesc)
 {
+#ifdef MELEE_PC
+    MELEE_PC_DAT(HSD_PObjDesc, pobjdesc);
+#endif
     if (pobjdesc != NULL) {
         HSD_PObj* pobj;
         HSD_ClassInfo* info;
@@ -445,7 +448,11 @@ static void setupArrayDesc(HSD_VtxDescList* desc_list)
     if (prev_vtxdesclist_array != desc_list) {
         for (desc = desc_list; desc->attr != GX_VA_NULL; desc++) {
             if (desc->attr_type != GX_DIRECT) {
-                GXSetArray(desc->attr, desc->vertex, desc->stride);
+                GXSETARRAY(desc->attr, desc->vertex,
+                           melee_pc_array_size(desc->attr_type,
+                                               desc->stride,
+                                               desc->vertex),
+                           desc->stride, false);
             }
         }
         prev_vtxdesclist_array = desc_list;
@@ -492,7 +499,11 @@ static void setupShapeAnimArrayDesc(HSD_VtxDescList* desc_list)
             case GX_VA_NBT:
                 break;
             default:
-                GXSetArray(desc->attr, desc->vertex, desc->stride);
+                GXSETARRAY(desc->attr, desc->vertex,
+                           melee_pc_array_size(desc->attr_type,
+                                               desc->stride,
+                                               desc->vertex),
+                           desc->stride, false);
             }
         }
     }

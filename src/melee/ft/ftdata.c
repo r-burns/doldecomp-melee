@@ -1459,7 +1459,7 @@ void ftData_800855C8(FighterKind kind, u8 color)
         color = 0;
     }
     if (ftData_803C1F40[kind].a != NULL) {
-        lbDvd_800178E8(2, ftData_803C1F40[kind].a, 4, 4, 0, 1, 4, 2, 0);
+        lbDvd_loadAsync(2, ftData_803C1F40[kind].a, 4, 4, 0, 1, 4, 2, 0);
     }
     if (color == 0xFF) {
         lo = 0;
@@ -1470,7 +1470,7 @@ void ftData_800855C8(FighterKind kind, u8 color)
     }
     for (i = lo; i < hi; i++) {
         if (ftData_803C2360[kind][i].dat_filename != NULL) {
-            lbDvd_800178E8(2, ftData_803C2360[kind][i].dat_filename, 4, 4, 0,
+            lbDvd_loadAsync(2, ftData_803C2360[kind][i].dat_filename, 4, 4, 0,
                            1, 3, 1, 0);
         }
     }
@@ -1478,7 +1478,7 @@ void ftData_800855C8(FighterKind kind, u8 color)
         efAsync_LoadAsync(ftData_UnkBytePerCharacter[kind]);
     }
     if (ftData_803C23E4[kind] != NULL) {
-        lbDvd_800178E8(1, ftData_803C23E4[kind], 5, 5, 0, 0, 1, 8, 0);
+        lbDvd_loadAsync(1, ftData_803C23E4[kind], 5, 5, 0, 0, 1, 8, 0);
     }
 }
 

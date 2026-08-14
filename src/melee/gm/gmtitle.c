@@ -241,7 +241,13 @@ HSD_Archive* gmTitle_801A1AC0(void)
     const char dat[] = "GmTtAll.dat";
     const char usd[] = "GmTtAll.usd";
 
-    return lbArchive_LoadSymbols(
+    // Split so that the matching build still reads exactly
+#ifdef MELEE_PC
+    HSD_Archive* archive =
+#else
+    return
+#endif
+        lbArchive_LoadSymbols(
         lbLang_IsSettingUS() ? usd : dat, &gmTitle_80479B28.joint,
         "TtlMoji_Top_joint", &gmTitle_80479B28.animjoint,
         "TtlMoji_Top_animjoint", &gmTitle_80479B28.matanim_joint,
@@ -257,6 +263,27 @@ HSD_Archive* gmTitle_801A1AC0(void)
         &gmTitle_80479B38.shapeanim_joint, "TtlBg_Top_shapeanim_joint",
 
         &gm_804D67F0, "TitleMark_sobjdesc", 0);
+
+#ifdef MELEE_PC
+    // Every one of those symbols points straight into the archive, which is
+    // still in GameCube layout. Unlike the scenes reached through a SceneDesc
+    // there is no single root to convert here, lbArchive_LoadSymbols() hands
+    // back each structure individually, so each needs converting on its own.
+    MELEE_PC_DAT(HSD_Joint, gmTitle_80479B28.joint);
+    MELEE_PC_DAT(HSD_AnimJoint, gmTitle_80479B28.animjoint);
+    MELEE_PC_DAT(HSD_MatAnimJoint, gmTitle_80479B28.matanim_joint);
+    MELEE_PC_DAT(HSD_ShapeAnimJoint, gmTitle_80479B28.shapeanim_joint);
+    MELEE_PC_DAT(HSD_CObjDesc, gmTitle_804D6708);
+    // ScTitle_scene_lights is a LightList**, walked to a NULL terminator.
+    MELEE_PC_DAT_PTRNULL(LightList, gmTitle_804D670C);
+    MELEE_PC_DAT(HSD_FogDesc, gmTitle_804D6710);
+    MELEE_PC_DAT(HSD_Joint, gmTitle_80479B38.joint);
+    MELEE_PC_DAT(HSD_AnimJoint, gmTitle_80479B38.animjoint);
+    MELEE_PC_DAT(HSD_MatAnimJoint, gmTitle_80479B38.matanim_joint);
+    MELEE_PC_DAT(HSD_ShapeAnimJoint, gmTitle_80479B38.shapeanim_joint);
+
+    return archive;
+#endif
 }
 
 void gmTitle_801A1C18_OnFrame(void)

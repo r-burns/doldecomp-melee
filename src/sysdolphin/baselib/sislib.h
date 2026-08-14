@@ -112,7 +112,7 @@ extern SisBlock* used_head;
 extern HSD_Text* HSD_SisLib_804D7978;
 extern sislib_UnkAlloc3* HSD_SisLib_804D797C;
 
-void HSD_SisLib_803A6048(size_t);
+void HSD_SisLib_803A6048(u32);
 UNK_T func_804A70A0(UNK_T, s32, u32, s32, s32, s32, s32, s32, f64, f64, f64,
                     f64, f64, f64, f64, f64);
 void HSD_SisLib_803A947C(HSD_Archive*);

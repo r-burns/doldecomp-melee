@@ -145,7 +145,7 @@ void* lbDvd_80017740(int type, int entry_num, int transient_heap, int heap,
     entry->state = 1;
     entry->type = type;
     entry->entry_num = entry_num;
-    if (lbHeap_80015BB8(heap)) {
+    if (lbHeap_get_heap_status(heap)) {
         HSD_ASSERTREPORT(0x1CB, 0, "%d, %d\n", heap, entry_num);
     }
     entry->heap = heap;
@@ -161,12 +161,12 @@ done:
     return entry;
 }
 
-void lbDvd_800178E8(int arg0, char* arg1, int arg2, int arg3, int arg4,
-                    int arg5, int arg6, u8 arg7, int arg8)
+void lbDvd_loadAsync(int entry_type, char* load_path, int transient_heap, int heap, int size,
+                    int load_state, int load_score, u8 arg7, int effect_index)
 {
     u8 _[8];
-    int temp_r3 = DVDConvertPathToEntrynum(lbFile_80016204(arg1));
-    lbDvd_80017740(arg0, temp_r3, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+    int temp_r3 = DVDConvertPathToEntrynum(lbFile_80016204(load_path));
+    lbDvd_80017740(entry_type, temp_r3, transient_heap, heap, size, load_state, load_score, arg7, effect_index);
 }
 
 void lbDvd_80017960(void)
@@ -284,7 +284,7 @@ void lbDvd_CachePreloadedFile(s32 index)
             preloadEntry->state = 2;
             preloadEntry->load_score = 9999;
             lbFile_800164A4(
-                preloadEntry->entry_num, (u32) preloadEntry->raw_data->addr,
+                preloadEntry->entry_num, (uintptr_t) preloadEntry->raw_data->addr,
                 &preloadEntry->size, 2, lbDvd_80017E64, (void*) index);
         }
     }

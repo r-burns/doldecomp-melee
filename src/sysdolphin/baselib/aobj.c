@@ -181,6 +181,9 @@ float fmod(float a, float b)
 
 HSD_AObj* HSD_AObjLoadDesc(HSD_AObjDesc* aobjdesc)
 {
+#ifdef MELEE_PC
+    MELEE_PC_DAT(HSD_AObjDesc, aobjdesc);
+#endif
     HSD_FObjDesc* fobjdesc;
     HSD_AObj* aobj;
 

@@ -1271,7 +1271,7 @@ void efAsync_LoadAsync(int index)
         return;
     }
 
-    lbDvd_800178E8(3, entry->ef_DAT_file, 4, 4, 0, 1U, 4, 4U, index);
+    lbDvd_loadAsync(3, entry->ef_DAT_file, 4, 4, 0, 1U, 4, 4U, index);
 }
 
 void efAsync_OnLoad(HSD_Archive* archive, u8* data, u32 length, int index)

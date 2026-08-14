@@ -367,7 +367,7 @@ HSD_Text* HSD_SisLib_803A5ACC(int font_idx, s32 context_id, f32 pos_x,
         list_tail = list_cur;
         list_cur = list_cur->next;
     }
-    text = HSD_SisLib_Alloc(0xA0);
+    text = HSD_SisLib_Alloc(MAX(0xA0, (s32) sizeof(HSD_Text)));
     if (HSD_SisLib_804D7978 == NULL) {
         HSD_SisLib_804D7978 = text;
     }
@@ -444,7 +444,7 @@ void HSD_SisLib_803A5E70(void)
     used_head = NULL;
     free_head->next = NULL;
     free_head->data = (HSD_Text*) (free_head + 1);
-    free_head->size = HSD_SisLib_804D7968 - 0xC;
+    free_head->size = HSD_SisLib_804D7968 - sizeof(SisBlock);
 }
 
 void HSD_SisLib_803A5F50(s32 font_idx)
@@ -485,7 +485,7 @@ void HSD_SisLib_803A6048(u32 size)
     HSD_SisLib_804D796C = free_head = HSD_MemAlloc(HSD_SisLib_804D7968);
     free_head->next = NULL;
     free_head->data = (HSD_Text*) (free_head + 1);
-    free_head->size = HSD_SisLib_804D7968 - 0xC;
+    free_head->size = HSD_SisLib_804D7968 - sizeof(SisBlock);
     HSD_SisLib_804D7978 = NULL;
     HSD_SisLib_804D797C = NULL;
 
@@ -527,7 +527,7 @@ s32 HSD_SisLib_803A611C(int font_idx, HSD_GObj* parent_gobj, u16 class_id,
         }
         list_cur = list_cur->x0;
     }
-    entry = HSD_SisLib_Alloc(0x10);
+    entry = HSD_SisLib_Alloc(MAX(0x10, (s32) sizeof(sislib_UnkAlloc3)));
     if (HSD_SisLib_804D797C == NULL) {
         HSD_SisLib_804D797C = entry;
     }
@@ -697,7 +697,7 @@ HSD_Text* HSD_SisLib_803A6754(int font_idx, s32 context_id)
 
     text = HSD_SisLib_803A5ACC(font_idx, context_id, 0.0F, 0.0F, 0.0F, 640.0F,
                                480.0F);
-    alloc = HSD_SisLib_Alloc(0x10);
+    alloc = HSD_SisLib_Alloc(MAX(0x10, (s32) sizeof(SisBlock)));
     text->alloc_data = alloc;
     buffer = HSD_SisLib_Alloc(0x80);
     alloc->data = buffer;
@@ -1726,6 +1726,12 @@ done:
 
 void HSD_SisLib_803A84BC(HSD_GObj* gobj, int pass)
 {
+#ifdef MELEE_PC
+    // Text rendering is disabled on PC, for now
+    (void) gobj;
+    (void) pass;
+    return;
+#else
     // clang-format off
     HSD_Text *text;
     GXTexObj tex_obj;
@@ -2258,6 +2264,7 @@ void HSD_SisLib_803A84BC(HSD_GObj* gobj, int pass)
         }
     }
     // clang-format on
+#endif
 }
 
 HSD_Archive* HSD_SisLib_803A945C(char* path)

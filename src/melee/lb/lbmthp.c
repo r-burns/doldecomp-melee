@@ -31,7 +31,7 @@ struct lbl_803BAFE8_t {
     /* 0x14 */ s32 x14;
 }; /* size = 0x18 */
 
-/* 4333E0 */ static struct lbl_804333E0_t MoviePlayer;
+/* 4333E0 */ static struct lbl_804333E0_t MoviePlayer MELEE_PC_ALIGN32;
 
 void fn_8001E910(int arg0, int arg1, void* arg2, int cancelflag)
 {

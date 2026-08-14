@@ -132,6 +132,9 @@ void HSD_WObjSetDefaultClass(HSD_ClassInfo* info)
 
 HSD_WObj* HSD_WObjLoadDesc(HSD_WObjDesc* desc)
 {
+#ifdef MELEE_PC
+    MELEE_PC_DAT(HSD_WObjDesc, desc);
+#endif
     if (desc != NULL) {
         HSD_WObj* wobj;
         HSD_ClassInfo* info;

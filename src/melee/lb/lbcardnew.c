@@ -637,7 +637,12 @@ int lb_8001B14C(void)
     if (_p(free_files) != NULL) {
         *_p(free_files) = _p(unused_files);
     }
-    nodes = HSD_MemAlloc(0x5F4);
+    // 0x5F4 is 0x7F * sizeof(struct SnapshotNode) on PowerPC, where the node
+    // is 12 bytes. Its first member is a pointer, so on a 64-bit host it is 16
+    // and the loop below , which can append one node per card file, up to
+    // 0x7F, would run 508 bytes past the end. MAX keeps the constant
+    // identical on PowerPC.
+    nodes = HSD_MemAlloc(MAX(0x5F4, 0x7F * (int) sizeof(struct SnapshotNode)));
     node = nodes;
     company = (char*) stat[0].company;
     game = (char*) stat[0].gameName;

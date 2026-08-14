@@ -606,6 +606,9 @@ static void expLoadDesc(HSD_Exp* exp, HSD_ExpDesc* desc);
 
 HSD_RObj* HSD_RObjLoadDesc(HSD_RObjDesc* robjdesc)
 {
+#ifdef MELEE_PC
+    MELEE_PC_DAT(HSD_RObjDesc, robjdesc);
+#endif
     HSD_RObj* robj;
 
     if (robjdesc != NULL) {

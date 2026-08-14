@@ -12,9 +12,9 @@
 /* 016204 */ char* lbFile_80016204(const char* basename);
 /* 01634C */ size_t lbFile_8001634C(s32 fileno);
 /* 0163D8 */ s32 lbFile_800163D8(const char* basename);
-/* 0164A4 */ void lbFile_800164A4(s32 file, uintptr_t dest, uintptr_t* size, s32 pri,
+/* 0164A4 */ void lbFile_800164A4(s32 file, uintptr_t dest, u32* size, s32 pri,
                                   HSD_DevComCallback callback, void* args);
-/* 016580 */ void lbFile_80016580(const char* basename, u32 src, u32* dest,
+/* 016580 */ void lbFile_80016580(const char* basename, uintptr_t src, u32* dest,
                                   HSD_DevComCallback callback, void* args);
 /* 01668C */ void lbFile_8001668C(const char* basename, u32* src, u32* dest);
 /* 016760 */ void lbFile_80016760(const char* basename, u32* src, u32* dest);

@@ -585,7 +585,7 @@ s32 fn_803AA790(void)
         entry->x0 = 0;
         return result;
     case 2:
-        switch (((s32*) (arg0 + 0x28))[entry->x8]) {
+        switch (((CardState*) arg0)->x28[entry->x8]) {
         case 0:
             result = fn_803AE7F8((struct CardState*) entry->x4, entry->x8,
                                  entry->xC, 1, (s32) entry->x14);
@@ -5263,11 +5263,16 @@ void hsd_803B2374(void)
 
 void hsd_803B24E4(s32* ctx, int channel, int file_no, void* work_buf)
 {
-    memset(ctx, 0, 0x464);
-    ctx[8] = -1;
-    ctx[1] = channel;
-    ctx[2] = file_no;
-    ctx[0] = (s32) work_buf;
+    // Written through the struct rather than as ctx[n]: the indices encode
+    // GameCube byte offsets, and CardState.x0 is a pointer, so every field
+    // after it sits 4 bytes later once pointers are 64-bit. Identical code on
+    // PowerPC, where sizeof(CardState) is the 0x464 this used to hard-code.
+    CardState* state = (CardState*) ctx;
+    memset(ctx, 0, sizeof(CardState));
+    state->x20 = -1;
+    state->x4 = channel;
+    state->x8 = file_no;
+    state->x0 = work_buf;
 }
 
 inline HsdCmdEntry* hsd_803B2550_inline(u8* arg0, s32 arg1)
@@ -5279,7 +5284,8 @@ int hsd_803B2550(s32* arg0, const char* arg1, void (*arg2)(int, int))
 {
     s32 new_var;
     u8* base = hsd_804D1138;
-    s32 chan = arg0[1];
+    CardState* state = (CardState*) arg0;
+    s32 chan = state->x4;
     s32 new_var3;
     s32 new_var2;
     s32 retries;
@@ -5287,7 +5293,7 @@ int hsd_803B2550(s32* arg0, const char* arg1, void (*arg2)(int, int))
     s32 write_idx;
     new_var2 = chan;
     for (retries = 0; retries < 10; retries++) {
-        result = CARDOpen(new_var2, (char*) arg1, (CARDFileInfo*) (arg0 + 3));
+        result = CARDOpen(new_var2, (char*) arg1, &state->file_info);
         if (result != -1) {
             break;
         }
@@ -5299,15 +5305,15 @@ int hsd_803B2550(s32* arg0, const char* arg1, void (*arg2)(int, int))
 
     result = 0;
     {
-        s32 tmp = arg0[4];
+        s32 tmp = state->file_info.fileNo;
         do {
             if (tmp != -1) {
                 break;
             }
             result++;
         } while (result < 10);
-        write_idx = arg0[4];
-        retries = (new_var = (new_var3 = arg0[4]));
+        write_idx = state->file_info.fileNo;
+        retries = (new_var = (new_var3 = state->file_info.fileNo));
         write_idx = retries;
         if (tmp < 0) {
             return new_var;
@@ -5315,7 +5321,7 @@ int hsd_803B2550(s32* arg0, const char* arg1, void (*arg2)(int, int))
     }
 
     for (chan = 0; chan < 10; chan++) {
-        if (CARDClose((CARDFileInfo*) (arg0 + 3)) != -1) {
+        if (CARDClose(&state->file_info) != -1) {
             break;
         }
     }

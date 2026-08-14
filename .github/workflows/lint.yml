@@ -20,3 +20,13 @@ jobs:
     - uses: pre-commit/action@v3.0.1
       with:
         extra_args: ${{ matrix.hook }} --all-files
+
+  cmake-sources:
+    name: Check cmake/sources.cmake is up to date
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+    - run: python configure.py cmake --check

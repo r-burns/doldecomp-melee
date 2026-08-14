@@ -127,17 +127,17 @@ s32 lbFile_800163D8(const char* basename)
 
 #define ROUND_UP_32(x) (((x) + 31) & ~31)
 
-void lbFile_800164A4(s32 file, uintptr_t dest, uintptr_t* size, s32 pri,
+void lbFile_800164A4(s32 file, uintptr_t dest, u32* size, s32 pri,
                      HSD_DevComCallback callback, void* args)
 {
     int type;
     *size = lbFile_8001634C(file);
-    type = (dest >= 0x80000000) ? 0x21 : 0x23;
+    type = MELEE_PC_IS_MAINRAM(dest) ? 0x21 : 0x23;
     HSD_DevComRequest(file, 0, dest, ROUND_UP_32(*size), type, pri, callback,
                       args);
 }
 
-void lbFile_80016580(const char* basename, u32 src, u32* dest,
+void lbFile_80016580(const char* basename, uintptr_t src, u32* dest,
                      HSD_DevComCallback callback, void* args)
 {
     char* filename = lbFile_80016204(basename);
