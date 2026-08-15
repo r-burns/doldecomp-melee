@@ -600,7 +600,7 @@ void hsd_80394434(void* text)
 {
     struct ParticleScreenState* sp = &hsd_804CF810;
     s32* x4_ptr = (s32*) sp + 1;
-    s32 x = sp->x4;
+    s32 x = *x4_ptr;
     s32 y = sp->x8;
     s32 mode = sp->x0_b7;
     s32 interlace = sp->x0_b6;
@@ -754,9 +754,10 @@ void hsd_80394668(void)
 void hsd_80394950(OSContext* ctx)
 {
     OSContext tmp;
+    int i;
+    int j;
     OSContext* saved;
     BOOL irq;
-    int i;
     u8* p;
 
     if (!(ctx->state & OS_CONTEXT_STATE_FPSAVED)) {
@@ -778,16 +779,16 @@ void hsd_80394950(OSContext* ctx)
 
     OSReport("- PSF -----------------------------------------------\n");
 
-    i = 0;
+    j = 0;
     p = (u8*) ctx;
     do {
         u32 val0 = ((u32*) p)[0x24];
         u32 val1 = ((u32*) p)[0x25];
-        OSReport("R%02d=%08X:%08X (%e, %e)\n", i, val0, val1, ((f32*) p)[0x24],
+        OSReport("R%02d=%08X:%08X (%e, %e)\n", j, val0, val1, ((f32*) p)[0x24],
                  ((f32*) p)[0x25]);
-        i++;
+        j++;
         p += 8;
-    } while (i < 32);
+    } while (j < 32);
 
     OSClearContext(&tmp);
     OSSetCurrentContext(saved);
@@ -1573,6 +1574,40 @@ static inline void ps_clear_nodes(struct ParticleScreenState* sp)
     sp->x0_b5 = 1;
 }
 
+static inline void hsd_80395D88_dump_gpr(OSContext* ctx)
+{
+    int i;
+
+    OSReport("- GPR -----------------------------------------------\n");
+    i = 0;
+    do {
+        OSReport("R%02d=%08X(%11d) R%02d=%08X(%11d)\n", i, ctx->gpr[i],
+                 ctx->gpr[i], i + 0x10, ctx->gpr[i + 0x10],
+                 ctx->gpr[i + 0x10]);
+        i++;
+    } while (i < 0x10);
+}
+
+static inline void hsd_80395D88_dump_misc(OSContext* ctx)
+{
+    int i;
+
+    OSReport("- MISC ----------------------------------------------\n");
+    OSReport("SRR0=%08X SRR1=%08X\n", ((u32*) ctx)[0x198 / 4],
+             ((u32*) ctx)[0x19C / 4]);
+    OSReport("CR  =%08X LR  =%08X\n", ((u32*) ctx)[0x80 / 4],
+             ((u32*) ctx)[0x84 / 4]);
+    OSReport("CTR =%08X XER =%08X\n", ((u32*) ctx)[0x88 / 4],
+             ((u32*) ctx)[0x8C / 4]);
+    OSReport("FPSCR=%08X\n", ((u32*) ctx)[0x194 / 4]);
+    i = 0;
+    do {
+        OSReport("GQR%d=%08X GQR%d=%08X\n", i, ((u32*) ctx)[i], i + 4,
+                 ((u32*) ctx)[0x1B4 / 4 + i]);
+        i++;
+    } while (i < 4);
+}
+
 bool hsd_80395D88(void* data)
 {
     switch (hsd_80395550(data)) {
@@ -1602,40 +1637,14 @@ bool hsd_80395D88(void* data)
             ps_remove_node(&hsd_804CF810, data);
             return false;
         case 6: {
-            int i;
-            OSContext* ctx;
             OSContext** ctx_ptr;
             int saved;
 
             if (*(ctx_ptr = &hsd_804CF810.xD4) != NULL) {
                 saved = hsd_80393D2C(1);
-                ctx = *ctx_ptr;
-                OSReport(
-                    "- GPR -----------------------------------------------\n");
-                i = 0;
-                do {
-                    OSReport("R%02d=%08X(%11d) R%02d=%08X(%11d)\n", i,
-                             ctx->gpr[i], ctx->gpr[i], i + 0x10,
-                             ctx->gpr[i + 0x10], ctx->gpr[i + 0x10]);
-                    i++;
-                } while (i < 0x10);
+                hsd_80395D88_dump_gpr(*ctx_ptr);
                 hsd_80394950(*ctx_ptr);
-                ctx = *ctx_ptr;
-                OSReport(
-                    "- MISC ----------------------------------------------\n");
-                OSReport("SRR0=%08X SRR1=%08X\n", ((u32*) ctx)[0x198 / 4],
-                         ((u32*) ctx)[0x19C / 4]);
-                OSReport("CR  =%08X LR  =%08X\n", ((u32*) ctx)[0x80 / 4],
-                         ((u32*) ctx)[0x84 / 4]);
-                OSReport("CTR =%08X XER =%08X\n", ((u32*) ctx)[0x88 / 4],
-                         ((u32*) ctx)[0x8C / 4]);
-                OSReport("FPSCR=%08X\n", ((u32*) ctx)[0x194 / 4]);
-                i = 0;
-                do {
-                    OSReport("GQR%d=%08X GQR%d=%08X\n", i, ((u32*) ctx)[i],
-                             i + 4, ((u32*) ctx)[0x1B4 / 4 + i]);
-                    i++;
-                } while (i < 4);
+                hsd_80395D88_dump_misc(*ctx_ptr);
                 hsd_80393D2C(saved);
             }
             ps_remove_node(&hsd_804CF810, data);
@@ -1707,9 +1716,9 @@ static inline s32 hsd_80396188_calc_col(void)
 static inline void hsd_80396188_draw_rows(char* buf, s32 col, u32** addr,
                                           s32* i)
 {
-    s32* x8 = &hsd_804CF810.x8;
     s32* x4 = &hsd_804CF810.x4;
     s32* x40 = &hsd_804CF810.x40;
+    s32* x8 = &hsd_804CF810.x8;
 
     hsd_80394434(lbl_804D62CC);
     *i = 0;
@@ -1731,23 +1740,28 @@ static inline void hsd_80396188_draw_rows(char* buf, s32 col, u32** addr,
     *x4 = col;
 }
 
+static inline void* hsd_80396188_get_x50(void)
+{
+    return hsd_804CF810.x50;
+}
+
 void hsd_80396188(void)
 {
-    void* saved;
     s32 col;
     s32 i;
     u32* addr;
     char buf[64];
     void* tmp;
-    PAD_STACK(20);
+    void* saved;
+    PAD_STACK(12);
 
     addr = (u32*) lbl_8040BAF0.x10;
-    saved = hsd_804CF810.x50;
-    col = ((hsd_804CF810.x20 - 0x2E) / 2) * 11 + 20;
+    saved = hsd_80396188_get_x50();
+    i = hsd_804CF810.x20 - 0x2E;
     hsd_804CF810.x50 = &lbl_8040AB00;
-    hsd_804CF810.x4 = col;
+    hsd_804CF810.x4 = (i / 2) * 11 + 20;
     hsd_804CF810.x8 = hsd_804CF810.x40 - 0x7C;
-    hsd_80396188_draw_rows(buf, col, &addr, &i);
+    hsd_80396188_draw_rows(buf, (i / 2) * 11 + 20, &addr, &i);
     hsd_804CF810.x8 = hsd_804CF810.x40 - 0x36;
     hsd_80394434(lbl_804D62D4);
     hsd_804CF810.x50 = saved;
@@ -2129,15 +2143,17 @@ static char* lbl_804D630C = "+-------------------------------+";
 
 // @TODO: Currently 86.10% match - .bss.0 relocation affects register
 // allocation
+static inline void* hsd_80396E40_get_x50(void)
+{
+    return hsd_804CF810.x50;
+}
+
 void hsd_80396E40(int keycode)
 {
     struct ParticleScreenState* sp = &hsd_804CF810;
     char buf[64];
-    void* saved;
     s32 row;
     s32 i;
-    s32 spr_u;
-    s32 spr_l;
     s32 bat_u;
     s32 bat_l;
     char* perm;
@@ -2150,25 +2166,35 @@ void hsd_80396E40(int keycode)
     s32 bit;
     char* ptr;
     s32 j;
-    char ch;
+    s32 ch;
+    void* saved;
+    PAD_STACK(8);
 
-    saved = hsd_804CF810.x50;
+    saved = hsd_80396E40_get_x50();
     row = sp->x1C - 1;
     hsd_804CF810.x50 = &lbl_8040AB00;
     hsd_804CF810.x4 = 0x106;
-    hsd_804CF810.x8 = (hsd_804CF810.x40 - 0x28) - (row + 1) * 14;
-    row--;
-    if (keycode < 0x220 && keycode >= 0x218) {
+    i = row--;
+    hsd_804CF810.x8 = (hsd_804CF810.x40 - 0x28) - (i + 1) * 14;
+    switch (keycode) {
+    case 0x218:
+    case 0x219:
+    case 0x21A:
+    case 0x21B:
+    case 0x21C:
+    case 0x21D:
+    case 0x21E:
+    case 0x21F:
         hsd_80394434(lbl_804D62FC);
-    } else {
+        break;
+    default:
         hsd_80394434(lbl_804D6300);
+        break;
     }
     i = 0;
-    spr_u = 0x219;
-    spr_l = 0x218;
     do {
-        bat_u = baselib_mfspr(spr_u);
-        bat_l = baselib_mfspr(spr_l);
+        bat_u = baselib_mfspr(0x219 + i * 2);
+        bat_l = baselib_mfspr(0x218 + i * 2);
         switch (bat_u & 2) {
         case 0:
             perm = "N/A";
@@ -2220,24 +2246,20 @@ void hsd_80396E40(int keycode)
             } else {
                 ch = '0';
             }
-            ptr[7] = ch;
+            ptr[7] = (char) ch;
             ptr++;
         }
         hsd_804CF810.x4 = 0x106;
-        hsd_804CF810.x8 = (hsd_804CF810.x40 - 0x28) - (row + 1) * 14;
-        row--;
+        hsd_804CF810.x8 = (hsd_804CF810.x40 - 0x28) - (row-- + 1) * 14;
         hsd_80394434(buf);
         sprintf(buf, lbl_804D6308, bat_l & 0xFFFC0000, bat_u & 0xFFFC0000);
         hsd_804CF810.x4 = 0x106;
-        hsd_804CF810.x8 = (hsd_804CF810.x40 - 0x28) - (row + 1) * 14;
-        row--;
+        hsd_804CF810.x8 = (hsd_804CF810.x40 - 0x28) - (row-- + 1) * 14;
         hsd_80394434(buf);
         i++;
-        spr_u += 2;
-        spr_l += 2;
     } while (i < 4);
     hsd_804CF810.x4 = 0x106;
-    hsd_804CF810.x8 = (hsd_804CF810.x40 - 0x28) - (row + 1) * 14;
+    hsd_804CF810.x8 = (hsd_804CF810.x40 - 0x28) - (row-- + 1) * 14;
     hsd_80394434(lbl_804D630C);
     hsd_804CF810.x50 = saved;
 }
