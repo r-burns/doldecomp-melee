@@ -26,8 +26,6 @@
 #include "mp/forward.h"
 
 #include <math.h>
-#include <math_ppc.h>
-#include <trigf.h>
 #include <dolphin/mtx.h>
 #include <MetroTRK/intrinsics.h>
 
@@ -1251,7 +1249,7 @@ void ftNs_SpecialAirHiStart_Phys(HSD_GObj* gobj)
         fp->mv.ns.specialhi.gravityDelay = gravity_timer - 1;
     } else {
         ftCommon_Fall(fp, ness_attr->x50_PK_THUNDER_FALL_ACCEL,
-                      fp->co_attrs.terminal_vel);
+                      fp->co_attrs.terminal_velocity);
     }
 
     {
@@ -1276,7 +1274,7 @@ void ftNs_SpecialAirHiHold_Phys(
         fp->mv.ns.specialhi.gravityDelay = gravity_timer - 1;
     } else {
         ftCommon_Fall(fp, ness_attr->x50_PK_THUNDER_FALL_ACCEL,
-                      fp->co_attrs.terminal_vel);
+                      fp->co_attrs.terminal_velocity);
     }
 
     {
@@ -1298,7 +1296,7 @@ void ftNs_SpecialAirHiEnd_Phys(HSD_GObj* gobj)
         fp->mv.ns.specialhi.gravityDelay = gravity_timer - 1;
     } else {
         ftCommon_Fall(fp, ness_attr->x50_PK_THUNDER_FALL_ACCEL,
-                      fp->co_attrs.terminal_vel);
+                      fp->co_attrs.terminal_velocity);
     }
 
     {
@@ -1405,7 +1403,7 @@ void ftNs_SpecialAirHiRebound_Phys(
 
     fighter_attr = &fp->co_attrs;
     fighter_attr == NULL;
-    ftCommon_Fall(fp, fp->co_attrs.grav, fp->co_attrs.terminal_vel);
+    ftCommon_Fall(fp, fp->co_attrs.gravity, fp->co_attrs.terminal_velocity);
     ftCommon_ApplyFrictionAir(fp, fighter_attr->aerial_friction);
 }
 

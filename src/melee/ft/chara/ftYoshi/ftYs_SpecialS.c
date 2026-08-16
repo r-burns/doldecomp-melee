@@ -4,7 +4,6 @@
 
 #include "ftYs_Init.h"
 #include "ftYs_SpecialHi.h"
-#include "math.h"
 #include "placeholder.h"
 
 #include "baselib/forward.h"
@@ -38,7 +37,7 @@
 #include "lb/lb_00B0.h"
 #include "mp/mplib.h"
 
-#include <trigf.h>
+#include <math.h>
 #include <dolphin/mtx.h>
 #include <baselib/gobj.h>
 
@@ -1007,7 +1006,7 @@ void ftYs_SpecialAirSEnd_Phys(Fighter_GObj* gobj)
 {
     Fighter* fp = GET_FIGHTER(gobj);
 
-    ftCommon_ApplyFrictionGround(fp, fp->co_attrs.gr_friction);
+    ftCommon_ApplyFrictionGround(fp, fp->co_attrs.ground_friction);
     ftCommon_ApplyGroundMovement(gobj);
 }
 

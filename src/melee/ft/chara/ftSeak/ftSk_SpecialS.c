@@ -25,8 +25,6 @@
 #include "lb/lbcollision.h"
 
 #include <math.h>
-#include <math_ppc.h>
-#include <trigf.h>
 #include <baselib/jobj.h>
 
 /// @todo Fix common data struct
@@ -619,7 +617,8 @@ void ftSk_SpecialAirSStart_Phys(HSD_GObj* gobj)
     ftCo_DatAttrs* fighter_attr = &fp->co_attrs;
 
     if (fp->cmd_vars[0] != 0) {
-        ftCommon_Fall(fp, fighter_attr->grav, fighter_attr->terminal_vel);
+        ftCommon_Fall(fp, fighter_attr->gravity,
+                      fighter_attr->terminal_velocity);
     }
 
     ftCommon_ApplyFrictionAir(fp, fighter_attr->aerial_friction);

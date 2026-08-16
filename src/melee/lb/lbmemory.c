@@ -13,13 +13,13 @@ struct MemEntry {
 };
 
 struct LBMgr {
-    OSAlarm alarm;                  // 0x00
-    u8* src;                        // 0x28
-    u8* dst;                        // 0x2C
-    u32 size;                       // 0x30
-    u32 offset;                     // 0x34
-    u32 cb_arg;                     // 0x38
-    void (*cb)(u32, u32, u32, u32); // 0x3C
+    OSAlarm alarm; // 0x00
+    u8* src;       // 0x28
+    u8* dst;       // 0x2C
+    u32 size;      // 0x30
+    u32 offset;    // 0x34
+    u32 cb_arg;    // 0x38
+    HSD_DevComCallback cb;
 };
 
 struct Allocator {
@@ -35,11 +35,11 @@ struct Allocator {
     struct LBMgr x6A0_mgr;
     u32 x6E0;
     void* x6E4;
-    void* x6E8;
+    void (*x6E8)(u32);
     u8 x6EC[0x6F0 - 0x6EC];
 };
 
-/* 015320 */ void lbMemory_80015320(int, Handle*, int, int);
+/* 015320 */ static void lbMemory_80015320(int, int, void*, int);
 
 struct Allocator lbMemory_804318B0;
 #define _p(x) (lbMemory_804318B0.x)
@@ -111,13 +111,12 @@ loop:
     return sum;
 }
 
-Handle* lbMemory_80014FC8(Handle* arg0, u32 size)
+Handle* lbMemory_80014FC8(Handle* arg0, size_t size)
 {
     void* lo;
     Handle* memp_kouho;
     void* end;
     u32 least_leftover;
-    u32 aligned_size;
     u32 leftover;
     u32 available_space;
     void* start;
@@ -125,7 +124,7 @@ Handle* lbMemory_80014FC8(Handle* arg0, u32 size)
 
     least_leftover = 0x40000000U;
     HSD_ASSERT(0xCC, _p(free_mem));
-    aligned_size = ((size + 0x1F) & 0xFFFFFFE0);
+    size = ((size + 0x1F) & 0xFFFFFFE0);
     start = arg0->x4_lo;
     iter = (Handle*) &arg0->xC_prev;
     memp_kouho = NULL;
@@ -133,8 +132,9 @@ Handle* lbMemory_80014FC8(Handle* arg0, u32 size)
     while (1) {
         end = (iter->x0_next != NULL) ? iter->x0_next->x4_lo : arg0->x8_hi;
         available_space = (u32) end - (u32) start;
-        if (available_space >= aligned_size) {
-            leftover = available_space - aligned_size;
+        if (available_space >= size) {
+            leftover = available_space;
+            leftover = leftover - size;
             if (leftover <= least_leftover) {
                 least_leftover = leftover;
                 lo = start;
@@ -153,7 +153,7 @@ Handle* lbMemory_80014FC8(Handle* arg0, u32 size)
         Handle* result;
         POP_HANDLE(&_p(free_mem), result);
 
-        result->x8_hi = (void*) aligned_size;
+        result->x8_hi = (void*) size;
         result->x4_lo = lo;
         result->x0_next = memp_kouho->x0_next;
         memp_kouho->x0_next = result;
@@ -210,7 +210,7 @@ void fn_80015184(OSAlarm* alarm, OSContext* context)
     OSSetAlarm(&p->alarm, OSMillisecondsToTicks(3), fn_80015184);
 }
 
-u32 lbMemory_8001529C(Handle* h, void* arg1, u32 arg2)
+u32 lbMemory_8001529C(Handle* h, void (*arg1)(u32), u32 arg2)
 {
     void* lo;
     Handle* iter;
@@ -225,7 +225,7 @@ u32 lbMemory_8001529C(Handle* h, void* arg1, u32 arg2)
     for (iter = h->xC_prev; iter != NULL; iter = iter->x0_next) {
         lo = iter->x4_lo;
         if (lo != *r7) {
-            lbMemory_80015320(0, iter, 0, 0);
+            lbMemory_80015320(0, (int) iter, NULL, 0);
             return 1;
         }
         *r7 = (void*) ((u32) lo + (u32) iter->x8_hi);
@@ -233,59 +233,68 @@ u32 lbMemory_8001529C(Handle* h, void* arg1, u32 arg2)
     return 0;
 }
 
-static void start_ram_copy(u32 old, u32 current, u32 size, Handle* next)
+static char lbl_803BA368[0x18] = "!p->size\0\0\0\0!cancelflag";
+
+static inline void start_ram_copy(u32 old, u32 current, u32 size, Handle* next)
 {
     struct LBMgr* p = &_p(x6A0_mgr);
     int enabled = OSDisableInterrupts();
 
-    HSD_ASSERT(0x14F, !p->size);
+    HSD_ASSERTMSG(0x14F, !p->size, &lbl_803BA368[0]);
     p->src = (u8*) old;
     p->dst = (u8*) current;
     p->size = size;
     p->offset = 0;
     p->cb_arg = (u32) next;
-    p->cb = (void (*)(u32, u32, u32, u32))(Event) lbMemory_80015320;
+    p->cb = lbMemory_80015320;
     OSRestoreInterrupts(enabled);
     OSCreateAlarm(&p->alarm);
     OSSetAlarm(&p->alarm, OSMillisecondsToTicks(3), fn_80015184);
 }
 
-void lbMemory_80015320(int arg0, Handle* handle, int arg2, int cancelflag)
+static void lbMemory_80015320(int arg0, int _handle, void* arg2,
+                              int cancelflag)
 {
+    void* null_or_old;
+    Handle* handle = (Handle*) _handle;
     void** currentp;
+    void* old;
     u32 current;
-    u32 old;
+    void* copy_src;
+    void* loaded_old;
 
     currentp = &_p(x6E4);
     current = (u32) _p(x6E4);
+    null_or_old = NULL;
 
-    HSD_ASSERT(0x188, !cancelflag);
+    HSD_ASSERTMSG(0x188, !cancelflag, &lbl_803BA368[0xC]);
 
-    if (handle != NULL) {
-        if ((old = (u32) handle->x4_lo) != current) {
+    if (handle != null_or_old) {
+        loaded_old = handle->x4_lo;
+        if ((old = loaded_old) != (void*) current) {
+            null_or_old = old;
             handle->x4_lo = (void*) current;
             *currentp = (void*) ((u32) handle->x4_lo + (u32) handle->x8_hi);
+            copy_src = null_or_old;
 
             if ((u32) handle->x4_lo < 0x80000000U) {
-                HSD_DevComRequest(
-                    0, old, current, ((u32) handle->x8_hi + 0x1F) & 0xFFFFFFE0,
-                    0x1B, 1, (HSD_DevComCallback) (Event) lbMemory_80015320,
-                    handle->x0_next);
+                HSD_DevComRequest(0, (u32) copy_src, current,
+                                  OSRoundUp32B(handle->x8_hi), 0x1B, 1,
+                                  lbMemory_80015320, handle->x0_next);
                 return;
             } else {
-                start_ram_copy(old, current,
-                               ((u32) handle->x8_hi + 0x1F) & 0xFFFFFFE0,
-                               handle->x0_next);
+                start_ram_copy((u32) copy_src, current,
+                               OSRoundUp32B(handle->x8_hi), handle->x0_next);
                 return;
             }
         }
 
         *currentp = (void*) ((u32) old + (u32) handle->x8_hi);
-        lbMemory_80015320(0, handle->x0_next, 0, 0);
+        lbMemory_80015320(0, (int) handle->x0_next, null_or_old, 0);
         return;
     }
 
-    ((void (*)(u32)) _p(x6E8))(_p(x6E0));
+    _p(x6E8)(_p(x6E0));
 }
 
 void lbMemory_800154BC(uintptr_t* arenaLo, uintptr_t* arenaHi)

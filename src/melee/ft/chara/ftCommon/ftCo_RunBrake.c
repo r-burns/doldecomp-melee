@@ -1,7 +1,5 @@
 #include "ftCo_RunBrake.h"
 
-#include "math.h"
-
 #include <placeholder.h>
 
 #include "ft/fighter.h"
@@ -20,6 +18,8 @@
 #include "ftCommon/ftCo_Jump.h"
 #include "ftCommon/ftCo_Squat.h"
 #include "ftCommon/ftCo_TurnRun.h"
+
+#include <math.h>
 
 bool ftCo_RunBrake_CheckInput(Fighter_GObj* gobj)
 {
@@ -95,8 +95,9 @@ void ftCo_RunBrake_Phys(Fighter_GObj* gobj)
 {
     Fighter* fp = GET_FIGHTER(gobj);
 
-    ftCommon_ApplyFrictionGround(fp, p_ftCommonData->x60_someFrictionMul *
-                                         fp->co_attrs.gr_friction);
+    ftCommon_ApplyFrictionGround(
+        fp, p_ftCommonData->run_dash_turn_friction_multiplier *
+                fp->co_attrs.ground_friction);
     ftCommon_ApplyGroundMovement(gobj);
 }
 

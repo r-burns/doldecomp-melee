@@ -25,9 +25,8 @@
 #include "mp/forward.h"
 
 #include "mp/mplib.h"
-#include "MSL/math.h"
 
-#include <math_ppc.h>
+#include <math.h>
 #include <baselib/debug.h>
 #include <baselib/gobj.h>
 #include <baselib/gobjproc.h>
@@ -1173,8 +1172,9 @@ void grKongo_801D7134(HSD_GObj* gobj, s32 arg1)
 
     mpLib_80057424(4);
     entry = (_struct_grKg_803E188C_0x18*) ((u8*) grKg_803E16E0 + 0x1AC);
+    i = 0;
     line_id = 0x28;
-    for (i = 0; i < 15; i++) {
+    do {
         temp = entry->unk14;
         mpLib_80056758(line_id, 0.0f, temp, 0.0f, temp);
         if ((s32) i == 0) {
@@ -1182,9 +1182,10 @@ void grKongo_801D7134(HSD_GObj* gobj, s32 arg1)
         } else if (i == 14) {
             mpLib_80056758(line_id + 1, 0.0f, temp, 0.0f, temp);
         }
+        i++;
         line_id += 2;
         entry++;
-    }
+    } while (i < 15);
 }
 
 f32 grKongo_801D8314(void)

@@ -1,7 +1,5 @@
 #include "ftPk_SpecialLw.h"
 
-#include "math.h"
-
 #include <platform.h>
 
 #include "cm/camera.h"
@@ -21,6 +19,7 @@
 #include "ftPikachu/types.h"
 #include "it/items/itpikachuthunder.h"
 
+#include <math.h>
 #include <dolphin/mtx.h>
 
 bool ftPk_SpecialLw_CheckProperty(HSD_GObj* gobj)
@@ -351,7 +350,7 @@ void ftPk_SpecialAirLwLoop1_Phys(HSD_GObj* gobj)
     Fighter* fp = GET_FIGHTER(gobj);
     ftPikachuAttributes* pika_attr = fp->dat_attrs;
     float pika_B8 = pika_attr->xB8;
-    float terminal_velocity = fp->co_attrs.terminal_vel;
+    float terminal_velocity = fp->co_attrs.terminal_velocity;
     ftCommon_Fall(fp, pika_B8, terminal_velocity);
     ftCommon_8007CF58(fp);
 }

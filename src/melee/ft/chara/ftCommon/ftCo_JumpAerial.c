@@ -1,7 +1,5 @@
 #include "ftCo_JumpAerial.h"
 
-#include "math.h"
-
 #include <placeholder.h>
 
 #include "ft/fighter.h"
@@ -32,6 +30,8 @@
 #include "ftCommon/ftCo_SpecialAir.h"
 #include "ftPeach/ftPe_Float.h"
 
+#include <math.h>
+
 /* 0CC3C4 */ static void ftYs_JumpAerial_Anim_Cb(Fighter_GObj* gobj);
 /* 0CC654 */ static void ftNs_JumpAerial_Phys_Cb(Fighter_GObj* gobj);
 
@@ -51,7 +51,7 @@ bool ft_did_jump(Fighter* fp, bool arg1)
 {
     if (fp->x1968_jumpsUsed < fp->co_attrs.max_jumps &&
         ((fp->input.lstick.y >= p_ftCommonData->tap_jump_threshold &&
-          fp->x671_timer_lstick_tilt_y < p_ftCommonData->x74) ||
+          fp->x671_timer_lstick_tilt_y < p_ftCommonData->tap_jump_window) ||
          fp->input.x668 & HSD_PAD_XY) &&
         !(arg1 && (fp->x68A < p_ftCommonData->x1C)))
     {

@@ -1,7 +1,6 @@
 #include "ftMr_SpecialHi.h"
 
 #include "inlines.h"
-#include "math.h"
 #include "types.h"
 
 #include <platform.h>
@@ -16,6 +15,7 @@
 #include "ftCommon/ftCo_FallSpecial.h"
 #include "ftCommon/ftCo_Landing.h"
 
+#include <math.h>
 #include <dolphin/mtx.h>
 
 void ftMr_SpecialHi_Enter(HSD_GObj* gobj)
@@ -120,7 +120,7 @@ void ftMr_SpecialAirHi_Phys(HSD_GObj* gobj)
         fp->self_vel.y *= sa->specialhi.vel_mul;
         fp->self_vel.z *= sa->specialhi.vel_mul;
     } else {
-        ftCommon_Fall(fp, sa->specialhi.grav, attrs->terminal_vel);
+        ftCommon_Fall(fp, sa->specialhi.grav, attrs->terminal_velocity);
         ftCommon_8007CF58(fp);
     }
 }

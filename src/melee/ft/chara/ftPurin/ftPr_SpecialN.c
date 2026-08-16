@@ -26,7 +26,6 @@
 #include "ftPurin/types.h"
 
 #include <math.h>
-#include <trigf.h>
 #include <baselib/archive.h>
 #include <baselib/gobj.h>
 #include <baselib/jobj.h>
@@ -967,7 +966,7 @@ void ftPr_SpecialNTurn_Phys(HSD_GObj* gobj)
 void ftPr_SpecialNEnd_Phys(Fighter_GObj* gobj)
 {
     Fighter* fp = GET_FIGHTER(gobj);
-    ftCommon_ApplyFrictionGround(fp, fp->co_attrs.gr_friction);
+    ftCommon_ApplyFrictionGround(fp, fp->co_attrs.ground_friction);
     ftCommon_ApplyGroundMovement(gobj);
 }
 

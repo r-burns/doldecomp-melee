@@ -4,9 +4,6 @@
 #include "grfzerocar.h"
 #include "grlib.h"
 #include "grmaterial.h"
-
-#include "grmutecity.static.h"
-
 #include "ground.h"
 #include "grzakogenerator.h"
 #include "inlines.h"
@@ -24,8 +21,6 @@
 #include "lb/lbvector.h"
 #include "mp/mplib.h"
 
-#include <math_ppc.h>
-#include <trigf.h>
 #include <baselib/debug.h>
 #include <baselib/gobj.h>
 #include <baselib/gobjproc.h>
@@ -44,6 +39,8 @@ typedef void (*grMc_SpeedFn)(Item_GObj*, Ground*, Vec3*, HSD_GObj*, f32);
 const Vec3 grMc_803B81B8 = { 0.0f, 0.0f, 0.0f };
 
 static s32 grMc_8049F440[30];
+
+#include "grmutecity.static.h"
 
 GrJoint grMc_803E30B0[] = {
     { 6, 29, 6 },

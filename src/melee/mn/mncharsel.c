@@ -11,7 +11,7 @@
 
 #include "lb/lb_013B.h"
 
-#include <trigf.h>
+#include <math.h>
 #include <sysdolphin/baselib/aobj.h>
 #include <sysdolphin/baselib/cobj.h>
 #include <sysdolphin/baselib/controller.h>
@@ -290,7 +290,7 @@ void mnCharSel_8025C020(int arg0)
                     HSD_SisLib_803A70A0(mnCharSel_804D6CDC, 0, "%d \x8c\xc2",
                                         target_count);
                 } else {
-                    HSD_SisLib_803A70A0(mnCharSel_804D6CDC, 0, "%d",
+                    HSD_SisLib_803A70A0(mnCharSel_804D6CDC, 0, "%d \x81\x40",
                                         target_count);
                 }
             } else {
@@ -334,7 +334,7 @@ void mnCharSel_8025C020(int arg0)
                 (f32) (int) (10.0f * (gm_801631F0() / 30.4788f)) / 10.0f);
         }
         break;
-    case 23:
+    case TRAINING_MODE:
         if (arg0 == 0) {
             HSD_SisLib_803A70A0(mnCharSel_804D6CDC, 0, "%d",
                                 gm_80163274(hud_index));
@@ -1668,6 +1668,18 @@ static inline s32 getIconOffset(unsigned long icon_idx)
 {
     return icon_idx * sizeof(CSSIcon);
 }
+
+static inline s32 getPlayerForDoor(u8 door)
+{
+    if (mnCharSel_804D6CF5 == 1) {
+        if (door != 0) {
+            return mnCharSel_804D6CF1;
+        }
+        return mnCharSel_804D6CF0;
+    }
+    return door;
+}
+
 void mnCharSel_8025FB50(u8 door, s32 arg1)
 {
     s32 icon_idx;
@@ -1683,17 +1695,9 @@ void mnCharSel_8025FB50(u8 door, s32 arg1)
         icon_offset = getIconOffset(icon_idx);
     } while (icons[icon_idx].state == 0);
 
-    if (mnCharSel_804D6CF5 == 1) {
-        if (door != 0) {
-            player = mnCharSel_804D6CF1;
-        } else {
-            player = mnCharSel_804D6CF0;
-        }
-    } else {
-        player = door;
-    }
+    player = getPlayerForDoor(door);
 
-    char_kinds = &all_data->icons[0].char_kind;
+    char_kinds = &icons[0].char_kind;
     mnCharSel_804D6CB0->data.data.players[player].c_kind =
         char_kinds[icon_offset];
 
@@ -4016,8 +4020,11 @@ s32 mnCharSel_802640A0(void)
         HSD_JObjAddAnimAll(mnCharSel_804D6CC0, ANIM[3].anim, ANIM[3].matanim,
                            ANIM[3].shapeanim);
     }
-    HSD_GObjObject_80390A70(mnCharSel_804D6CBC, HSD_GObj_804D7849,
-                            mnCharSel_804D6CC0);
+    {
+        u8 obj_kind = HSD_GObj_804D7849;
+        HSD_GObjObject_80390A70(mnCharSel_804D6CBC, obj_kind,
+                                mnCharSel_804D6CC0);
+    }
     GObj_SetupGXLink(mnCharSel_804D6CBC, HSD_GObj_JObjCallback, 1, 0x80);
     HSD_GObj_SetupProc(mnCharSel_804D6CBC, fn_8025F0E0, 4);
     HSD_JObjReqAnimAll(mnCharSel_804D6CC0, 0.0f);
@@ -4117,13 +4124,17 @@ s32 mnCharSel_802640A0(void)
                         HSD_AObjStopAnim, AOBJ_ARG_AOV, 0, 0);
         ck = mnCharSel_804D6CB0->data.data.players[mnCharSel_804D6CF1].c_kind;
         if ((s8) ck >= CKIND_PLAYABLE_COUNT || gm_IsCKindUnlocked(ck) == 0) {
+            u8* char_kinds;
+            s32 icon_off;
             do {
                 i = HSD_Randi(0x19);
             } while ((u8) icons[i].state == 0);
+            char_kinds = &icons[0].char_kind;
+            icon_off = getIconOffset(i);
             mnCharSel_804D6CB0->data.data.players[mnCharSel_804D6CF1].c_kind =
-                icons[i].char_kind;
+                char_kinds[icon_off];
             mnCharSel_804D6CB0->data.data.players[mnCharSel_804D6CF1].color =
-                HSD_Randi((s32) gm_80169238(icons[i].char_kind));
+                HSD_Randi((s32) gm_80169238(char_kinds[icon_off]));
         }
     }
 
@@ -4199,7 +4210,7 @@ s32 mnCharSel_802640A0(void)
         }
         for (found = 0; found < 0x19; found++) {
             u8 ck = mnCharSel_804D6CB0->data.data.players[player].c_kind;
-            if ((s8) ck == (s8) icons[found].char_kind &&
+            if ((s8) ck == icons[found].char_kind &&
                 gm_IsCKindUnlocked(ck) != 0)
             {
                 break;
@@ -4402,7 +4413,8 @@ s32 mnCharSel_802640A0(void)
     }
 
     if ((u8) mnCharSel_804D6CF5 == 1) {
-        switch (mnCharSel_804D6CB0->match_type) {
+        CSSData* css = mnCharSel_804D6CB0;
+        switch (css->match_type) {
         case REG_CLASSIC:
         case REG_ADVENTURE:
         case REG_ALLSTAR:
@@ -4413,8 +4425,7 @@ s32 mnCharSel_802640A0(void)
             spD4 = mnCharSel_804DC594;
             {
                 u8 cpu_level =
-                    mnCharSel_804D6CB0->data.data.players[mnCharSel_804D6CF0]
-                        .cpu_level;
+                    css->data.data.players[mnCharSel_804D6CF0].cpu_level;
                 CSS_ALL->doors_data.xce = cpu_level;
                 CSS_ALL->doors_data.xcd = cpu_level;
             }
@@ -4886,8 +4897,9 @@ s32 mnCharSel_802640A0(void)
                     hval =
                         (u8) mnCharSel_804D6CB0->data.data.players[i].handicap;
                 }
-                if (hval != 0) {
-                } else {
+                /* switch forces MWCC beq/b double-branch (not bne) */
+                switch (hval) {
+                case 0:
                     hval = 1;
                 }
                 {

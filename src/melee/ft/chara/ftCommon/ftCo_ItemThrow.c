@@ -33,7 +33,6 @@
 #include <baselib/forward.h>
 
 #include <math.h>
-#include <trigf.h>
 
 /* 094D70 */ bool ftCo_800951D0(Fighter_GObj* gobj);
 /* 094E7C */ static bool ftCo_800952DC(Fighter_GObj* gobj);
@@ -57,6 +56,11 @@ typedef struct ftCo_ItemThrowAttrs {
     float angle;
     float x8;
 } ftCo_ItemThrowAttrs;
+
+typedef struct ftCo_ItemThrowCmd {
+    /* +0:0  */ u32 pad : 20;
+    /* +0:20 */ s32 angle : 12;
+} ftCo_ItemThrowCmd;
 
 bool ftCo_80094E54(Fighter* fp)
 {
@@ -102,8 +106,8 @@ int ftCo_80094EA4(HSD_GObj* gobj)
     } else {
         return false;
     }
-    if (ABS(stick_x) >= p_ftCommonData->x3C &&
-        var_f28 < p_ftCommonData->x40 + p_ftCommonData->x44)
+    if (ABS(stick_x) >= p_ftCommonData->dash_smash_stick_threshold &&
+        var_f28 < p_ftCommonData->dash_smash_window + p_ftCommonData->x44)
     {
         msid = stick_x * fp->facing_dir >= 0.0f ? ftCo_MS_HeavyThrowF4
                                                 : ftCo_MS_HeavyThrowB4;
@@ -405,8 +409,8 @@ void ftCo_80095A30(HSD_GObj* gobj)
     if (var_f1 < 0.0f) {
         var_f1 = -var_f1;
     }
-    if (var_f1 >= p_ftCommonData->x3C &&
-        fp->x673 < p_ftCommonData->x40 + p_ftCommonData->x44)
+    if (var_f1 >= p_ftCommonData->dash_smash_stick_threshold &&
+        fp->x673 < p_ftCommonData->dash_smash_window + p_ftCommonData->x44)
     {
         if (fp->input.lstick.x * fp->facing_dir >= 0.0f) {
             var_r0 = 0x6C;
@@ -478,18 +482,22 @@ void ftCo_80095D5C(Fighter* fp, Vec3* arg1)
 {
     float vel;
     float angle;
+    float vel_mul;
     u8* array_element;
+    ftCo_DatAttrs* co_attrs = getFtAttrs(fp);
     u32 cmd_var0 = fp->cmd_vars[0];
 
     vel = 1;
     if (cmd_var0 != 0) {
         vel = 0.01f * ((cmd_var0 >> 12) & 0x3FF);
     }
-    array_element = (u8*) Fighter_804D6550 + (fp->motion_id * 3);
-    vel *= fp->co_attrs.item_throw_velocity_multiplier *
-           *(float*) (array_element - 0x468);
+    array_element = (u8*) Fighter_804D6550;
+    vel_mul = co_attrs->item_throw_velocity_multiplier;
+    co_attrs = (ftCo_DatAttrs*) (array_element + fp->motion_id * 12);
+    array_element = (u8*) co_attrs;
+    vel *= vel_mul * *(float*) (array_element - 0x468);
     if (cmd_var0 != 0) {
-        int int_angle = (s32) (cmd_var0 << 20) >> 20;
+        int int_angle = ((ftCo_ItemThrowCmd*) fp->cmd_vars)->angle;
         if (int_angle == 361) {
             angle = *(float*) (array_element - 0x464);
         } else {
@@ -538,7 +546,7 @@ void ftCo_80095EFC(Fighter_GObj* gobj)
                 }
                 {
                     float fsm = -fp->cmd_timer / fp->frame_speed_mul;
-                    float cd_xB4 = co_attrs->xB4;
+                    float cd_xB4 = co_attrs->heavy_throw_velocity_multiplier;
                     float base_throw_speed =
                         cd_xB4 * ((ftCo_ItemThrowAttrs*)
                                       Fighter_804D6550)[fp->motion_id -
@@ -608,10 +616,10 @@ void ftCo_LightThrowDash_Phys(Fighter_GObj* gobj)
         if (cd != NULL) {
             // Needed for matching register allocation.
         }
-        ft_80085030(gobj, (cd->x404 * fp->co_attrs.gr_friction) * cd->x40C,
+        ft_80085030(gobj, (cd->x404 * fp->co_attrs.ground_friction) * cd->x40C,
                     fp->facing_dir);
     } else {
-        ft_80085030(gobj, p_ftCommonData->x404 * fp->co_attrs.gr_friction,
+        ft_80085030(gobj, p_ftCommonData->x404 * fp->co_attrs.ground_friction,
                     fp->facing_dir);
     }
 }

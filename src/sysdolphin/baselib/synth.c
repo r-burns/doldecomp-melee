@@ -4,7 +4,7 @@
 
 #include "synth.static.h"
 
-#include <math_ppc.h>
+#include <math.h>
 #include <dolphin/ai.h>
 #include <dolphin/ar.h>
 #include <dolphin/os.h>

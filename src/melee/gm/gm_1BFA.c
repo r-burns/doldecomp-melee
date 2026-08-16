@@ -135,7 +135,7 @@ static UNK_T* gm_801BFC60(u32 arg0, s32 arg1, u32 arg2, u32 arg3, UNK_T* arg4)
         un_804A1F48.x2 = arg2;
         return (&un_804A1F48.x8);
     }
-    temp_r3 = HSD_MemAlloc(0xC);
+    temp_r3 = HSD_MemAlloc(sizeof(struct un_804A1F48_t));
     if (temp_r3 != NULL) {
         temp_r3->x0 = arg0;
         temp_r3->x4 = arg3;
@@ -154,13 +154,13 @@ void gm_801BFCFC(GameScene* arg0)
     s32 var_r27_2;
     u32* temp_r29;
     u8* var_r27;
+    u32 var_r28_3;
     u8* var_r28;
     UNK_T* temp_r3;
     u8* var_r28_2;
     u32 var_r25_2;
     int var_r25;
     u32* temp_r29_2;
-    u32 var_r28_3;
     UNK_T* var_r31;
     s32 var_r30;
     u8* var_r26;

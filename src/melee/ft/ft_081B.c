@@ -32,9 +32,9 @@
 #include "mp/mpcoll.h"
 #include "mp/mplib.h"
 
+#include <math.h>
 #include <dolphin/mtx.h>
 #include <baselib/gobj.h>
-#include <MSL/math.h>
 
 void ft_80081B38(Fighter_GObj* gobj)
 {
@@ -1375,7 +1375,7 @@ void ft_80084DB0(Fighter_GObj* gobj)
     if (fp->fall_fast) {
         ftCommon_FallFast(fp);
     } else {
-        ftCommon_Fall(fp, co_attrs->grav, co_attrs->terminal_vel);
+        ftCommon_Fall(fp, co_attrs->gravity, co_attrs->terminal_velocity);
     }
     ftCommon_8007D268(fp);
 }

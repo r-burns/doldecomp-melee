@@ -1,7 +1,5 @@
 #include "ftCa_SpecialHi.h"
 
-#include "math.h"
-
 #include <platform.h>
 
 #include "ft/fighter.h"
@@ -20,6 +18,7 @@
 #include "ftCommon/ftCo_Throw.h"
 #include "ftCommon/ftCo_Thrown.h"
 
+#include <math.h>
 #include <dolphin/mtx.h>
 
 void ftCa_SpecialHiThrow1_Coll(HSD_GObj* gobj)
@@ -276,7 +275,7 @@ void ftCa_SpecialHiThrow0_Phys(HSD_GObj* gobj)
         ca = &fp->co_attrs;
         {
             float vel_y = fp->self_vel.y - fp->mv.ca.specialhi.vel.y;
-            ftCommon_Fall(fp, da->specialhi_catch_grav, ca->terminal_vel);
+            ftCommon_Fall(fp, da->specialhi_catch_grav, ca->terminal_velocity);
             fp->mv.ca.specialhi.vel.y = fp->self_vel.y - vel_y;
         }
     } else {

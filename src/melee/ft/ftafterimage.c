@@ -7,7 +7,6 @@
 
 #include "baselib/debug.h"
 
-#include <math_ppc.h>
 #include <dolphin/gx.h>
 #include <dolphin/mtx.h>
 #include <baselib/cobj.h>
@@ -410,14 +409,13 @@ void ftCo_800C2FD8(Fighter_GObj* gobj)
             return;
         }
         switch (itGetKind(fp->item_gobj)) {
-        case It_Kind_Sword: {
+        case It_Kind_Sword:
             it_802852B8(fp->item_gobj, &fp->x20F8, &fp->x20FC);
             var_r29 = 1;
             break;
-        }
-        default: {
-            HSD_ASSERTREPORT(0x16D, 0, "no afterimage item!\n");
-        }
+        default:
+            HSD_ASSERTREPORT(365, 0, "no afterimage item!\n");
+            break;
         }
         jobj = it_80285314(fp->item_gobj);
     } else {
@@ -453,8 +451,6 @@ void ftCo_800C2FD8(Fighter_GObj* gobj)
             var_r5 = &da->x78;
             break;
         }
-        default:
-            break;
         }
         var_r29 = 0;
         fp->x20F8 = var_r5->x18;
