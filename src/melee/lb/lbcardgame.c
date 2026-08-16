@@ -287,7 +287,7 @@ void lb_8001D164(int arg0)
 {
     if (_p(x5C) == 0) {
         lbArchive_80016DBC("LbMcGame.", &_p(x5C), "MemCardIconData", 0);
-        lbArchive_80016DBC("NtMemAc", &_p(x64), "ScNtcCommon_scene_data", 0);
+        lbArchive_80016DBC("NtMemAc", &_p(x64), "ScNtcCommon_scene_data", 0); MELEE_PC_DAT(SceneDesc, _p(x64));
         _p(x60) = arg0;
         _p(enable) = 1;
     }

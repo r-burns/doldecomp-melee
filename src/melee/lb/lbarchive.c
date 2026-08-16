@@ -54,7 +54,7 @@ static inline HSD_Archive* lbArchive_LoadArchive_inline(const char* filename)
 {
     HSD_Archive* archive;
     void* data;
-    size_t length;
+    u32 length;
 
     data = lbHeap_80015BD0(0, OSRoundUp32B(lbFile_800163D8(filename)));
     archive = lbHeap_80015BD0(0, sizeof(HSD_Archive));
@@ -143,6 +143,7 @@ void lbArchive_80016EFC(HSD_Archive* archive)
 {
     HSD_ASSERT(0xFC, archive);
     HSD_ASSERT(0xFD, archive->flags & HSD_ARCHIVE_DONT_FREE);
+    MELEE_PC_ON_ARCHIVE_FREE(archive->data, archive->header.data_size);
     lbHeap_80015CA8(0, (u32*) (archive->data - 0x20));
     lbHeap_80015CA8(0, (u32*) archive);
 }
@@ -150,7 +151,7 @@ void lbArchive_80016EFC(HSD_Archive* archive)
 bool lbArchive_80016F80(HSD_Archive** archive, const char* filename)
 {
     void* data;
-    size_t length;
+    u32 length;
     HSD_Archive* var_r3;
     bool result;
     u8 _[8];
@@ -191,7 +192,7 @@ bool lbArchive_80017040(HSD_Archive** dst, const char* filename, void* symbols,
         // Inlined lbArchive_LoadArchive
         {
             void* data;
-            size_t length;
+            u32 length;
             u32 pad;
             u32 pad2;
             data = lbHeap_80015BD0(0, OSRoundUp32B(lbFile_800163D8(filename)));
@@ -232,7 +233,7 @@ bool lbArchive_800171CC(HSD_Archive** dst, const char* filename, void* symbols,
         // Inlined lbArchive_LoadArchive
         {
             void* data;
-            size_t length;
+            u32 length;
             u32 pad;
             u32 pad2;
             data = lbHeap_80015BD0(0, OSRoundUp32B(lbFile_800163D8(filename)));

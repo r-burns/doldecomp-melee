@@ -167,6 +167,9 @@ static int MObjLoad(HSD_MObj* mobj, HSD_MObjDesc* desc)
 
 HSD_MObj* HSD_MObjLoadDesc(HSD_MObjDesc* mobjdesc)
 {
+#ifdef MELEE_PC
+    MELEE_PC_DAT(HSD_MObjDesc, mobjdesc);
+#endif
     if (mobjdesc) {
         HSD_MObj* mobj;
         HSD_ClassInfo* info;

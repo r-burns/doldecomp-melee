@@ -27,7 +27,8 @@ struct lbHeap_HeapDesc lbHeap_803BA380[5] = {
 };
 
 #define lbHeap_GetHeapOffsetView(offset)                                      \
-    ((struct lbHeap_HeapOffsetView*) ((u32) (&lbHeap_80431FA0) + (offset)))
+    ((struct lbHeap_HeapOffsetView*) ((uintptr_t) (&lbHeap_80431FA0) +        \
+                                      (offset)))
 
 static inline void lbHeap_ResetHeap(struct Heap* heap)
 {
@@ -93,19 +94,26 @@ void lbHeap_80015900(void)
     struct lbHeap_HeapOffsetView* create_view;
     s32 heap_offset;
     s32 create_i;
-    u32 arena_lo;
-    u32 aram_lo;
-    u32 aram_hi;
-    u32 arena_hi;
+    uintptr_t arena_lo;
+    uintptr_t aram_lo;
+    uintptr_t aram_hi;
+    uintptr_t arena_hi;
     struct Heap* main_heap;
     s32 destroy_i;
     struct Heap* aram_heap;
-    u32 destroy_cursor;
+    uintptr_t destroy_cursor;
 
     /// @remarks 0 and 1 are reserved for HSD and ARAM
     destroy_i = 2;
-    destroy_cursor = (u32) &lbHeap_80431FA0.heap_array[destroy_i] - 0x10;
-    heap_offset = 0x38;
+    destroy_cursor =
+        (uintptr_t) &lbHeap_80431FA0.heap_array[destroy_i] - 0x10;
+    // 0x38 on PowerPC: heap_array is at 0x10 and struct Heap is 0x1C, so
+    // heap_array[2] sits at 0x48 and the view starts 0x10 before it. struct
+    // Heap holds a Handle*, so on a 64-bit host it is 0x28 and none of those
+    // offsets hold, the literal addressed unrelated memory and the heaps
+    // were never created
+    heap_offset = (uintptr_t) &lbHeap_80431FA0.heap_array[destroy_i] -
+                  (uintptr_t) &lbHeap_80431FA0 - 0x10;
     for (; destroy_i < 6; destroy_i++, destroy_cursor += sizeof(struct Heap),
                           heap_offset += sizeof(struct Heap))
     {
@@ -115,8 +123,8 @@ void lbHeap_80015900(void)
         }
     }
 
-    arena_lo = (u32) lbHeap_80431FA0.arena_lo;
-    arena_hi = (u32) lbHeap_80431FA0.arena_hi;
+    arena_lo = (uintptr_t) lbHeap_80431FA0.arena_lo;
+    arena_hi = (uintptr_t) lbHeap_80431FA0.arena_hi;
     aram_lo = lbHeap_80431FA0.aram_lo;
     aram_hi = lbHeap_80431FA0.aram_hi;
 
@@ -163,8 +171,11 @@ void lbHeap_80015900(void)
     aram_heap->status = LbHeapStatus_Create;
     aram_heap->type = 3;
 
-    for (create_i = 2, heap_offset = 0x38; create_i < 6;
-         create_i++, heap_offset += sizeof(struct Heap))
+    // same hardcoded PowerPC offset as in the destroy loop above
+    for (create_i = 2,
+        heap_offset = (uintptr_t) &lbHeap_80431FA0.heap_array[2] -
+                      (uintptr_t) &lbHeap_80431FA0 - 0x10;
+         create_i < 6; create_i++, heap_offset += sizeof(struct Heap))
     {
         if (lbHeap_80431FA0.heap_array[create_i].transient == 0) {
             create_view = lbHeap_GetHeapOffsetView(heap_offset);
@@ -173,7 +184,7 @@ void lbHeap_80015900(void)
     }
 }
 
-int lbHeap_80015BB8(int arg0)
+int lbHeap_get_heap_status(int arg0)
 {
     return lbHeap_80431FA0.heap_array[arg0].status;
 }

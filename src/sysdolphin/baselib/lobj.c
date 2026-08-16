@@ -999,6 +999,9 @@ static int LObjLoad(HSD_LObj* lobj, HSD_LightDesc* ldesc)
 
 HSD_LObj* HSD_LObjLoadDesc(HSD_LightDesc* ldesc)
 {
+#ifdef MELEE_PC
+    MELEE_PC_DAT(HSD_LightDesc, ldesc);
+#endif
     HSD_LObj *top, **p = &top;
 
     for (; ldesc; ldesc = ldesc->next) {

@@ -280,6 +280,9 @@ static int TObjLoad(HSD_TObj* tobj, HSD_TObjDesc* td)
 
 HSD_TObj* HSD_TObjLoadDesc(HSD_TObjDesc* td)
 {
+#ifdef MELEE_PC
+    MELEE_PC_DAT(HSD_TObjDesc, td);
+#endif
     if (td != NULL) {
         HSD_TObj* tobj;
         HSD_ClassInfo* info;
@@ -299,6 +302,9 @@ HSD_TObj* HSD_TObjLoadDesc(HSD_TObjDesc* td)
 
 HSD_Tlut* HSD_TlutLoadDesc(HSD_TlutDesc* tlutdesc)
 {
+#ifdef MELEE_PC
+    MELEE_PC_DAT(HSD_TlutDesc, tlutdesc);
+#endif
     if (tlutdesc != NULL) {
         HSD_Tlut* tlut = HSD_TlutAlloc();
         memcpy(tlut, tlutdesc, sizeof(HSD_Tlut));
@@ -309,6 +315,9 @@ HSD_Tlut* HSD_TlutLoadDesc(HSD_TlutDesc* tlutdesc)
 
 HSD_TObjTev* HSD_TObjTevLoadDesc(HSD_TObjTevDesc* tevdesc)
 {
+#ifdef MELEE_PC
+    MELEE_PC_DAT(HSD_TObjTevDesc, tevdesc);
+#endif
     if (tevdesc != NULL) {
         HSD_TObjTev* new = HSD_TObjTevAlloc();
         memcpy(new, tevdesc, sizeof(HSD_TObjTev));

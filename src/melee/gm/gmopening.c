@@ -189,6 +189,24 @@ void gm_801AA28C_OnFrame(void)
     HSD_SObj* temp_r3_3;
     PAD_STACK(4);
 
+#ifdef MELEE_PC
+    // Skip the opening movie
+    {
+        static bool melee_pc_skipped;
+        if (!melee_pc_skipped) {
+            melee_pc_skipped = true;
+            gmMainLib_8015F500();
+            lbAudioAx_800236DC();
+            lbAudioAx_80023694();
+            sfxForward();
+            gm_801A4B60();
+            gm_SetPendingGameMode(GM_TITLE);
+            gm_SetNewGameModePending();
+            return;
+        }
+    }
+#endif
+
     lbMthp_8001F578();
     temp_r3 = lbMthp_8001F5C4();
     if ((u32) gm_804D67EC > 0x1518) {

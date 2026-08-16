@@ -670,6 +670,9 @@ s32 JObjLoad(HSD_JObj* jobj, HSD_Joint* joint, HSD_JObj* parent)
 
 HSD_JObj* HSD_JObjLoadJoint(HSD_Joint* arg0)
 {
+#ifdef MELEE_PC
+    MELEE_PC_DAT(HSD_Joint, arg0);
+#endif
     HSD_JObj* jobj = JObjLoadJointSub(arg0, 0);
     HSD_JObjResolveRefsAll(jobj, arg0);
     return jobj;

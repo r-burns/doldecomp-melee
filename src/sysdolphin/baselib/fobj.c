@@ -295,7 +295,7 @@ static u32 FObjAnimKey(HSD_FObj* fobj)
     return HSD_FObjSetState(fobj, st == FOBJ_LOAD_DATA0 ? 3 : 4);
 }
 
-inline u32 FObjLoadData(HSD_FObj* fobj)
+static inline u32 FObjLoadData(HSD_FObj* fobj)
 {
     if ((unsigned) (fobj->ad - fobj->ad_head) >= fobj->length) {
         return 6;
@@ -455,6 +455,9 @@ void HSD_FObjInterpretAnimAll(void* fobj, void* obj,
 
 HSD_FObj* HSD_FObjLoadDesc(HSD_FObjDesc* desc)
 {
+#ifdef MELEE_PC
+    MELEE_PC_DAT(HSD_FObjDesc, desc);
+#endif
     if (desc != NULL) {
         HSD_FObj* fobj = HSD_FObjAlloc();
         fobj->next = HSD_FObjLoadDesc(desc->next);

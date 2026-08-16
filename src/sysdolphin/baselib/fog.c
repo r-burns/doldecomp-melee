@@ -94,6 +94,9 @@ HSD_Fog* HSD_FogAlloc(void)
 
 HSD_Fog* HSD_FogLoadDesc(HSD_FogDesc* desc)
 {
+#ifdef MELEE_PC
+    MELEE_PC_DAT(HSD_FogDesc, desc);
+#endif
     HSD_Fog* fog = HSD_FogAlloc();
     HSD_ASSERT(0x99, fog);
     HSD_FogInit(fog, desc);
@@ -134,6 +137,9 @@ HSD_FogAdj* HSD_FogAdjAlloc(void)
 
 HSD_FogAdj* HSD_FogAdjLoadDesc(HSD_FogAdjDesc* desc)
 {
+#ifdef MELEE_PC
+    MELEE_PC_DAT(HSD_FogAdjDesc, desc);
+#endif
     HSD_FogAdj* adj = HSD_FogAdjAlloc();
     HSD_ASSERT(0xE6, adj);
     HSD_FogAdjInit(adj, desc);

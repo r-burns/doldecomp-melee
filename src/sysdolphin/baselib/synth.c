@@ -53,7 +53,7 @@ void HSD_SynthSFXSampleLoadCallback(int result, int length, void* addr,
     s32 i;
 
     if (HSD_Synth_804D7738 == 0) {
-        s32 header_size = hsd_SynthSFXLoadBuf[0];
+        s32 header_size = MELEE_PC_BE32(hsd_SynthSFXLoadBuf[0]);
         u32 data_bytes = header_size - 0x10;
         s32 src_idx = (data_bytes >> 2) - 1;
         u32 total;
@@ -64,7 +64,7 @@ void HSD_SynthSFXSampleLoadCallback(int result, int length, void* addr,
         s32 count;
         s32 base;
 
-        total = hsd_SynthSFXLoadBuf[2] * 8 + header_size;
+        total = MELEE_PC_BE32(hsd_SynthSFXLoadBuf[2]) * 8 + header_size;
         total = (total + 0x37) & ~0x1F;
         shift = (total - data_bytes) >> 2;
         for (i = src_idx; i >= 0; i--) {
@@ -73,13 +73,13 @@ void HSD_SynthSFXSampleLoadCallback(int result, int length, void* addr,
         }
         dnw = total - header_size;
         *(u32*) ((u8*) HSD_Synth_804D7730 + (dnw & ~3)) =
-            hsd_SynthSFXLoadBuf[4];
+            MELEE_PC_BE32(hsd_SynthSFXLoadBuf[4]);
         ((u32*) HSD_Synth_804D7730)[((dnw & ~3) >> 2) + 1] =
-            hsd_SynthSFXLoadBuf[5];
+            MELEE_PC_BE32(hsd_SynthSFXLoadBuf[5]);
         ((u32*) HSD_Synth_804D7730)[((dnw & ~3) >> 2) + 2] =
-            hsd_SynthSFXLoadBuf[6];
+            MELEE_PC_BE32(hsd_SynthSFXLoadBuf[6]);
         ((u32*) HSD_Synth_804D7730)[((dnw & ~3) >> 2) + 3] =
-            hsd_SynthSFXLoadBuf[7];
+            MELEE_PC_BE32(hsd_SynthSFXLoadBuf[7]);
         HSD_Synth_804D7734 = (u32*) ((u8*) HSD_Synth_804D7730 + (dnw & ~3));
 
         bankID = HSD_Synth_804C2A60[0].bankID;
@@ -92,9 +92,9 @@ void HSD_SynthSFXSampleLoadCallback(int result, int length, void* addr,
         HSD_Synth_804D7730->x0 = NULL;
         HSD_Synth_804D7730->x4 = HSD_Synth_804C2A60[0].entrynum;
         HSD_Synth_804D7730->x10 = hsd_SynthSFXBank[bankID];
-        HSD_Synth_804D7730->x14 = hsd_SynthSFXLoadBuf[1];
-        count = hsd_SynthSFXLoadBuf[2];
-        base = hsd_SynthSFXLoadBuf[3];
+        HSD_Synth_804D7730->x14 = MELEE_PC_BE32(hsd_SynthSFXLoadBuf[1]);
+        count = MELEE_PC_BE32(hsd_SynthSFXLoadBuf[2]);
+        base = MELEE_PC_BE32(hsd_SynthSFXLoadBuf[3]);
         HSD_Synth_804D7730->x8 = base;
         HSD_Synth_804D7730->xC = count;
         HSD_Synth_804D7730 = HSD_Synth_804D7730 + 1;
@@ -139,7 +139,7 @@ void HSD_SynthSFXSampleLoadCallback(int result, int length, void* addr,
             HSD_Synth_804C2A60[0].x8(HSD_Synth_804C2A60[0].entrynum,
                                      HSD_Synth_804C2A60[0].xC);
         }
-        hsd_SynthSFXBank[bankID] += hsd_SynthSFXLoadBuf[1];
+        hsd_SynthSFXBank[bankID] += MELEE_PC_BE32(hsd_SynthSFXLoadBuf[1]);
     } else {
         if (HSD_Synth_804D7730 != NULL) {
             OSFreeToHeap(HSD_Synth_804D6018, HSD_Synth_804D7730);
@@ -169,12 +169,12 @@ static void HSD_SynthSFXHeaderLoadCallback(int result, int length, void* addr,
         HSD_ASSERTREPORT(0xCD,
                          hsd_SynthSFXBankHead[bankID + 1] -
                                  hsd_SynthSFXBank[bankID] >=
-                             hsd_SynthSFXLoadBuf[1],
+                             MELEE_PC_BE32(hsd_SynthSFXLoadBuf[1]),
                          "Can't load SFX file; bank(id=%d) buffer overflow.\n",
                          HSD_Synth_804C2A60[0].bankID);
 
-        alloc_size = hsd_SynthSFXLoadBuf[2] * 8 + 0x18;
-        header_size = hsd_SynthSFXLoadBuf[0];
+        alloc_size = MELEE_PC_BE32(hsd_SynthSFXLoadBuf[2]) * 8 + 0x18;
+        header_size = MELEE_PC_BE32(hsd_SynthSFXLoadBuf[0]);
         p = OSAllocFromHeap(HSD_Synth_804D6018,
                             OSRoundUp32B(alloc_size + header_size));
         HSD_ASSERTREPORT(0x29U, p, "audio heap overflow.\n");
@@ -185,7 +185,7 @@ static void HSD_SynthSFXHeaderLoadCallback(int result, int length, void* addr,
         HSD_Synth_804D6028[0] = HSD_DevComRequest(
             HSD_Synth_804C2A60[0].entrynum, OSRoundUp32B(header_size + 0x10),
             hsd_SynthSFXBank[HSD_Synth_804C2A60[0].bankID],
-            hsd_SynthSFXLoadBuf[1], 0x23, 1, HSD_SynthSFXSampleLoadCallback,
+            MELEE_PC_BE32(hsd_SynthSFXLoadBuf[1]), 0x23, 1, HSD_SynthSFXSampleLoadCallback,
             NULL);
         return;
     }

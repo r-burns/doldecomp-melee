@@ -49,7 +49,7 @@ int hsd_803B286C(s32* arg0, UNK_T arg1, const char* arg2, int arg3, int arg4,
 {
     u8* base = hsd_804D1138;
 
-    memcpy((u8*) arg0 + 0x370, arg2, 64);
+    memcpy(((CardState*) arg0)->x370, arg2, 64);
 
     {
         s32 write_idx;
@@ -78,7 +78,7 @@ int hsd_803B2928(s32* arg0, const char* arg1, int arg2, int arg3,
 {
     u8* base = hsd_804D1138;
 
-    memcpy((u8*) arg0 + 0x370, arg1, 64);
+    memcpy(((CardState*) arg0)->x370, arg1, 64);
 
     {
         s32 write_idx;
@@ -164,7 +164,7 @@ int hsd_803B2A4C(s32* arg0, int arg1, int arg2, void (*arg3)(int, int))
 
 int hsd_803B2ADC(s32* ctx, UNK_T data)
 {
-    memcpy(&ctx[236], data, 18);
-    ctx[9] = hsd_803AC340(&ctx[236]);
+    memcpy(&((CardState*) ctx)->x3B0, data, 18);
+    ((CardState*) ctx)->x24 = hsd_803AC340(&((CardState*) ctx)->x3B0);
     return 0;
 }

@@ -2927,7 +2927,7 @@ void ftKb_SpecialN_800EEC34(int arg0, int arg1, int arg2)
     int lo;
 
     if (ftKb_Init_803CA9D0[arg0].filename != NULL) {
-        lbDvd_800178E8(2, ftKb_Init_803CA9D0[arg0].filename, 4, 4, 0, 1, 3, 1,
+        lbDvd_loadAsync(2, ftKb_Init_803CA9D0[arg0].filename, 4, 4, 0, 1, 3, 1,
                        0);
     }
     if (ftKb_Init_803CB3E8[arg0] != NULL) {
@@ -2939,7 +2939,7 @@ void ftKb_SpecialN_800EEC34(int arg0, int arg1, int arg2)
         }
         for (i = lo; i < arg2; i++) {
             if (ftKb_Init_803CB3E8[arg0][i].dat_filename != NULL) {
-                lbDvd_800178E8(2, ftKb_Init_803CB3E8[arg0][i].dat_filename, 4,
+                lbDvd_loadAsync(2, ftKb_Init_803CB3E8[arg0][i].dat_filename, 4,
                                4, 0, 1, 3, 1, 0);
             }
         }

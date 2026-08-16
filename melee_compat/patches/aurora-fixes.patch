@@ -1,0 +1,223 @@
+diff --git a/include/dolphin/mtx/GeoTypes.h b/include/dolphin/mtx/GeoTypes.h
+index a262b85..59aa593 100644
+--- a/include/dolphin/mtx/GeoTypes.h
++++ b/include/dolphin/mtx/GeoTypes.h
+@@ -21,6 +21,10 @@ extern "C" {
+ 
+   typedef Vec Vec3;
+ 
++  typedef struct {
++    s8 x, y, z;
++  } S8Vec3, S8Vec, *S8Vec3Ptr, *S8VecPtr;
++
+   typedef struct {
+     u8 x, y, z, w;
+   } U8Vec4, *U8Vec4Ptr;
+diff --git a/include/dolphin/os.h b/include/dolphin/os.h
+index cfc801b..605fc98 100644
+--- a/include/dolphin/os.h
++++ b/include/dolphin/os.h
+@@ -92,8 +92,11 @@ OSThread* __gUnkThread1 AT_ADDRESS(OS_BASE_CACHED | 0x00D8);
+ int __gUnknown800030C0[2] AT_ADDRESS(OS_BASE_CACHED | 0x30C0);
+ u8 __gUnknown800030E3 AT_ADDRESS(OS_BASE_CACHED | 0x30E3);
+ #else
+-#define __OSBusClock  (*(u32 *)(OS_BASE_CACHED + 0x00F8))
+-#define __OSCoreClock (*(u32 *)(OS_BASE_CACHED + 0x00FC))
++// These must be relative to where MEM1 actually landed. OS_BASE_CACHED is the
++// GameCube's physical 0x80000000, which aurora explicitly does not map to (see
++// AuroraConfig::mem1Size), so using it here dereferences an unmapped address.
++#define __OSBusClock  (*(u32 *)(OSBaseAddress + 0x00F8))
++#define __OSCoreClock (*(u32 *)(OSBaseAddress + 0x00FC))
+ #endif
+ 
+ #define OS_TIMER_CLOCK_DIVIDER 4
+diff --git a/include/dolphin/thp.h b/include/dolphin/thp.h
+index 455afe6..6a887e4 100644
+--- a/include/dolphin/thp.h
++++ b/include/dolphin/thp.h
+@@ -132,6 +132,16 @@ static void __THPHuffGenerateSizeTable(void);
+ static void __THPHuffGenerateCodeTable(void);
+ static void __THPHuffGenerateDecoderTables(u8 tabIndex);
+ static void __THPRestartDefinition(void);
++// Melee's THP decoder (src/melee/lb/lbmthp.c) is written against a THPDec_*
++// interface that this header does not otherwise describe. Only this one type
++// is needed; the functions are declared by melee's own lbmthp.h.
++typedef struct {
++  s32 val0;
++  u16 val1;
++  u16 _pad;
++  u8 val2;
++} THPDec_8032FD40_Data;
++
+ static void __THPPrepBitStream(void);
+ static void __THPDecompressYUV(void* tileY, void* tileU, void* tileV);
+ static void __THPGQRRestore(void);
+diff --git a/lib/dolphin/dvd/dvd.cpp b/lib/dolphin/dvd/dvd.cpp
+index 8b60922..d34fa2b 100644
+--- a/lib/dolphin/dvd/dvd.cpp
++++ b/lib/dolphin/dvd/dvd.cpp
+@@ -1,3 +1,4 @@
++#include <cstdio>
+ #include <aurora/dvd.h>
+ #include <dolphin/dvd.h>
+ 
+diff --git a/lib/dolphin/gx/GXGeometry.cpp b/lib/dolphin/gx/GXGeometry.cpp
+index fc0e27e..a595290 100644
+--- a/lib/dolphin/gx/GXGeometry.cpp
++++ b/lib/dolphin/gx/GXGeometry.cpp
+@@ -215,7 +215,21 @@ void GXSetVtxAttrFmtv(GXVtxFmt vtxfmt, const GXVtxAttrFmtList* list) {
+   __gx->dirtyVAT |= static_cast<u8>(1 << vtxfmt);
+ }
+ 
++// TEMPORARY melee_pc diagnostics -- see docs/cmake_pc_port.md.
++extern "C" {
++unsigned long melee_pc_dbg_setarray = 0;
++unsigned long melee_pc_dbg_arr_size0 = 0;
++unsigned long melee_pc_dbg_last_arr_size = 0;
++unsigned long melee_pc_dbg_last_arr_stride = 0;
++const void* melee_pc_dbg_last_arr_data = 0;
++}
++
+ void GXSetArray(GXAttr attr, const void* data, u32 size, u8 stride, bool le) {
++  ++melee_pc_dbg_setarray;
++  if (size == 0) { ++melee_pc_dbg_arr_size0; }
++  melee_pc_dbg_last_arr_size = size;
++  melee_pc_dbg_last_arr_stride = stride;
++  melee_pc_dbg_last_arr_data = data;
+   GXAttr cpAttr = static_cast<GXAttr>(attr);
+   if (attr == GX_VA_NBT) {
+     cpAttr = GX_VA_NRM;
+diff --git a/lib/dolphin/gx/GXTransform.cpp b/lib/dolphin/gx/GXTransform.cpp
+index f443204..f64dd45 100644
+--- a/lib/dolphin/gx/GXTransform.cpp
++++ b/lib/dolphin/gx/GXTransform.cpp
+@@ -11,7 +11,23 @@ static inline void CacheProjectionVector(const f32* ptr, GXProjectionType type)
+ 
+ extern "C" {
+ 
++// TEMPORARY melee_pc diagnostics -- see docs/cmake_pc_port.md.
++extern "C" {
++unsigned long melee_pc_dbg_setproj = 0;
++unsigned long melee_pc_dbg_setvp = 0;
++float melee_pc_dbg_vp[6] = {0};
++float melee_pc_dbg_proj[16] = {0};
++int melee_pc_dbg_projtype = -1;
++unsigned long melee_pc_dbg_posmtx = 0;
++float melee_pc_dbg_pm[12] = {0};
++}
++
+ void GXSetProjection(const void* mtx_, GXProjectionType type) {
++  ++melee_pc_dbg_setproj;
++  melee_pc_dbg_projtype = static_cast<int>(type);
++  for (int i = 0; i < 16; ++i) {
++    melee_pc_dbg_proj[i] = static_cast<const float*>(mtx_)[i];
++  }
+   const auto& mtx = *reinterpret_cast<const aurora::Mat4x4<float>*>(mtx_);
+   const f32 projVec[] = {
+       static_cast<f32>(type == GX_ORTHOGRAPHIC),
+@@ -54,6 +70,10 @@ void GXSetProjectionv(const f32* ptr) {
+ }
+ 
+ void GXLoadPosMtxImm(const void* mtx_, u32 id) {
++  ++melee_pc_dbg_posmtx;
++  for (int i = 0; i < 12; ++i) {
++    melee_pc_dbg_pm[i] = static_cast<const float*>(mtx_)[i];
++  }
+   CHECK(id >= GX_PNMTX0 && id <= GX_PNMTX9, "invalid pn mtx {}", static_cast<int>(id));
+   const auto* mtx = reinterpret_cast<const f32*>(mtx_);
+ 
+@@ -121,6 +141,10 @@ void GXLoadTexMtxImm(const void* mtx_, u32 id, GXTexMtxType type) {
+ }
+ 
+ void GXSetViewport(float left, float top, float width, float height, float nearZ, float farZ) {
++  ++melee_pc_dbg_setvp;
++  melee_pc_dbg_vp[0] = left; melee_pc_dbg_vp[1] = top;
++  melee_pc_dbg_vp[2] = width; melee_pc_dbg_vp[3] = height;
++  melee_pc_dbg_vp[4] = nearZ; melee_pc_dbg_vp[5] = farZ;
+   GXSetViewportJitter(left, top, width, height, nearZ, farZ, 1);
+ }
+ 
+diff --git a/lib/dolphin/os/OSMemory.cpp b/lib/dolphin/os/OSMemory.cpp
+index 2a963a5..582f13b 100644
+--- a/lib/dolphin/os/OSMemory.cpp
++++ b/lib/dolphin/os/OSMemory.cpp
+@@ -8,6 +8,10 @@
+ 
+ #include <cassert>
+ 
++#if defined(__linux__) && defined(__x86_64__)
++#include <sys/mman.h>
++#endif
++
+ #include "internal.hpp"
+ #include <dolphin/os.h>
+ #include "dolphin/types.h"
+@@ -138,6 +142,27 @@ static void* AllocMEM1(u32 size) {
+ }
+ #else
+ static void* AllocMEM1(u32 size) {
++  // MEM1 must live in the low 4GB.
++  //
++  // DAT archives store their internal pointers as 32-bit offsets and the HSD
++  // loader relocates them in place (`*ptr += (u32)archive->data`) into 4-byte
++  // slots. If the archive sits above 4GB there is simply nowhere to put a host
++  // pointer -- the slot is too small -- and every relocated pointer is
++  // truncated garbage.
++  //
++  // Below 2GB specifically, not merely below 4GB: the game also round-trips
++  // pointers through *signed* 32-bit slots (`cmd[1] = (s32) state`,
++  // hsd_3A94.c:2326). An address of 0x8xxxxxxx would come back sign-extended
++  // and unusable, so MAP_32BIT -- which allocates below 2GB -- is what keeps
++  // those lossless. See docs/cmake_pc_port.md.
++#if defined(__linux__) && defined(__x86_64__)
++  void* p = mmap(nullptr, size, PROT_READ | PROT_WRITE,
++                 MAP_PRIVATE | MAP_ANONYMOUS | MAP_32BIT, -1, 0);
++  if (p != MAP_FAILED) {
++    return p;
++  }
++  // Fall through: better a working high allocation than none at all.
++#endif
+   return calloc(1, size);
+ }
+ #endif
+diff --git a/lib/gx/command_processor.cpp b/lib/gx/command_processor.cpp
+index 615c64d..ee6b53b 100644
+--- a/lib/gx/command_processor.cpp
++++ b/lib/gx/command_processor.cpp
+@@ -434,14 +434,24 @@ static void handle_draw_unmerged(GXPrimitive prim, GXVtxFmt fmt, u16 vtxCount, g
+   push_gx_draw(prim, fmt, vtxCount, vertRange, idxRange, numIndices);
+ }
+ 
++// TEMPORARY melee_pc diagnostics -- see docs/cmake_pc_port.md.
++extern "C" {
++unsigned long melee_pc_dbg_draw_prim = 0;
++unsigned long melee_pc_dbg_draw_verts = 0;
++unsigned long melee_pc_dbg_vtxsize0 = 0;
++}
++
+ static void draw_prim(GXPrimitive prim, GXVtxFmt fmt, u16 vtxCount, Reader& reader) noexcept {
+   ZoneScoped;
++  ++melee_pc_dbg_draw_prim;
++  melee_pc_dbg_draw_verts += vtxCount;
+   u32 vtxSize;
+   if (g_gxState.lastVtxFmt == fmt)
+     LIKELY { vtxSize = g_gxState.lastVtxSize; }
+   else
+     UNLIKELY { vtxSize = calc_vtx_size(fmt); }
+ 
++  if (vtxSize == 0) { ++melee_pc_dbg_vtxsize0; }
+   u32 totalVtxBytes = vtxCount * vtxSize;
+   if (totalVtxBytes > reader.remaining())
+     UNLIKELY { handle_draw_overrun(totalVtxBytes, reader); }
+diff --git a/lib/internal.hpp b/lib/internal.hpp
+index 4c233b2..1d21fc6 100644
+--- a/lib/internal.hpp
++++ b/lib/internal.hpp
+@@ -7,6 +7,7 @@
+ #include <array>
+ #include <cassert>
+ #include <cstdint>
++#include <cstring>
+ #include <type_traits>
+ #include <vector>
+ 

@@ -448,7 +448,7 @@ void Ground_801C06B8(GrKind arg0)
         return;
     }
     if (stage_datas[arg0]->data1 != NULL) {
-        lbDvd_800178E8(4, stage_datas[arg0]->data1, 4, 4, 0, 1, 7, 16, 0);
+        lbDvd_loadAsync(4, stage_datas[arg0]->data1, 4, 4, 0, 1, 7, 16, 0);
     }
     switch (arg0) {
     case Gr_Kind_Izumi:
