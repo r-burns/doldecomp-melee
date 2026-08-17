@@ -97,9 +97,6 @@
 #include <baselib/mtx.h>
 #include <baselib/random.h>
 
-extern struct UnkCostumeList CostumeListsForeachCharacter[FTKIND_MAX];
-
-extern MotionState ftData_MotionStateList[ftCo_MS_Count];
 extern MotionState* ftData_CharacterStateTables[FTKIND_MAX];
 
 /// ==== fighter.c variables ====
@@ -1260,8 +1257,7 @@ void Fighter_ChangeMotionState(Fighter_GObj* gobj, FtMotionId msid,
                 } else {
                     ftData_80085CD8(fp, fp, fp->anim_id);
                 }
-                fp->x3E4_fighterCmdScript.u =
-                    (union CmdUnion*) unk_struct_x18->xC;
+                fp->x3E4_fighterCmdScript.u = unk_struct_x18->xC;
                 fp->x3E4_fighterCmdScript.loop_count = 0;
 
                 if (anim_start) {
@@ -1269,8 +1265,8 @@ void Fighter_ChangeMotionState(Fighter_GObj* gobj, FtMotionId msid,
                         ftAnim_8006EBE8(gobj, anim_start - anim_speed,
                                         anim_speed,
                                         (anim_blend == -1.0f) ? 0.0f
-                                        : (anim_blend) ? anim_blend
-                                                       : (*unk_byte_ptr)[0]);
+                                        : anim_blend ? anim_blend
+                                                     : (*unk_byte_ptr)[0]);
                     }
                     ftAnim_8006E9B4(gobj);
                     if (fp->x594_b0 != 0U) {
@@ -1290,8 +1286,8 @@ void Fighter_ChangeMotionState(Fighter_GObj* gobj, FtMotionId msid,
                     if (fp->x590 != 0U) {
                         ftAnim_8006EBE8(gobj, anim_start, anim_speed,
                                         (anim_blend == -1.0f) ? 0.0f
-                                        : (anim_blend) ? anim_blend
-                                                       : (*unk_byte_ptr)[0]);
+                                        : anim_blend ? anim_blend
+                                                     : (*unk_byte_ptr)[0]);
                     }
                     fp->x3E4_fighterCmdScript.timer = 0.0f;
                 }
@@ -2346,7 +2342,7 @@ void Fighter_procUpdate(Fighter_GObj* gobj)
                 VEC_CLEAR(fp->xD4_unk_vel);
             }
             // fp->xB0_position += *pAtkShieldKB
-            PSVECAdd(&fp->cur_pos, (Vec3*) pAtkShieldKB, &fp->cur_pos);
+            PSVECAdd(&fp->cur_pos, pAtkShieldKB, &fp->cur_pos);
         } else {
             // fp@r31.position@0xB0.xyz += selfVel + pAtkShieldKB
             PSVECAdd(&fp->cur_pos, &selfVel, &fp->cur_pos);
@@ -2354,7 +2350,7 @@ void Fighter_procUpdate(Fighter_GObj* gobj)
             fp->cur_pos.y += p_kb_vel->y;
             fp->cur_pos.z += 0;
 
-            PSVECAdd(&fp->cur_pos, (Vec3*) pAtkShieldKB, &fp->cur_pos);
+            PSVECAdd(&fp->cur_pos, pAtkShieldKB, &fp->cur_pos);
         }
         // accumulate wind hazards into the windOffset vector
         ftColl_GetWindOffsetVec(gobj,
@@ -2671,7 +2667,7 @@ void Fighter_8006CDA4(Fighter* fp, s32 arg1)
         hold_item_bool = true;
     }
 
-    temp_bool = !((fp->x2220_b3 || fp->x2220_b4 || ftCo_8008E984(fp)));
+    temp_bool = !(fp->x2220_b3 || fp->x2220_b4 || ftCo_8008E984(fp));
     vec = vec3_803B7494;
 
     if (fp->motion_id != 0x145 && (unsigned) fp->motion_id - 0x122 > 1 &&
@@ -2680,8 +2676,8 @@ void Fighter_8006CDA4(Fighter* fp, s32 arg1)
         if ( ///// giant if condition
             hold_item_bool && temp_bool &&
             ((HSD_Randi(p_ftCommonData->x418) < arg1) ||
-             ((((it_8026B30C(fp->item_gobj) == 3) &&
-                it_8026B594(fp->item_gobj))) &&
+             (((it_8026B30C(fp->item_gobj) == 3) &&
+               it_8026B594(fp->item_gobj)) &&
               !HSD_Randi(p_ftCommonData->x41C))))
         {
             if (fp->x1978) {
@@ -2731,7 +2727,7 @@ void Fighter_8006CFE0(Fighter_GObj* gobj)
     }
 }
 
-inline void setBit(Fighter_GObj* gobj)
+static inline void setBit(Fighter_GObj* gobj)
 {
     Fighter* fp = GET_FIGHTER(gobj);
     fp->x2219_b7 = 1;
@@ -3078,7 +3074,7 @@ void Fighter_Unload_8006DABC(void* user_data)
 {
     /// @remarks This doesn't use #GET_FIGHTER, but since it appears to pass it
     ///          directly it's probably just written directly.
-    Fighter* fp = (Fighter*) (user_data);
+    Fighter* fp = (Fighter*) user_data;
     int kind = fp->kind;
 
     if (ftData_OnUserDataRemove[kind]) {

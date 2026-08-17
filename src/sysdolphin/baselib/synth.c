@@ -5,6 +5,7 @@
 #include "synth.static.h"
 
 #include <math.h>
+#include <string.h>
 #include <dolphin/ai.h>
 #include <dolphin/ar.h>
 #include <dolphin/os.h>
@@ -46,8 +47,8 @@ static inline s32 SfxLoadStreamDataSize(s32 size)
     return size + 8;
 }
 
-void HSD_SynthSFXSampleLoadCallback(int result, int length, void* addr,
-                                    int cancelflag)
+static void HSD_SynthSFXSampleLoadCallback(int result, int length, void* addr,
+                                           bool cancelflag)
 {
     BOOL intr;
     s32 i;
@@ -156,7 +157,7 @@ void HSD_SynthSFXSampleLoadCallback(int result, int length, void* addr,
 }
 
 static void HSD_SynthSFXHeaderLoadCallback(int result, int length, void* addr,
-                                           int cancelflag)
+                                           bool cancelflag)
 {
     AXVPB** unused;
     s32 header_size;
@@ -190,7 +191,7 @@ static void HSD_SynthSFXHeaderLoadCallback(int result, int length, void* addr,
         return;
     }
     HSD_Synth_804D7730 = NULL;
-    HSD_SynthSFXSampleLoadCallback(NULL, 0, NULL, 0);
+    HSD_SynthSFXSampleLoadCallback(0, 0, NULL, 0);
 }
 
 void HSD_SynthSFXLoadNewProc(void)
@@ -1200,12 +1201,11 @@ extern s32 HSD_Synth_804D7764;
 void HSD_Synth_8038AD74(u32 offset, uintptr_t src)
 {
     HSD_DevComRequest(HSD_Synth_804D7764, src,
-                      HSD_Synth_804D7780 + ((u32) HSD_Synth_804D7768 << 16),
+                      HSD_Synth_804D7780 + (HSD_Synth_804D7768 << 16),
                       lbl_804C4540[HSD_Synth_804D7768].x0, 0x23, 0,
                       HSD_SynthResetStreamCounters, 0);
 }
 
-extern s32 HSD_Synth_804D7764;
 extern u32 HSD_Synth_804D7770;
 extern u32 HSD_Synth_804D7774;
 
@@ -1252,8 +1252,7 @@ void HSD_Synth_8038ADD0(void)
     if (node->flags & 8) {
         return;
     }
-    pos = (u32) (*(u32*) ((u8*) node->voice[0] + 0x1B2) -
-                 HSD_Synth_804D7780 * 2) >>
+    pos = (*(u32*) ((u8*) node->voice[0] + 0x1B2) - HSD_Synth_804D7780 * 2) >>
           0x11;
     if (pos != HSD_Synth_804D7774) {
         HSD_Synth_804D7774 = pos;
@@ -1324,16 +1323,16 @@ void HSD_Synth_8038B120(void)
             AXSetVoiceSrc(node->voice[i], &HSD_Synth_80407FD8);
             AXSetVoiceCurrentAddr(
                 node->voice[i],
-                (HSD_Synth_804D7780 + ((u32) HSD_Synth_804D7768 << 16)) * 2 +
+                (HSD_Synth_804D7780 + (HSD_Synth_804D7768 << 16)) * 2 +
                     i * lbl_804C4540[HSD_Synth_804D7768].x0 + 2);
             AXSetVoiceEndAddr(
                 node->voice[i],
-                (HSD_Synth_804D7780 + ((u32) HSD_Synth_804D7768 << 16)) * 2 +
+                (HSD_Synth_804D7780 + (HSD_Synth_804D7768 << 16)) * 2 +
                     i * lbl_804C4540[HSD_Synth_804D7768].x0 +
                     lbl_804C4540[HSD_Synth_804D7768].x4);
             AXSetVoiceLoopAddr(
                 node->voice[i],
-                (HSD_Synth_804D7780 + ((u32) HSD_Synth_804D7768 << 16)) * 2 +
+                (HSD_Synth_804D7780 + (HSD_Synth_804D7768 << 16)) * 2 +
                     i * lbl_804C4540[HSD_Synth_804D7768].x0 + 2);
             AXSetVoiceState(node->voice[i], 1);
         }
@@ -1355,16 +1354,13 @@ void HSD_Synth_8038B120(void)
 void HSD_SynthPStreamFirstHakoHeaderCallback(void)
 {
     HSD_DevComRequest(HSD_Synth_804D7764, 0xA0,
-                      HSD_Synth_804D7780 + ((u32) HSD_Synth_804D7768 << 16),
+                      HSD_Synth_804D7780 + (HSD_Synth_804D7768 << 16),
                       lbl_804C4540[HSD_Synth_804D7768].x0, 0x23, 0,
                       (HSD_DevComCallback) HSD_Synth_8038B120, 0);
 }
 
-extern u32 HSD_Synth_804D7770;
-extern u32 HSD_Synth_804D7774;
-
 void HSD_SynthPStreamHeaderCallback(int arg0, int arg1, void* arg2,
-                                    int cancelflag)
+                                    bool cancelflag)
 {
     u32* entry = arg2;
     struct HSD_SynthSFXNode* node;

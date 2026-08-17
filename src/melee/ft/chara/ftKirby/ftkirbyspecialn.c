@@ -21,6 +21,7 @@
 #include "ft/forward.h"
 
 #include "ft/ft_081B.h"
+#include "ft/ft_0852.h"
 #include "ft/ft_0877.h"
 #include "ft/ft_0892.h"
 #include "ft/ftanim.h"
@@ -706,7 +707,7 @@ void ftKb_SpecialLw1_Anim(Fighter_GObj* gobj)
     }
 }
 
-inline void ftKbUnkInline(Fighter_GObj* gobj, int val)
+static inline void ftKbUnkInline(Fighter_GObj* gobj, int val)
 {
     Fighter* fp = GET_FIGHTER(gobj);
     fp->x221C_b4 = val;
@@ -1891,7 +1892,7 @@ void ftKb_SpecialN_800F5BA4(Fighter* fp)
     if ((s32) fp->kind == FTKIND_KIRBY &&
         (s32) fp->u.kb.hat.kind != FTKIND_KIRBY && !fp->u.kb.hat.x8_b0 &&
         (u32) fp->victim_gobj == 0U &&
-        (u32) fp->dmg.x1860_element != HitElement_Cape &&
+        fp->dmg.x1860_element != HitElement_Cape &&
         HSD_Randi((s32) da->specialn_odds_lose_ability_on_hit) == 0)
     {
         ftKb_SpecialN_800F5D04(fp->gobj, 1);
@@ -3494,7 +3495,7 @@ static inline void fn_800F9260_DrMario(HSD_GObj* gobj, Fighter* fp, Vec3* pos)
                         fp->facing_dir);
 }
 
-inline s32 fn_800F9260_inline(HSD_GObj* gobj)
+static inline s32 fn_800F9260_inline(HSD_GObj* gobj)
 {
     Fighter* fp2;
     s32 candidates[9];

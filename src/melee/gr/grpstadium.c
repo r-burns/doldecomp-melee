@@ -291,7 +291,7 @@ void fn_801D13C8(Ground_GObj* gobj)
 }
 
 /// @todo this is a commonly used inline; it should be moved to random.h
-inline int randi(int i)
+static inline int randi(int i)
 {
     if (i != 0) {
         return HSD_Randi(i);
@@ -311,7 +311,7 @@ void grStadium_801D13E0(Ground_GObj* gobj)
 
     Ground_801C2ED0(jobj, gr->map_id);
     grAnime_801C8138(gobj, gr->map_id, 0);
-    mobj = (void*) lbDvd_GetPreloadedArchive(0x7D5);
+    mobj = lbDvd_GetPreloadedArchive(0x7D5);
     gr->u.stadium.xCC = mobj;
     if (mobj == NULL) {
         gr->u.stadium.xCC = HSD_MemAlloc(0x50000);
@@ -624,7 +624,7 @@ void grStadium_801D1E1C(Ground_GObj* gobj) {}
 
 extern Vec3 grPs_803B7F80;
 
-inline void mul_vec(Vec* v, float m)
+static inline void mul_vec(Vec* v, float m)
 {
     v->x *= m;
     v->y *= m;
@@ -922,7 +922,7 @@ typedef struct TextWrapper {
 } TextWrapper;
 
 /// @todo can these inlines be merged?
-inline int randi_between_2(int a, int b)
+static inline int randi_between_2(int a, int b)
 {
     int result = b;
     if (b > a) {
@@ -933,7 +933,7 @@ inline int randi_between_2(int a, int b)
     return result;
 }
 
-inline int randi_between(int a, int b)
+static inline int randi_between(int a, int b)
 {
     if (b > a) {
         return a + randi(b - a);
@@ -1305,7 +1305,7 @@ void grStadium_801D3084(HSD_GObj* gobj, int unused)
 
 /// @todo these are commonly used inlines; they should be moved to jobj.h
 
-inline HSD_JObj* jobj_next(HSD_JObj* jobj)
+static inline HSD_JObj* jobj_next(HSD_JObj* jobj)
 {
     if (jobj == NULL) {
         return NULL;
@@ -1313,7 +1313,7 @@ inline HSD_JObj* jobj_next(HSD_JObj* jobj)
     return jobj->next;
 }
 
-inline HSD_JObj* jobj_parent(HSD_JObj* jobj)
+static inline HSD_JObj* jobj_parent(HSD_JObj* jobj)
 {
     if (jobj == NULL) {
         return NULL;
@@ -1321,7 +1321,7 @@ inline HSD_JObj* jobj_parent(HSD_JObj* jobj)
     return jobj->parent;
 }
 
-inline HSD_JObj* jobj_child(HSD_JObj* jobj)
+static inline HSD_JObj* jobj_child(HSD_JObj* jobj)
 {
     if (jobj == NULL) {
         return NULL;

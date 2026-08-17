@@ -16,8 +16,7 @@
 #include <dolphin/gx.h>
 #include <dolphin/gx/GXTransform.h>
 #include <dolphin/mtx.h>
-#include <dolphin/vi.h>
-#include <MetroTRK/intrinsics.h>
+#include <dolphin/vi.h> // IWYU pragma: keep
 
 static HSD_ClassInfo* default_class;
 static HSD_CObj* current;
@@ -627,7 +626,7 @@ static float upvec2roll(HSD_CObj* cobj, Vec3* up)
     if (HSD_CObjGetEyeVector(cobj, &eye) != 0) {
         dot = 0.0f;
     } else {
-        dot = __fabsf(VECDotProduct(up, &eye));
+        dot = fabsf(VECDotProduct(up, &eye));
         dot = 1.0f - dot;
         if (dot < FLT_MIN) {
             dot = 0.0f;
@@ -649,10 +648,12 @@ static inline f32 vec_get_x(Vec3* v)
     return v->x;
 }
 
+#ifdef MUST_MATCH
 static inline f64 cobj_fabsf_p(f32* v)
 {
-    return __fabsf(*v);
+    return fabsf(*v);
 }
+#endif
 
 static int roll2upvec(HSD_CObj* cobj, Vec3* up, float roll)
 {
@@ -666,7 +667,11 @@ static int roll2upvec(HSD_CObj* cobj, Vec3* up, float roll)
     if (res != 0) {
         return res;
     }
+#ifdef MUST_MATCH
     if (1.0 - cobj_fabsf_p(&eye.y) < 0.0001) {
+#else
+    if (1.0 - fabsf(eye.y) < 0.0001) {
+#endif
         v0.x = sqrtf(eye.y * eye.y + eye.z * eye.z);
         v0.y = eye.y * (-vec_get_x(&eye) / v0.x);
         v0.z = eye.z * (-eye.x / v0.x);
@@ -1260,7 +1265,7 @@ HSD_CObj* HSD_CObjAlloc(void)
     return cobj;
 }
 
-inline static void CObjResetFlags(HSD_CObj* cobj, u32 flags)
+static inline void CObjResetFlags(HSD_CObj* cobj, u32 flags)
 {
     if (cobj == NULL) {
         return;

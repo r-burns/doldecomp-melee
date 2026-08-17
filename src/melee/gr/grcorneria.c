@@ -1788,7 +1788,7 @@ int grCorneria_801E08CC(void)
     return -1;
 }
 
-int grCorneria_801E0A74(f32* arg0)
+int grCorneria_801E0A74(const f32* arg0)
 {
     HSD_GObj* gobj;
 
@@ -2473,11 +2473,11 @@ void smashTaunt_801E24AC(Ground_GObj* gobj, int renderpass)
         if (gp->u.smashtaunt.text == NULL) {
             return;
         }
-        ((HSD_Text*) gp->u.smashtaunt.text)->hidden = true;
+        (gp->u.smashtaunt.text)->hidden = true;
         return;
     }
     if (gp->u.smashtaunt.text != NULL) {
-        ((HSD_Text*) gp->u.smashtaunt.text)->hidden = false;
+        (gp->u.smashtaunt.text)->hidden = false;
     }
     grDisplay_801C5DB0(gobj, renderpass);
 }

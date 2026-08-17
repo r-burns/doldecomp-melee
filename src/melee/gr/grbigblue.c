@@ -8,7 +8,6 @@
 #include "ground.h"
 #include "placeholder.h"
 
-#include <placeholder.h>
 #include <platform.h>
 
 #include "baselib/debug.h"
@@ -602,9 +601,9 @@ void grBigBlue_801E68B8(Ground_GObj* gobj)
 {
     Ground* gp = GET_GROUND(gobj);
 
-    HSD_Free((void*) gp->u.bigblue.xC8);
+    HSD_Free(gp->u.bigblue.xC8);
     gp->u.bigblue.xC8 = NULL;
-    HSD_Free((void*) gp->u.bigblue.xCC);
+    HSD_Free(gp->u.bigblue.xCC);
     gp->u.bigblue.xCC = NULL;
 }
 
@@ -713,8 +712,8 @@ void grBigBlue_801E6C60(Ground_GObj* gobj)
                     s32 found;
                     s32 retries;
 
-                    memzero(&pos, 0xC);
-                    memzero(&neg_pos, 0xC);
+                    memzero(&pos, sizeof(pos));
+                    memzero(&neg_pos, sizeof(neg_pos));
                     pos.x = 10.0f + Stage_GetBlastZoneRightOffset();
                     neg_pos.x = -(10.0f + Stage_GetBlastZoneRightOffset());
 
@@ -827,7 +826,7 @@ void grBigBlue_801E6C60(Ground_GObj* gobj)
                         gp->u.bigblue.data[i].x38 = pos;
                         gp->u.bigblue.data[i].x44.x =
                             yakumono_param->x98 *
-                            (f32) (s8) gp->u.bigblue.data[i].x2;
+                            (f32) gp->u.bigblue.data[i].x2;
                         gp->u.bigblue.data[i].x44.z = 0.0f;
                         gp->u.bigblue.data[i].x44.y = 0.0f;
                         gp->u.bigblue.data[i].x18.z = 0.0f;
@@ -853,7 +852,7 @@ void grBigBlue_801E6C60(Ground_GObj* gobj)
                         base->u.arwing.xC4 += 1;
                         if ((int) grBigBlue_801E89DC(2) == 0) {
                             u32 cnt = base->u.arwing.xC4;
-                            if ((s32) cnt >= (s32) yakumono_param->x11C) {
+                            if ((s32) cnt >= yakumono_param->x11C) {
                                 s32 max = yakumono_param->x120;
                                 if ((s32) cnt <= max &&
                                     ((s32) cnt == max || HSD_Randi(2) != 0))
@@ -864,9 +863,9 @@ void grBigBlue_801E6C60(Ground_GObj* gobj)
                         }
                         if ((int) grBigBlue_801E89DC(1) == 0) {
                             u32 cnt2 = base->u.arwing.xC4;
-                            if ((s32) cnt2 >= (s32) yakumono_param->xDC &&
+                            if ((s32) cnt2 >= yakumono_param->xDC &&
                                 (s32) gp->u.bigblue.data[i].x2 == 1 &&
-                                ((s32) cnt2 >= (s32) yakumono_param->xE0 ||
+                                ((s32) cnt2 >= yakumono_param->xE0 ||
                                  HSD_Randi(2) != 0))
                             {
                                 grBigBlue_801E8978(0, NULL, NULL);
@@ -932,8 +931,8 @@ void grBigBlue_801E6C60(Ground_GObj* gobj)
             {
                 Vec3 speeds;
                 speeds = grBb_803B8114;
-                speed_val = (f32) (s8) gp->u.bigblue.data[i].x2 *
-                            (((f32*) &speeds)[(s8) idx] * Ground_801C0498());
+                speed_val = (f32) gp->u.bigblue.data[i].x2 *
+                            (((f32*) &speeds)[idx] * Ground_801C0498());
             }
             fwd.x = speed_val;
             fwd.z = 0.0f;
@@ -944,9 +943,8 @@ void grBigBlue_801E6C60(Ground_GObj* gobj)
             {
                 Vec3 speeds2;
                 speeds2 = grBb_803B8114;
-                speed_val = (f32) - (s8) gp->u.bigblue.data[i].x2 *
-                                        (((f32*) &speeds2)[(s8) idx] *
-                                         Ground_801C0498());
+                speed_val = (f32) -gp->u.bigblue.data[i].x2 *
+                            (((f32*) &speeds2)[idx] * Ground_801C0498());
             }
             back.x = speed_val;
             back.z = 0.0f;
@@ -1123,7 +1121,7 @@ void grBigBlue_801E6C60(Ground_GObj* gobj)
                 {
                     Vec3 speeds3;
                     speeds3 = grBb_803B8114;
-                    speed3 = ((f32*) &speeds3)[(s8) idx] * Ground_801C0498();
+                    speed3 = ((f32*) &speeds3)[idx] * Ground_801C0498();
                 }
                 {
                     Vec3 speeds4;
@@ -1131,8 +1129,7 @@ void grBigBlue_801E6C60(Ground_GObj* gobj)
                     f32 left_x = pos.x - (20.0f + speed3);
                     f32 right_x;
                     speeds4 = grBb_803B8114;
-                    speed_off4 =
-                        ((f32*) &speeds4)[(s8) idx] * Ground_801C0498();
+                    speed_off4 = ((f32*) &speeds4)[idx] * Ground_801C0498();
                     right_x = pos.x + (20.0f + speed_off4);
                     target_y =
                         grBigBlue_801E8B84(cam_top, cam_bot, left_x, right_x);
@@ -1145,8 +1142,7 @@ void grBigBlue_801E6C60(Ground_GObj* gobj)
                     Vec3 speeds5;
                     f32 speed_off5;
                     speeds5 = grBb_803B8114;
-                    speed_off5 =
-                        ((f32*) &speeds5)[(s8) idx] * Ground_801C0498();
+                    speed_off5 = ((f32*) &speeds5)[idx] * Ground_801C0498();
                     coll_result = grBigBlue_801EACE8(
                         jobj, &pos, &coll_y, 10.0f + speed_off5, 16.5f);
                 }
@@ -1660,7 +1656,7 @@ void grBigBlue_801E93D8(Ground_GObj* gobj)
                 if (count <= 1) {
                     f32 height;
 
-                    memzero(&pos, 0xC);
+                    memzero(&pos, sizeof(pos));
                     pos.x = Stage_GetBlastZoneLeftOffset() - 50.0f;
                     height = grBigBlue_801EC58C(&pos, NULL, 500.0f);
                     if (height != -3.4028235e38f) {
@@ -1965,8 +1961,8 @@ void grBigBlue_801EA05C(Ground_GObj* gobj)
             f32 range;
             s32 r;
 
-            memzero(&pos, 0xC);
-            memzero(&half_bot, 0xC);
+            memzero(&pos, sizeof(pos));
+            memzero(&half_bot, sizeof(half_bot));
             pos.x = Stage_GetBlastZoneRightOffset();
             half_bot.x = -Stage_GetBlastZoneRightOffset();
 
@@ -3358,7 +3354,7 @@ void grBigBlue_801ECB50(Ground_GObj* gobj)
 
             st_val = 10;
             byte = target_car[0xD4];
-#ifdef MWERKS_GEKKO
+#ifdef MUST_MATCH
             asm { rlwimi byte, st_val, 2, 24, 29 }
 #endif
             target_car[0xD4] = byte;
@@ -3372,7 +3368,7 @@ void grBigBlue_801ECB50(Ground_GObj* gobj)
                      *(f32*) (bp + 0xE0) > *(f32*) (target_car + 0xE0)))
                 {
                     byte = bp[0xD4];
-#ifdef MWERKS_GEKKO
+#ifdef MUST_MATCH
                     asm { rlwimi byte, st_val, 2, 24, 29 }
 #endif
                     bp[0xD4] = byte;
@@ -3387,7 +3383,7 @@ void grBigBlue_801ECB50(Ground_GObj* gobj)
                      *(f32*) (bp + 0x120) > *(f32*) (target_car + 0xE0)))
                 {
                     byte = bp[0x114];
-#ifdef MWERKS_GEKKO
+#ifdef MUST_MATCH
                     asm { rlwimi byte, st_val, 2, 24, 29 }
 #endif
                     bp[0x114] = byte;
@@ -3403,7 +3399,7 @@ void grBigBlue_801ECB50(Ground_GObj* gobj)
                      *(f32*) (p2 + 0xE0) > *(f32*) (target_car + 0xE0)))
                 {
                     byte = p2[0xD4];
-#ifdef MWERKS_GEKKO
+#ifdef MUST_MATCH
                     asm { rlwimi byte, st_val, 2, 24, 29 }
 #endif
                     p2[0xD4] = byte;
@@ -3417,7 +3413,7 @@ void grBigBlue_801ECB50(Ground_GObj* gobj)
                          *(f32*) (p3 + 0xE0) > *(f32*) (target_car + 0xE0)))
                     {
                         byte = p3[0xD4];
-#ifdef MWERKS_GEKKO
+#ifdef MUST_MATCH
                         asm { rlwimi byte, st_val, 2, 24, 29 }
 #endif
                         p3[0xD4] = byte;
@@ -3498,7 +3494,7 @@ void grBigBlue_801ECB50(Ground_GObj* gobj)
                         pick = 0;
                     }
                     for (pos = 0; pos < 30; pos++) {
-                        if ((u8) * ((u8*) gp->u.bigblue.xCC + pos) == 0 &&
+                        if ((*((u8*) gp->u.bigblue.xCC + pos)) == 0 &&
                             --pick < 0)
                         {
                             if (grBigBlue_801EE398(ground_gobj, active_count,
@@ -3534,7 +3530,7 @@ void grBigBlue_801ECB50(Ground_GObj* gobj)
                         pick = 0;
                     }
                     for (pos = 0; pos < 30; pos++) {
-                        if ((u8) * ((u8*) gp->u.bigblue.xCC + pos) == 2 &&
+                        if ((*((u8*) gp->u.bigblue.xCC + pos)) == 2 &&
                             --pick < 0)
                         {
                             if (grBigBlue_801EE398(ground_gobj, active_count,

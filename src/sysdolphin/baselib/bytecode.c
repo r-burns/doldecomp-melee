@@ -10,7 +10,6 @@
 
 #include <math.h>
 #include <dolphin/os.h>
-#include <melee/lb/lb_00CE.h>
 
 typedef union {
     void* p;
@@ -18,18 +17,7 @@ typedef union {
     f32 f;
 } ByteCodeVal;
 
-static inline f32 fmodf(f32 divisor, f32 dividend)
-{
-    long long quotient;
-
-    if (__fabsf(divisor) > __fabsf(dividend)) {
-        return dividend;
-    }
-    quotient = dividend / divisor;
-    return dividend - divisor * quotient;
-}
-
-float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
+float HSD_ByteCodeEval(u8* bytecode, const f32* args, s32 nb_args)
 {
     HSD_SList* stack;
     int i;
@@ -271,7 +259,8 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
             HSD_ASSERT(525, stack->next);
             f0 = ((ByteCodeVal*) &stack->data)->f;
             stack = HSD_SListRemove(stack);
-            fv = fmodf(f0, ((ByteCodeVal*) &stack->data)->f);
+            f1 = f1 = ((ByteCodeVal*) &stack->data)->f;
+            fv = fmodf(f1, f0);
             stack->data = *(void**) &fv;
             break;
         case 0x1C:

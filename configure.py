@@ -82,11 +82,6 @@ parser.add_argument(
     help="build with debug info (implies --non-matching)",
 )
 parser.add_argument(
-    "--bugfix",
-    action="store_true",
-    help="build with bug fixes (implies --non-matching)",
-)
-parser.add_argument(
     "--asm",
     action="store_true",
     help="override src files with asm equivalents (implies --non-matching)",
@@ -191,7 +186,7 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-if any({args.debug, args.bugfix, args.asm, args.testing}) or args.sym == "on":
+if any({args.debug, args.asm, args.testing}) or args.sym == "on":
     args.non_matching = True
 
 
@@ -287,8 +282,8 @@ cflags_base = [
 
 if args.sym in {"on", "off"}:
     cflags_base.append(f"-sym {args.sym}")
-if args.bugfix:
-    cflags_base.append("-DBUGFIX")
+if not args.non_matching:
+    cflags_base.append("-DMUST_MATCH")
 
 cflags_base.append(f"-maxerrors {args.max_errors}")
 if args.max_errors == 0:
@@ -354,7 +349,6 @@ clang_flags_base = [
     "-fno-builtin",
     "--target=ppc32-none-eabi",
     "-fno-short-enums",
-    "-DBUGFIX",
     "-Isrc/melee",
     "-Isrc/melee/ft/chara",
     "-isystemsrc",
@@ -739,7 +733,7 @@ config.libs = [
             Object(Matching, "melee/ft/ftcolanim.c"),
             Object(Matching, "melee/ft/ftdevice.c"),
             Object(Matching, "melee/ft/ft_459A.c"),
-            Object(NonMatching, "melee/ft/chara/ftCommon/ftCo_Bury.c"),
+            Object(Matching, "melee/ft/chara/ftCommon/ftCo_Bury.c"),
             Object(Matching, "melee/ft/chara/ftCommon/ftCo_FlyReflect.c"),
             Object(Matching, "melee/ft/chara/ftCommon/ftCo_PassiveWall.c"),
             Object(Matching, "melee/ft/chara/ftCommon/ftCo_PassiveCeil.c"),
@@ -1155,7 +1149,7 @@ config.libs = [
             Object(Matching, "melee/gm/gmlightning.c"),
             Object(NonMatching, "melee/gm/gm_1BA8.c"),
             Object(Matching, "melee/gm/gm_1BF9.c"),
-            Object(NonMatching, "melee/gm/gm_1BFA.c"),
+            Object(Matching, "melee/gm/gm_1BFA.c"),
         ],
     ),
     MeleeLib(
@@ -1493,7 +1487,7 @@ config.libs = [
             Object(Matching, "melee/if/if_2F6E.c"),
             Object(NonMatching, "melee/if/if_2F72.c"),
             Object(NonMatching, "melee/if/ifstock.c"),
-            Object(NonMatching, "melee/if/ifmagnify.c"),
+            Object(Matching, "melee/if/ifmagnify.c"),
             Object(Matching, "melee/if/ifnametag.c"),
             Object(Matching, "melee/if/ifhazard.c"),
             Object(Matching, "melee/if/if_2FD9.c"),

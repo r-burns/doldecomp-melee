@@ -218,8 +218,8 @@ static inline s32 random_adder(s32 temp_f0, s32 temp_f2)
         return random_adder_b(temp_f0, temp_f2);
     }
 #else
-    temp_r28_2 = (s32) temp_f0;
-    var_r29 = (s32) temp_f2;
+    temp_r28_2 = temp_f0;
+    var_r29 = temp_f2;
 
     if (temp_f2 > temp_f0) {
         temp_r3 = var_r29 - temp_r28_2;
@@ -338,12 +338,12 @@ void grKongo_801D577C(Ground_GObj* arg0)
             angle_delta += M_TAU;
         }
         if (angle_delta < limit_angle || angle_delta < ABS(gp->u.kongo3.xE0)) {
-            if ((s16) gp->u.kongo3.xC4 == 3) {
+            if (gp->u.kongo3.xC4 == 3) {
                 gp->u.kongo3.xC4 = 0;
             }
             break;
         }
-        if ((s16) gp->u.kongo3.xC4 == 2) {
+        if (gp->u.kongo3.xC4 == 2) {
             gp->u.kongo3.xC4 = 3;
         }
         break;
@@ -365,7 +365,7 @@ void grKongo_801D577C(Ground_GObj* arg0)
             }
         }
         gp->u.kongo2.xCC -= 1;
-        if ((s16) gp->u.kongo2.xCC < 0) {
+        if (gp->u.kongo2.xCC < 0) {
             f32 spin_step;
             gp->u.kongo3.xC4 = 1;
             if (HSD_Randi(2) != 0) {
@@ -919,7 +919,7 @@ typedef struct unk_struct_x14 {
     f32 unk10;
 } unk_struct_x14;
 
-static inline void grKongo_801D6AFC_apply(f32* deltas,
+static inline void grKongo_801D6AFC_apply(const f32* deltas,
                                           _struct_grKg_803E188C_0x18* entries)
 {
     int i;
@@ -1640,7 +1640,7 @@ HSD_GObj* grKongo_801D8078(HSD_GObj* gobj)
             it_8026B294(cur, &item_pos);
 
             dx = pos.x - item_pos.x;
-            dz = pos.z - ((0, item_pos.z));
+            dz = pos.z - (0, item_pos.z);
             dy = pos.y - item_pos.y;
             dx2 = dx * dx;
             dy2 = dy * dy;

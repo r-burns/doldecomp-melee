@@ -210,7 +210,7 @@ void Camera_80028B9C(int n_subjects)
     cm_80452C68.x399_b4 = 0;
     cm_80452C68.x399_b5 = 0;
     cm_80452C68.x399_b6 = 0;
-    memzero(&cm_80452C68.x380, 0x18);
+    memzero(&cm_80452C68.x380, sizeof(cm_80452C68.x380));
     cm_80452C68.x399_b7 = 0;
     cm_80452C68.x39A_b0 = 0;
     cm_80452C68.x39A_b1 = 0;
@@ -269,7 +269,7 @@ CmSubject* Camera_80029044(int arg0)
 {
     CmSubject* subject = cm_804D6458;
 
-    if ((CmSubject*) cm_804D6458 == NULL) {
+    if (cm_804D6458 == NULL) {
         OSReport("couldn't get CmSubject struct.\n", arg0);
         while (true) {
         };
@@ -277,7 +277,7 @@ CmSubject* Camera_80029044(int arg0)
 
     cm_804D6458 = subject->prev;
     subject->next = NULL;
-    if ((CmSubject*) cm_804D6460 != NULL) {
+    if (cm_804D6460 != NULL) {
         cm_804D6468->next = subject;
     } else {
         cm_804D6460 = subject;
@@ -536,7 +536,7 @@ void Camera_8002958C(CameraBounds* bounds, CameraTransformState* transform)
                         base_pos.y =
                             (Stage_GetCamBoundsBottomOffset() > base_ground)
                                 ? (Stage_GetCamBoundsBottomOffset())
-                                : (base_ground);
+                                : base_ground;
                     }
                 }
                 test_pos.x =
@@ -558,7 +558,7 @@ void Camera_8002958C(CameraBounds* bounds, CameraTransformState* transform)
                         test_pos.y = (Stage_GetCamBoundsBottomOffset() >
                                       x_extent_ground)
                                          ? (Stage_GetCamBoundsBottomOffset())
-                                         : (x_extent_ground);
+                                         : x_extent_ground;
                     }
                 }
                 if (test_pos.x < min_x) {
@@ -586,7 +586,7 @@ void Camera_8002958C(CameraBounds* bounds, CameraTransformState* transform)
                         test_pos.y =
                             (Stage_GetCamBoundsBottomOffset() > alt_x_ground)
                                 ? (Stage_GetCamBoundsBottomOffset())
-                                : (alt_x_ground);
+                                : alt_x_ground;
                     }
                 }
                 if (test_pos.x < min_x) {
@@ -614,7 +614,7 @@ void Camera_8002958C(CameraBounds* bounds, CameraTransformState* transform)
                         test_pos.y = (Stage_GetCamBoundsBottomOffset() >
                                       y_extent_ground)
                                          ? (Stage_GetCamBoundsBottomOffset())
-                                         : (y_extent_ground);
+                                         : y_extent_ground;
                     }
                 }
                 if (test_pos.y < min_y) {
@@ -642,7 +642,7 @@ void Camera_8002958C(CameraBounds* bounds, CameraTransformState* transform)
                         test_pos.y =
                             (Stage_GetCamBoundsBottomOffset() > alt_y_ground)
                                 ? (Stage_GetCamBoundsBottomOffset())
-                                : (alt_y_ground);
+                                : alt_y_ground;
                     }
                 }
                 if (test_pos.y < min_y) {
@@ -679,8 +679,8 @@ void Camera_8002958C(CameraBounds* bounds, CameraTransformState* transform)
     new_bounds->z_pos = z_pos;
 }
 
-inline float get_follow_speed(float temp_f4, float spread,
-                              CameraUnkGlobals* globals)
+static inline float get_follow_speed(float temp_f4, float spread,
+                                     CameraUnkGlobals* globals)
 {
     if (spread > temp_f4) {
         return globals->x30;
@@ -693,7 +693,7 @@ inline float get_follow_speed(float temp_f4, float spread,
     }
 }
 
-inline float get_delta(float temp_f)
+static inline float get_delta(float temp_f)
 {
     if (temp_f > 0.0001f) {
         return 1.0f / temp_f;
@@ -1002,7 +1002,7 @@ void Camera_8002A28C(CameraBounds* arg0)
 
 /// @note doesnt check all stages...
 /// probably was a bandaid for problem stages
-inline float get_stage_floor_height(GrKind kind)
+static inline float get_stage_floor_height(GrKind kind)
 {
     float height = -F32_MAX;
     switch (kind) {
@@ -1526,7 +1526,7 @@ static inline void update_avg_bounds_width(void)
 {
     f32 left_off;
 
-    if (((s16) cm_80452C68.x2B8) > 0x3E8) {
+    if ((cm_80452C68.x2B8) > 0x3E8) {
         cm_80452C68.x2B4 = cm_80452C68.x2B0;
         cm_80452C68.x2B8 = 1;
     }
@@ -1567,17 +1567,17 @@ void Camera_8002B3D4(void* arg0)
     update_avg_bounds_width();
 }
 
-inline HSD_PadStatus* get_slot_pad(u8 arg0)
+static inline HSD_PadStatus* get_slot_pad(u8 arg0)
 {
     return &HSD_PadCopyStatus[arg0];
 }
 
-inline f32 get_stick_x(HSD_PadStatus* arg0)
+static inline f32 get_stick_x(HSD_PadStatus* arg0)
 {
     return arg0->nml_stickX;
 }
 
-inline f32 get_stick_y(HSD_PadStatus* arg0)
+static inline f32 get_stick_y(HSD_PadStatus* arg0)
 {
     return arg0->nml_stickY;
 }
@@ -2161,7 +2161,7 @@ void Camera_8002C5B4(Camera_x2D0* arg0)
     }
 }
 
-static inline bool get_subject_pos(Vec3* pos, s8* slot_ptr)
+static inline bool get_subject_pos(Vec3* pos, const s8* slot_ptr)
 {
     CmSubject* subject;
     HSD_GObj* gobj;
@@ -2186,7 +2186,7 @@ static inline bool get_subject_pos(Vec3* pos, s8* slot_ptr)
 }
 
 #pragma inline_depth(8)
-static inline void get_subject_pos_out(Vec3* pos, s8* slot_ptr,
+static inline void get_subject_pos_out(Vec3* pos, const s8* slot_ptr,
                                        bool* valid_out)
 {
     CmSubject* subject;
@@ -4405,7 +4405,7 @@ void Camera_80030E44(enum_t arg0, Vec3* arg1)
     case 1:
         pgobj = &cm_80452C68.xA0;
         if (cm_80452C68.xA0 == NULL) {
-            *pgobj = (HSD_GObj*) grLib_801C9CEC(arg0);
+            *pgobj = grLib_801C9CEC(arg0);
         }
         result = 10;
         break;
