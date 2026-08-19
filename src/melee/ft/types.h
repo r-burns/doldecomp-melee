@@ -925,7 +925,7 @@ struct Fighter_DemoStrings {
         /* fp+2072:7 */ u8 count_specials : 1;
         /* fp+2073 */ u8 x2073;
     };
-    /* fp+2070 */ s32 x2070_int;
+    /* fp+2070 */ int x2070_int;
 };
 
 /// @todo See if this should likewise be instituted for item->xD94 thru
@@ -1500,7 +1500,7 @@ struct Fighter {
     /* fp+2064 */ int x2064_ledgeCooldown;
     /* fp+2068 */ s32 x2068_attackID;
     /* fp+206C */ u16 x206C_attack_instance;
-    /* fp+206E */ short x206E;
+    /* fp+206E */ s16 x206E;
     /* fp+2070 */ union Struct2070 x2070;
     /* fp+2074 */ struct Struct2074 x2074;
     /* fp+208C */ s32 x208C;

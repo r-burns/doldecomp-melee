@@ -85,7 +85,7 @@ float ftCo_Damage_CalcAngle(Fighter* fp, float f)
             fp->mv.co.damage.x1A = 1;
             fp->mv.co.damage.x1B = p_ftCommonData->x7F0;
         }
-        return deg_to_rad * fp->dmg.x1848_kb_angle;
+        return MTXDegToRad(fp->dmg.x1848_kb_angle);
     }
     if (fp->ground_or_air == GA_Air) {
         return p_ftCommonData->x144_radians;
@@ -93,12 +93,12 @@ float ftCo_Damage_CalcAngle(Fighter* fp, float f)
         return 0;
     } else {
         float result =
-            deg_to_rad * (p_ftCommonData->x148 *
-                              ((f - p_ftCommonData->x14C) /
-                               (p_ftCommonData->x150 - p_ftCommonData->x14C)) +
-                          1);
-        if (result > deg_to_rad * p_ftCommonData->x148) {
-            result = deg_to_rad * p_ftCommonData->x148;
+            MTXDegToRad(p_ftCommonData->x148 *
+                            ((f - p_ftCommonData->x14C) /
+                             (p_ftCommonData->x150 - p_ftCommonData->x14C)) +
+                        1);
+        if (result > MTXDegToRad(p_ftCommonData->x148)) {
+            result = MTXDegToRad(p_ftCommonData->x148);
         }
         return result;
     }
@@ -330,7 +330,7 @@ void ftCo_8008DCE0(Fighter_GObj* gobj, int arg1, float facing_dir)
         if (kb_level_base < 2) {
             goto block_17;
         }
-        if ((u32) fp->dmg.x1860_element != HitElement_Ice) {
+        if (fp->dmg.x1860_element != HitElement_Ice) {
             goto block_17;
         }
         kb_angle = calcAngle(kb_angle);
@@ -429,7 +429,7 @@ void ftCo_8008DCE0(Fighter_GObj* gobj, int arg1, float facing_dir)
         if (kb_level_base < 2) {
             goto block_42;
         }
-        if ((u32) fp->dmg.x1860_element != HitElement_Ice) {
+        if (fp->dmg.x1860_element != HitElement_Ice) {
             goto block_42;
         }
         msid = 0x5A;
@@ -467,7 +467,7 @@ block_63:
     fp->x670_timer_lstick_tilt_x = 0xFE;
     fp->x671_timer_lstick_tilt_y = 0xFE;
     fp->post_hitlag_cb = ftCo_Damage_OnExitHitlag;
-    fp->dmg.x18A8 = (float) fp->dmg.kb_applied;
+    fp->dmg.x18A8 = fp->dmg.kb_applied;
     fp->x221C_b6 = true;
     fp->dmg.x18ac_time_since_hit = (s32) 0;
     if (msid == 0x5B) {
@@ -535,7 +535,7 @@ block_83:
     if (kb_level_base < 2) {
         return;
     }
-    if ((u32) fp->dmg.x1860_element == HitElement_Ice) {
+    if (fp->dmg.x1860_element == HitElement_Ice) {
         ftCo_DamageIce_Init(gobj);
     }
 }
@@ -614,7 +614,7 @@ void ftCo_8008E5A4(Fighter* fp)
                 float angle = atan2f(kb_y, kb_x);
                 float scale;
                 kb_mag = sqrtf(kb_x * kb_x + kb_y * kb_y);
-                scale = deg_to_rad * p_ftCommonData->x1A8;
+                scale = MTXDegToRad(p_ftCommonData->x1A8);
                 angle += scale * f30;
                 fp->x8c_kb_vel.x = kb_mag * cosf(angle);
                 fp->x8c_kb_vel.y = kb_mag * sinf(angle);
@@ -974,7 +974,7 @@ void ftCo_8008F744(Fighter_GObj* gobj)
             fp->x2098 = p_ftCommonData->x4CC;
             ftCommon_8007F86C(gobj);
             if (ftCo_800C5240(gobj)) {
-                ftCo_800C554C((Fighter*) fp);
+                ftCo_800C554C(fp);
             }
         }
     }
@@ -1115,7 +1115,7 @@ void ftCo_8008FC94(Fighter_GObj* gobj)
 void ftCo_Damage_SetMv8FromKbThreshold(Fighter* fp)
 {
     float kb_vel = fp->ground_or_air == GA_Air
-                       ? sqrtf__Ff(VEC3_SQ_LEN(fp->x8c_kb_vel))
+                       ? sqrtf(VEC3_SQ_LEN(fp->x8c_kb_vel))
                        : ABS(fp->xF0_ground_kb_vel);
     fp->mv.co.damage.x8 =
         kb_vel < p_ftCommonData->x568   ? 0

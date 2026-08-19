@@ -111,7 +111,7 @@ void grLib_801C98A0(HSD_JObj* jobj)
     }
 }
 
-inline HSD_JObj* jobj_child(HSD_JObj* node)
+static inline HSD_JObj* jobj_child(HSD_JObj* node)
 {
     if (node == NULL) {
         return NULL;
@@ -119,7 +119,7 @@ inline HSD_JObj* jobj_child(HSD_JObj* node)
     return node->child;
 }
 
-inline HSD_JObj* jobj_next(HSD_JObj* node)
+static inline HSD_JObj* jobj_next(HSD_JObj* node)
 {
     if (node == NULL) {
         return NULL;
@@ -189,10 +189,6 @@ void grLib_801C9A70(enum_t arg0, Vec3* v)
         break;
     default:
         HSD_ASSERT(290, 0);
-#ifdef BUGFIX
-        // Asserts 0 but the compiler doesn't know that.
-        return;
-#endif
     }
     *v = grLib_8049EF58[i];
 }

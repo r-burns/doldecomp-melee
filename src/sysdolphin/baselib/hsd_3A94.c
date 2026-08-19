@@ -81,17 +81,14 @@ typedef struct CardQueueEntry {
     fn_803ACFC0((state), (block_idx), (file_id), (seq_num), (payload),        \
                 (payload_len), (file_idx))
 
-/* 4D1138 */ extern u8 hsd_804D1138[0x10];
+/* 3A949C */ static void hsd_803A949C(s32 chan, s32 arg1);
+/* 3ACB74 */ static s32 fn_803ACB74(s32 seq_a, s32 seq_b);
 /* 4D1148 */ extern u32 hsd_804D1148[0x80][0x9];
 /* 4D2348 */ extern __baselib_UnkType003 hsd_804D2348;
-/* 4D2648 */ extern __jmp_buf hsd_804D2648;
-/* 4D2E70 */ extern u8 hsd_804D2E70[2084];
 /* 4D7980 */ extern volatile s32 hsd_804D7980;
 /* 4D7984 */ extern volatile s32 hsd_804D7984;
 /* 4D7988 */ extern s32 hsd_804D7988;
 /* 4D798C */ extern s32 hsd_804D798C;
-/* 4D7990 */ extern s32 hsd_804D7990;
-/* 4D7994 */ extern s32 hsd_804D7994;
 /* 4D7998 */ extern s32 hsd_804D7998;
 /* 4D799C */ extern s32 hsd_804D799C;
 /* 4D79A0 */ u8* hsd_804D79A0;
@@ -104,7 +101,6 @@ typedef struct CardQueueEntry {
 /* 4D79C0 */ s32 hsd_804D79C0;
 /* 4D79C4 */ s32 hsd_804D79C4;
 /* 4D79C8 */ u8 hsd_804D79C8;
-/* 3A949C */ void hsd_803A949C(s32 chan, s32 arg1);
 
 static inline s32 hsd_803A949C_Close(CardState* state)
 {
@@ -641,7 +637,7 @@ s32 fn_803AA790(void)
         return result;
     case 6:
         result = fn_803B26CC((CardState*) arg0, entry->x8, entry->xC,
-                             entry->x10, (void (*)(s32, s32)) entry->x14);
+                             entry->x10, entry->x14);
         if (result < 0) {
             if (entry->x14 != NULL) {
                 entry->x14(0, result);
@@ -789,7 +785,7 @@ static inline s32 retryCardSetStatusAsync(s32 chan, s32 file_no,
 
     return result;
 }
-static inline int setupCardIcons(s32* cmd)
+static inline int setupCardIcons(const s32* cmd)
 {
     u32 bit;
     s32 k;
@@ -806,7 +802,7 @@ static inline int setupCardIcons(s32* cmd)
     }
     return k;
 }
-static inline void unpackCardStat(s32* cmd, CARDStat* stat)
+static inline void unpackCardStat(const s32* cmd, CARDStat* stat)
 {
     s32 k;
 
@@ -1428,7 +1424,7 @@ s32 fn_803AC168(s32* cmd_buf)
     {
         s32 idx = hsd_804D7984;
         hsd_804D7984 = (hsd_804D7984 + 1) % 128;
-        memcpy((u8*) hsd_804D1148[idx], cmd_buf, 36);
+        memcpy((u8*) hsd_804D1148[idx], cmd_buf, sizeof(CardCmd));
     }
 
     if (mode == 2) {
@@ -1555,7 +1551,7 @@ void fn_803AC3F8(void* arg0, u8* data, s32 file_idx)
     for (i = 0; i < 3 && i < 9; i++) {
         s32 idx = start + i;
         data[0] = idx;
-        data[1] = ((((u32) file_desc->x4C[idx]) >> ((0, 0x10))) & 0x3F) |
+        data[1] = ((((u32) file_desc->x4C[idx]) >> (0, 0x10)) & 0x3F) |
                   ((file_desc->x28[idx] << 6) & 0xC0);
         data[2] = (u32) file_desc->x4C[idx] >> 8;
         data[3] = file_desc->x4C[idx];
@@ -1627,7 +1623,7 @@ u32 fn_803AC634(struct CardState* file_desc, s32 file_idx)
     }
 }
 
-inline u32 fn_803AC6B8_first_block_count(struct CardState* file_desc)
+static inline u32 fn_803AC6B8_first_block_count(struct CardState* file_desc)
 {
     if (file_desc->x4C[0] <= 0) {
         return 0;
@@ -1720,7 +1716,8 @@ static inline s32 fn_803AC6B8_blocks_before(struct CardState* file_desc,
     return total;
 }
 
-inline u32 fn_803AC7DC_block_count(struct CardState* file_desc, s32 file_idx)
+static inline u32 fn_803AC7DC_block_count(struct CardState* file_desc,
+                                          s32 file_idx)
 {
     if (file_desc->x4C[file_idx] <= 0) {
         return 0;
@@ -1789,7 +1786,7 @@ s32 fn_803AC7DC(CardState* state)
     return total + extra;
 }
 
-inline s32 fn_803ACB74(s32 seq_a, s32 seq_b)
+static inline s32 fn_803ACB74(s32 seq_a, s32 seq_b)
 {
     s32 diff;
 
@@ -4953,14 +4950,14 @@ void hsd_803B2374(void)
 
 void hsd_803B24E4(s32* ctx, int channel, int file_no, void* work_buf)
 {
-    memset(ctx, 0, 0x464);
-    ctx[8] = -1;
-    ctx[1] = channel;
-    ctx[2] = file_no;
-    ctx[0] = (s32) work_buf;
+    memset((CardState*) ctx, 0, sizeof(CardState));
+    ((CardState*) ctx)->x20 = -1;
+    ((CardState*) ctx)->x4 = channel;
+    ((CardState*) ctx)->x8 = file_no;
+    ((CardState*) ctx)->x0 = work_buf;
 }
 
-inline HsdCmdEntry* hsd_803B2550_inline(u8* arg0, s32 arg1)
+static inline HsdCmdEntry* hsd_803B2550_inline(u8* arg0, s32 arg1)
 {
     return &((HsdCmdEntry*) (arg0 + 0x1210))[arg1];
 }

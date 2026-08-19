@@ -354,7 +354,7 @@ bool itBombhei_UnkMotion2_Anim(Item_GObj* gobj)
     ip = GET_ITEM(gobj);
     ip->xDD4_itemVar.bombhei.xDD4 -= 1;
     ip->xDD4_itemVar.bombhei.xDEC -= 1.0f;
-    if ((s32) ip->xDD4_itemVar.bombhei.xDD4 <= 0) {
+    if (ip->xDD4_itemVar.bombhei.xDD4 <= 0) {
         it_8027F8E0(gobj);
     }
     if (it_80272C6C(gobj) == 0) {
@@ -662,8 +662,6 @@ bool it_3F14_Logic6_DmgDealt(Item_GObj* gobj)
     }
     return false;
 }
-
-void it_80280B60(Item_GObj*);
 
 bool it_3F14_Logic6_DmgReceived(Item_GObj* gobj)
 {

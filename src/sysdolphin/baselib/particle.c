@@ -107,8 +107,8 @@ void hsd_803983A4(HSD_Generator* gen)
 }
 
 // @TODO: Currently 96.40% match - lis hoisting and r29/r30 register swap
-void psInitDataBankLoad(int bank, int* cmdBank, int* texBank, u32* ref,
-                        int* formBank)
+void psInitDataBankLoad(int bank, const int* cmdBank, const int* texBank,
+                        const u32* ref, const int* formBank)
 {
     s32* base = (s32*) hsd_804D08E8;
     u16 version;
@@ -351,7 +351,7 @@ void hsd_80398A08(u32 unused)
     extern u16 hsd_804D78DC;
     s32 i;
 
-    HSD_ObjAllocInit(&hsd_804D0F60.alloc_data, 0x98, 4);
+    HSD_ObjAllocInit(&hsd_804D0F60.alloc_data, sizeof(HSD_Particle), 4);
     PAD_STACK(24);
 
     i = 0;
@@ -404,7 +404,7 @@ HSD_Particle* hsd_80398C04(HSD_Particle** head, int linkNo, int bank, u32 kind,
 
     pp = HSD_ObjAlloc(&hsd_804D0F60.alloc_data);
     if (pp != NULL) {
-        memset(pp, 0, 0x98);
+        memset(pp, 0, sizeof(*pp));
     }
     if (pp == NULL) {
         return NULL;
@@ -1457,7 +1457,7 @@ void* hsd_8039930C(void* pp_arg, void* prev_arg)
                     if (srt == NULL) {
                         break;
                     }
-                    if ((u8) srt->xA2 != 0) {
+                    if (srt->xA2 != 0) {
                         break;
                     }
                     hsd_803983A4(srt->gp);

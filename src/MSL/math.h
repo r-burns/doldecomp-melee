@@ -26,9 +26,6 @@
 
 #define SIGNF(x) ((x) > 0.0f ? 1.0f : -1.0f)
 
-static float const deg_to_rad = M_PI / 180;
-static float const rad_to_deg = 180 / M_PI;
-
 #ifdef __MWERKS__
 #pragma push
 #pragma cplusplus on
@@ -87,6 +84,8 @@ static inline s32 __fpclassifyd(double x)
 
 #define ABS(x) ((x) < 0 ? -(x) : (x))
 
+#define fabsf __fabsf
+
 static inline double fabs(double f)
 {
     return __fabs(f);
@@ -98,15 +97,23 @@ float atan2f(float y, float x);
 float atanf(float);
 float cosf(float);
 float sinf(float);
-float tanf(float);
 double frexp(double x, int* exponent);
 float fabsf__Ff(float);
-float tanf(float x);
 float cos__Ff(float x);
 float sin__Ff(float x);
-float cosf(float x);
-float sinf(float x);
 void __sinit_trigf_c(void);
 float logf(float);
+float expf(float);
+
+static inline float fmodf(float a, float b)
+{
+    long long quotient;
+
+    if (fabsf(b) > fabsf(a)) {
+        return a;
+    }
+    quotient = a / b;
+    return a - b * quotient;
+}
 
 #endif

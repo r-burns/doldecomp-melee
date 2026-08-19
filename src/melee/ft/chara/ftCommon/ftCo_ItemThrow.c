@@ -34,7 +34,6 @@
 
 #include <math.h>
 
-/* 094D70 */ bool ftCo_800951D0(Fighter_GObj* gobj);
 /* 094E7C */ static bool ftCo_800952DC(Fighter_GObj* gobj);
 /* 0952C8 */ static UNK_RET lbl_80095728(UNK_PARAMS);
 /* 0952D8 */ static UNK_RET lbl_80095738(UNK_PARAMS);
@@ -49,7 +48,7 @@
 /* static */ double const ftCo_804D85A0 = 4503601774854144;
 /* static */ float const ftCo_804D85A8 = 1;
 /* static */ float const ftCo_804D85AC = 0.01;
-/* static */ float const ftCo_804D85B0 = deg_to_rad;
+/* static */ float const ftCo_804D85B0 = MTXDegToRad(1);
 
 typedef struct ftCo_ItemThrowAttrs {
     float velocity_mul;
@@ -322,7 +321,7 @@ void ftCo_80095744(Fighter_GObj* gobj, int* arg1)
     Item_8026ABD8(fp->item_gobj, &vec, 1);
 }
 
-inline float getAnimSpeed(Fighter_GObj* gobj, int msid)
+static inline float getAnimSpeed(Fighter_GObj* gobj, int msid)
 {
     Fighter* fp;
     float speed = 1;
@@ -501,7 +500,7 @@ void ftCo_80095D5C(Fighter* fp, Vec3* arg1)
         if (int_angle == 361) {
             angle = *(float*) (array_element - 0x464);
         } else {
-            angle = deg_to_rad * int_angle;
+            angle = MTXDegToRad(int_angle);
         }
         fp->cmd_vars[0] = 0;
     } else {

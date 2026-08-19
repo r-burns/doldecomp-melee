@@ -226,19 +226,19 @@ static inline void ftCommon_HandleTeleportCollisions(Fighter_GObj* gobj,
 {
     if ((coll->env_flags & Collide_CeilingMask) &&
         lbVector_AngleXY(&coll->ceiling.normal, &fp->self_vel) >
-            deg_to_rad * (90.0f + *angle_clamp))
+            MTXDegToRad(90.0f + *angle_clamp))
     {
         on_collide(gobj);
     }
     if ((coll->env_flags & Collide_LeftWallMask) &&
         lbVector_AngleXY(&coll->left_facing_wall.normal, &fp->self_vel) >
-            deg_to_rad * (90.0f + *angle_clamp))
+            MTXDegToRad(90.0f + *angle_clamp))
     {
         on_collide(gobj);
     }
     if ((coll->env_flags & Collide_RightWallMask) &&
         lbVector_AngleXY(&coll->right_facing_wall.normal, &fp->self_vel) >
-            deg_to_rad * (90.0f + *angle_clamp))
+            MTXDegToRad(90.0f + *angle_clamp))
     {
         on_collide(gobj);
     }
@@ -299,7 +299,7 @@ static inline int ftGetFacingDirInt2(Fighter_GObj* gobj)
 #define gmScriptEventUpdatePtr(event, type)                                   \
     (event = (void*) ((uintptr_t) event + 4))
 
-inline CommandInfo* getCmdScript(Fighter* fp)
+static inline CommandInfo* getCmdScript(Fighter* fp)
 {
     return &fp->x3E4_fighterCmdScript;
 }

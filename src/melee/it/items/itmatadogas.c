@@ -131,7 +131,7 @@ void itMatadogas_UnkMotion2_Phys(Item_GObj* gobj)
         jobj = gobj->hsd_obj;
         Item_80268E5C(gobj, 1, ITEM_ANIM_UPDATE);
         Item_SetEffectHitlagCallbacks(item2);
-        ((jobj) ? ((void) 0) : __assert("jobj.h", 660, "jobj"));
+        (jobj ? ((void) 0) : __assert("jobj.h", 660, "jobj"));
         ((!(jobj->flags & JOBJ_USE_QUATERNION))
              ? ((void) 0)
              : __assert("jobj.h", 661,
@@ -161,8 +161,8 @@ void it_802CB4F0(Item_GObj* gobj, s32 kind, f32 radius)
     it_8026BB88(gobj, &spawn.pos);
     spawn.facing_dir = ip->facing_dir;
     spawn.x3C_damage = 0;
-    spawn.vel.x = radius * cosf(deg_to_rad * rand);
-    spawn.vel.y = radius * sinf(deg_to_rad * rand);
+    spawn.vel.x = radius * cosf(MTXDegToRad(rand));
+    spawn.vel.y = radius * sinf(MTXDegToRad(rand));
     spawn.vel.z = 0.0f;
     spawn.kind = kind;
     spawn.x0_parent_gobj = ip->owner;

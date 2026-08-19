@@ -7,6 +7,7 @@
 
 #include <melee/ft/forward.h>
 
+#include <string.h>
 #include <dolphin/ai.h>
 #include <dolphin/ar.h>
 #include <dolphin/axfx.h>
@@ -136,7 +137,7 @@ void fn_80023254(s32 arg0)
         priority = (int*) (base + 0x11E4);
         index = 0;
         do {
-            if (arg0 == (s8) *type && *used == 0 &&
+            if (arg0 == (*type) && *used == 0 &&
                 (u32) ((int (*)[2])(base + 0x11E4))[*list][0] <
                     (u32) *priority)
             {
@@ -2425,8 +2426,6 @@ void lbAudioAx_80027AB0(s32 arg0)
         }
     }
 }
-
-extern int lbl_804D6418;
 
 void lbAudioAx_80027DBC(void)
 {

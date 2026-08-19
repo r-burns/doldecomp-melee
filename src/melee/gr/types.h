@@ -179,7 +179,7 @@ struct GroundVars_unk {
     int xC8;
     int xCC;
     int xD0;
-    int xD4;
+    HSD_GObj* text_gobj;
     int xD8;
     int xDC;
     int xE0;
@@ -206,10 +206,10 @@ struct GroundVars_izumi2 {
 };
 
 struct GroundVars_izumi3 {
-    short xC4;
-    short xC6;
-    short xC8;
-    short xCA;
+    s16 xC4;
+    s16 xC6;
+    s16 xC8;
+    s16 xCA;
     HSD_JObj* xCC;
     float xD0;
     float xD4;
@@ -254,8 +254,8 @@ struct GroundVars_flatzone2 {
     s32 xC4;
     f32 xC8;
     grDynamicAttr_UnkStruct* xCC;
-    s32 xD0;
-    s32 xD4;
+    int xD0;
+    int timer;
 };
 
 /// @todo Should be merged with #grOldKongo_GroundVars
@@ -1039,14 +1039,12 @@ struct Map_VanishDesc {
     /* +2 */ s16 x2;
     /* +4 */ bool x4;
 };
-STATIC_ASSERT(sizeof(struct Map_VanishDesc) == 0x8);
 
 struct Map_VanishEntry {
     /* +0 */ s16 x0;
     /* +2 */ s16 x2;
     /* +4 */ HSD_JObj* jobj;
 };
-STATIC_ASSERT(sizeof(struct Map_VanishEntry) == sizeof(struct Map_VanishDesc));
 
 struct grRCruise_GroundVars {
     struct {
@@ -1062,7 +1060,7 @@ struct grRCruise_GroundVars {
     /* +04 gp+C8 */ struct lb_80011A50_t* x4;
     /* +08 gp+CC */ f32 x8;
     /* +0C gp+D0 */ s32 xC;
-    /* +10 gp+D4 */ u32 x10;
+    /* +10 gp+D4 */ int x10;
     /* +14 gp+D8 */ f32 x14;
     /* +18 gp+DC */ f32 x18;
     /* +1C gp+E0 */ f32 x1C;

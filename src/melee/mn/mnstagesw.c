@@ -68,7 +68,7 @@ extern StaticModelDesc MenMainCursorSs_Top;
 /* 23593C */ static void mnStageSw_8023593C(HSD_GObj* gobj);
 /* 2359C8 */ static void mnStageSw_802359C8(MnStageSwData* data);
 /* 235C58 */ static s32 mnStageSw_80235C58(u8 arg0);
-/* 235DC8 */ static void mnStageSw_80235DC8(u8* user_data, s32 buttons);
+/* 235DC8 */ static void mnStageSw_80235DC8(const u8* user_data, s32 buttons);
 /* 235F80 */ static void fn_80235F80(HSD_GObj* gobj);
 /* 236178 */ static void mnStageSw_80236178(MnStageSwData* data, u8 idx);
 /* 2364A0 */ static HSD_JObj* mnStageSw_802364A0(MnStageSwData* data, u8 idx);
@@ -219,7 +219,7 @@ loop_done:
     }
 }
 
-static void mnStageSw_80235DC8(u8* user_data, s32 buttons)
+static void mnStageSw_80235DC8(const u8* user_data, s32 buttons)
 {
     s32 selection;
     u8 idx;
@@ -281,7 +281,7 @@ static void mnStageSw_80235DC8(u8* user_data, s32 buttons)
     }
 }
 
-static inline s32 mnStageSw_CountEnabled(u8* user_data)
+static inline s32 mnStageSw_CountEnabled(const u8* user_data)
 {
     s32 i;
     s32 count = 0;
@@ -398,15 +398,15 @@ static void mnStageSw_80236178(MnStageSwData* data, u8 idx)
     delta = HSD_JObjGetTranslationY(data->x30) -
             HSD_JObjGetTranslationY(data->x2C);
 
-    if ((u8) idx < 15) {
+    if (idx < 15) {
         ref_jobj = data->x2C;
         HSD_JObjSetTranslateX(jobj, HSD_JObjGetTranslationX(ref_jobj));
-        HSD_JObjSetTranslateY(jobj, delta * (f32) (u8) idx +
+        HSD_JObjSetTranslateY(jobj, delta * (f32) idx +
                                         HSD_JObjGetTranslationY(data->x2C));
     } else {
         ref_jobj = data->x34;
         HSD_JObjSetTranslateX(jobj, HSD_JObjGetTranslationX(ref_jobj));
-        HSD_JObjSetTranslateY(jobj, delta * (f32) ((u8) idx - 15) +
+        HSD_JObjSetTranslateY(jobj, delta * (f32) (idx - 15) +
                                         HSD_JObjGetTranslationY(data->x2C));
     }
 }
@@ -620,7 +620,7 @@ static void fn_80236998(HSD_GObj* gobj)
             changed_hovered = 1;
         }
         if (data->x2[mn_804A04F0.hovered_selection] !=
-            (u8) mn_804A04F0.confirmed_selection)
+            mn_804A04F0.confirmed_selection)
         {
             changed_confirmed = 1;
         }

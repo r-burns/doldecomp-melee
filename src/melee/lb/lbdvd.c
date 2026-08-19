@@ -9,6 +9,7 @@
 
 #include "gm/gm_1B14.h"
 
+#include <string.h>
 #include <dolphin/dvd.h>
 #include <baselib/debug.h>
 #include <melee/db/db.h>
@@ -100,7 +101,7 @@ void lbDvd_80017700(int arg0)
     }
 }
 
-inline int same(int a, s32 b)
+static inline int same(int a, s32 b)
 {
     int result = 0;
     if (a == b) {
@@ -220,7 +221,7 @@ void lbDvd_80017960(void)
     }
 }
 
-static void lbDvd_80017A80(void)
+static void lbDvd_80017A80(u32 unused)
 {
     preloadCache.persistent_heap = 6;
     lbDvd_80017CC4();
