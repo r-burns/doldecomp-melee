@@ -245,9 +245,7 @@ void grGarden_80203098(Ground_GObj* gobj)
 {
     int iVar1;
     Ground* gp = GET_GROUND(gobj);
-    if ((grAnime_801C83D0(gobj, 0, 7) != NULL) ||
-        (grAnime_801C84A4(gobj, 0, 7) != NULL))
-    {
+    if (grAnime_801C83D0(gobj, 0, 7) || grAnime_801C84A4(gobj, 0, 7)) {
         if (gp->u.garden.xc8 == 0) {
             gp->u.garden.xc4 = gp->u.garden.xc4 + 1;
             if (3 < gp->u.garden.xc4) {
@@ -300,7 +298,7 @@ bool grGarden_80203248(Ground_GObj* arg)
     return false;
 }
 
-inline float absoluteValue(float fVar1)
+static inline float absoluteValue(float fVar1)
 {
     if (fVar1 < 0.0f) {
         fVar1 = -fVar1;
@@ -380,7 +378,7 @@ bool grGarden_8020349C(u32 unk, HSD_GObj* player, Vec3* water)
         if (previous.y > dVar3) {
             dVar3 = ftLib_80086B80(player) / 10.0f;
             current.y = -30.0f;
-            grGarden_80203560((dVar3), &current);
+            grGarden_80203560(dVar3, &current);
             Ground_801C53EC(410000);
         }
         uVar1 = true;

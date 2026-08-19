@@ -457,7 +457,7 @@ static void ftFx_SpecialLw_Turn(HSD_GObj* gobj)
         fp->facing_dir = -fp->facing_dir;
     }
     ftPartSetRotY(fp, 0,
-                  -((180 / da->x9C_FOX_REFLECTOR_TURN_FRAMES * deg_to_rad) -
+                  -(MTXDegToRad(180 / da->x9C_FOX_REFLECTOR_TURN_FRAMES) -
                     ftPartGetRotZ(fp, 0)));
 }
 #pragma pop
@@ -477,7 +477,7 @@ static inline void ftFox_SpecialLw_Turn_Inline(HSD_GObj* gobj)
     }
 
     ftPartSetRotY(fp, 0,
-                  -((deg_to_rad * (180 / da->x9C_FOX_REFLECTOR_TURN_FRAMES)) -
+                  -(MTXDegToRad(180 / da->x9C_FOX_REFLECTOR_TURN_FRAMES) -
                     ftPartGetRotZ(fp, 0)));
 }
 
@@ -585,7 +585,7 @@ void ftFx_SpecialAirLwTurn_Coll(HSD_GObj* gobj)
     }
 }
 
-inline void ftFox_SpecialLw_SetReflectVars(HSD_GObj* gobj)
+static inline void ftFox_SpecialLw_SetReflectVars(HSD_GObj* gobj)
 {
     Fighter* fp = GET_FIGHTER(gobj);
     fp->reflecting = true;
@@ -617,7 +617,7 @@ void ftFx_SpecialAirLwTurn_GroundToAir(HSD_GObj* gobj)
     ftFox_SpecialLw_SetReflectVars(gobj);
 }
 
-inline void ftFox_SpecialLwTurn_SetVarAll(HSD_GObj* gobj)
+static inline void ftFox_SpecialLwTurn_SetVarAll(HSD_GObj* gobj)
 {
     Fighter* fp = gobj->user_data;
     ftFox_DatAttrs* da = getFtSpecialAttrs(fp);
@@ -652,7 +652,7 @@ bool ftFx_SpecialLwTurn_Check(HSD_GObj* gobj)
     return false;
 }
 
-inline void ftFox_SpecialLwHit_CreateReflectInline(HSD_GObj* gobj)
+static inline void ftFox_SpecialLwHit_CreateReflectInline(HSD_GObj* gobj)
 {
     Fighter* fp = gobj->user_data;
     ftFox_DatAttrs* da = getFtSpecialAttrs(fp);

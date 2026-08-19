@@ -126,7 +126,7 @@ void ftPk_SpecialAirHiStart0_Phys(HSD_GObj* gobj)
         ftPikachuAttributes* sa = fp->dat_attrs;
         ftCo_DatAttrs* da = &fp->co_attrs;
 
-        if ((signed) fp->mv.pk.specialhi.x0 != 0) {
+        if (fp->mv.pk.specialhi.x0 != 0) {
             fp->mv.pk.specialhi.x0--;
         } else {
             ftCommon_Fall(fp, sa->x64, da->terminal_velocity);
@@ -652,7 +652,7 @@ bool ftPk_SpecialHi_80127064(HSD_GObj* gobj)
         tempf = lbVector_AngleXY(&vec2, &vec1);
 
         // if the angular difference > the minimum difference, return 1
-        if (tempf > (deg_to_rad * (pika_attr->xA8))) {
+        if (tempf > MTXDegToRad(pika_attr->xA8)) {
             return true;
         }
 
@@ -665,7 +665,7 @@ bool ftPk_SpecialHi_80127064(HSD_GObj* gobj)
 void ftPk_SpecialHiEnd_Anim(HSD_GObj* gobj)
 {
     Fighter* fp = GET_FIGHTER(gobj);
-    if ((u32) fp->cmd_vars[0] == 1U) {
+    if (fp->cmd_vars[0] == 1U) {
         if (ftPk_SpecialHi_80127064(gobj)) {
             fp->cmd_vars[0] = 0;
             fp->mv.pk.specialhi.x8 = 1;

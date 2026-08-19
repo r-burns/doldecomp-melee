@@ -4,7 +4,7 @@
 
 #include <placeholder.h>
 
-#include <__mem.h>
+#include <string.h>
 #include <dolphin/gx.h>
 
 static struct {
@@ -468,7 +468,7 @@ int HSD_TexCoordID2Num(int id)
 
 #pragma push
 #pragma force_active on
-void ChanUpdateFunc(HSD_Chan* chan, int arg1, f32* arg2)
+void ChanUpdateFunc(HSD_Chan* chan, int arg1, const f32* arg2)
 {
     if (chan != NULL) {
         switch (arg1) {

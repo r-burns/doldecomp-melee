@@ -178,7 +178,7 @@ bool itLinkbow_UnkMotion5_Anim(Item_GObj* arg0)
     HSD_JObj* jobj;
     Vec3 scale;
 
-    item = GET_ITEM((HSD_GObj*) arg0);
+    item = GET_ITEM(arg0);
     jobj = HSD_GObjGetHSDObj(arg0);
 
     scale.x = scale.y = scale.z = item->xDD4_itemVar.linkbow.x0;
@@ -188,9 +188,9 @@ bool itLinkbow_UnkMotion5_Anim(Item_GObj* arg0)
     case 5:
     case 2:
         if ((item->x5CC_currentAnimFrame == 0.0f) ||
-            ((item->x5CC_currentAnimFrame >= 24.0f)))
+            (item->x5CC_currentAnimFrame >= 24.0f))
         {
-            itLinkBow_Logic100_Destroyed((Item_GObj*) arg0);
+            itLinkBow_Logic100_Destroyed(arg0);
             return 1;
         }
         break;

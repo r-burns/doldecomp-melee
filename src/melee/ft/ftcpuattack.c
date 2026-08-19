@@ -140,7 +140,7 @@ typedef struct ftCo_CollData {
 } ftCo_CollData;
 
 /// @todo Fake helper forcing a fresh load of the scale field.
-
+#ifdef MUST_MATCH
 /// MSL sqrtf expansion writing through a caller-provided stack slot so each
 /// call site owns a distinct 4-byte temp (retail 0x28..0x34 below sp3C).
 static inline float sqrtf_store(float x, volatile float* y)
@@ -155,6 +155,9 @@ static inline float sqrtf_store(float x, volatile float* y)
     }
     return x;
 }
+#else
+#define sqrtf_store(x, y) sqrtf(x)
+#endif
 
 static inline f32 get_scale(Fighter* fp)
 {
@@ -1814,8 +1817,8 @@ bool ftCo_800B8A9C(Fighter* fp)
     ftCo_800B77E8(fp);
     if (fp->ground_or_air == GA_Air) {
         if (ftCo_800B89CC(fp)) {
-            result = ftCo_800B4AB0(fp, target,
-                                   ((void**) Fighter_804D64FC->x8)[fp->kind]);
+            result =
+                ftCo_800B4AB0(fp, target, (Fighter_804D64FC->x8)[fp->kind]);
             if (result != 0) {
                 cpu->xA4 = result;
                 return true;
@@ -1837,8 +1840,7 @@ bool ftCo_800B8A9C(Fighter* fp)
                 tmp->xC8++;
             }
         }
-        result = ftCo_800B4AB0(fp, target,
-                               ((void**) Fighter_804D64FC->x4)[fp->kind]);
+        result = ftCo_800B4AB0(fp, target, (Fighter_804D64FC->x4)[fp->kind]);
         if (result != 0) {
             cpu->xA4 = result;
             return true;
@@ -1876,8 +1878,7 @@ bool ftCo_800B8A9C(Fighter* fp)
                 break;
             }
         }
-        result = ftCo_800B52AC(fp, target,
-                               ((void**) Fighter_804D64FC->x18)[fp->kind],
+        result = ftCo_800B52AC(fp, target, (Fighter_804D64FC->x18)[fp->kind],
                                weapon_reach);
         if (result != 0) {
             cpu->xA4 = result;
@@ -1885,8 +1886,7 @@ bool ftCo_800B8A9C(Fighter* fp)
         }
     }
     if (cpu->level > 5 && ftCo_800B9F6C(target)) {
-        result = ftCo_800B4AB0(fp, target,
-                               ((void**) Fighter_804D64FC->x10)[fp->kind]);
+        result = ftCo_800B4AB0(fp, target, (Fighter_804D64FC->x10)[fp->kind]);
         if (result != 0) {
             cpu->xA4 = result;
             return true;
@@ -1911,23 +1911,21 @@ bool ftCo_800B8A9C(Fighter* fp)
         }
     }
     if (var_r0 != 0) {
-        result = ftCo_800B4AB0(fp, target,
-                               ((void**) Fighter_804D64FC->x1C)[fp->kind]);
+        result = ftCo_800B4AB0(fp, target, (Fighter_804D64FC->x1C)[fp->kind]);
         if (result != 0) {
             cpu->xA4 = result;
             cpu->xF8_b7 = 1;
             return true;
         }
     }
-    result =
-        ftCo_800B4AB0(fp, target, ((void**) Fighter_804D64FC->x4)[fp->kind]);
+    result = ftCo_800B4AB0(fp, target, (Fighter_804D64FC->x4)[fp->kind]);
     if (result != 0) {
         cpu->xA4 = result;
         return true;
     }
     if (cpu->x50 != 0) {
         result = ftCo_800B5AB0(fp, (void*) cpu->x50,
-                               ((void**) Fighter_804D64FC->x14)[fp->kind]);
+                               (Fighter_804D64FC->x14)[fp->kind]);
         if (result != 0) {
             cpu->xA4 = result;
             return true;

@@ -52,7 +52,7 @@ static inline float my_sqrtf(float x)
     return x;
 }
 
-inline float my_sqrtf_accurate(float x)
+static inline float my_sqrtf_accurate(float x)
 {
     volatile float y;
     if (x > 0.0f) {
@@ -461,7 +461,7 @@ void it_802D208C(Item_GObj* gobj)
         }
 
         target = ip->xDD4_itemVar.lugia.x8C;
-        angle = deg_to_rad * new_angle;
+        angle = MTXDegToRad(new_angle);
         target.x += attrs->x3C * cosf(angle);
         target.y += attrs->x3C * sinf(angle);
 

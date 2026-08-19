@@ -12,9 +12,10 @@ final: prev: {
     })
   ];
 
-  clang-format-minimal = final.runCommand "clang-format-minimal" { } ''
+  clang-tools-minimal = final.runCommand "clang-tools-minimal" { } ''
     mkdir -p $out/bin/
     cp ${final.clang.cc}/bin/clang-format $out/bin/
+    cp ${final.clang.cc}/bin/clang-tidy $out/bin/
   '';
 
   main-dol = final.requireFile {
@@ -33,8 +34,8 @@ final: prev: {
   aurora-src = final.fetchFromGitHub {
     owner = "r-burns";
     repo = "aurora";
-    rev = "melee";
-    hash = "sha256-N7Rp95Bll8zcYmB+vYRRRq7pGsr/3XMz+vRrjcn61ec=";
+    rev = "e6a6f02ace4146e8a2f648d5c274dbb7dd89665c";
+    hash = "sha256-jvnfdnRF5HtZ792lwUs0WYASwG/dHIkp9JaisLdntUc=";
   };
 
   default = final.melee;

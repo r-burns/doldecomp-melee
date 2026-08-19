@@ -266,9 +266,9 @@ void grRCruise_801FF5B4(Ground_GObj* gobj)
     {
         Vec3 pos = { 1.0f, 0.0f, 0.0f };
         gp->u.rcruise.x4 =
-            lb_80011A50(&pos, -1, 0.4f, 0.0f, 60 * deg_to_rad, -10000.0f,
+            lb_80011A50(&pos, -1, 0.4f, 0.0f, MTXDegToRad(60), -10000.0f,
                         +10000.0f, +10000.0f, -10000.0f);
-        gp->u.rcruise.x8 = deg_to_rad;
+        gp->u.rcruise.x8 = MTXDegToRad(1);
         gp->u.rcruise.xC = 1;
     }
 }
@@ -281,7 +281,7 @@ bool grRCruise_801FF6CC(Ground_GObj* arg)
 void grRCruise_801FF6D4(Ground_GObj* gobj)
 {
     Ground* gp = GET_GROUND(gobj);
-    if (gp->u.unk.xD4 == 0) {
+    if (gp->u.rcruise.x10 == 0) {
         grRCruise_80201588(gobj);
         grRCruise_8020071C(gobj);
         grRCruise_80200C04(gobj);

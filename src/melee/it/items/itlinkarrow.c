@@ -123,7 +123,7 @@ s32 itLinkArrow_802A81C4(Item_GObj* gobj)
     case 6:
         rand = HSD_Randf();
         lookup_table = &it_803F6A84[ip->xDD4_itemVar.linkarrow.x9C];
-        temp = deg_to_rad * ((lookup_table[8] * rand) + lookup_table[0]);
+        temp = MTXDegToRad((lookup_table[8] * rand) + lookup_table[0]);
         z = ip->xDD4_itemVar.linkarrow.x94 + temp;
         break;
     case 1:
@@ -131,7 +131,7 @@ s32 itLinkArrow_802A81C4(Item_GObj* gobj)
     case 5:
         rand = HSD_Randf();
         lookup_table = &it_803F6A84[ip->xDD4_itemVar.linkarrow.x9C];
-        temp = deg_to_rad * ((lookup_table[8] * rand) + lookup_table[0]);
+        temp = MTXDegToRad((lookup_table[8] * rand) + lookup_table[0]);
         z = ip->xDD4_itemVar.linkarrow.x94 - temp;
         break;
     default:
@@ -215,12 +215,12 @@ HSD_GObj* it_802A83E0(f32 facing_dir, Fighter_GObj* arg1, Vec3* arg2,
         /// @todo Use Item_AttachToParent when it inlines here without growing
         /// the stack frame.
         Item_8026AB54(gobj, arg1, arg3);
-        db_80225DD8(gobj, (Fighter_GObj*) arg1);
+        db_80225DD8(gobj, arg1);
     }
     return gobj;
 }
 
-inline HSD_JObj* itLinkArrow_802A850C_inline(HSD_Joint* joint)
+static inline HSD_JObj* itLinkArrow_802A850C_inline(HSD_Joint* joint)
 {
     HSD_JObj* jobj;
     if (joint != NULL) {
@@ -229,7 +229,8 @@ inline HSD_JObj* itLinkArrow_802A850C_inline(HSD_Joint* joint)
     return jobj;
 }
 
-inline void itLinkArrow_802A850C_inline_2(Item_GObj* gobj, Quaternion* quat)
+static inline void itLinkArrow_802A850C_inline_2(Item_GObj* gobj,
+                                                 Quaternion* quat)
 {
     int i;
     Item* item;
@@ -673,7 +674,7 @@ bool itLinkarrow_UnkMotion4_Anim(Item_GObj* gobj)
     case 6:
         rand = HSD_Randf();
         temp_r3 = (f32*) &it_803F6A28 + ip->xDD4_itemVar.linkarrow.x9C;
-        var_f32 = deg_to_rad * ((temp_r3[31] * rand) + temp_r3[23]);
+        var_f32 = MTXDegToRad((temp_r3[31] * rand) + temp_r3[23]);
         var_f31 = ip->xDD4_itemVar.linkarrow.x94 + var_f32;
         break;
     case 1:
@@ -681,7 +682,7 @@ bool itLinkarrow_UnkMotion4_Anim(Item_GObj* gobj)
     case 5:
         rand = HSD_Randf();
         temp_r3 = (f32*) &it_803F6A28 + ip->xDD4_itemVar.linkarrow.x9C;
-        var_f32 = deg_to_rad * ((temp_r3[31] * rand) + temp_r3[23]);
+        var_f32 = MTXDegToRad((temp_r3[31] * rand) + temp_r3[23]);
         var_f31 = ip->xDD4_itemVar.linkarrow.x94 - var_f32;
         break;
     default:

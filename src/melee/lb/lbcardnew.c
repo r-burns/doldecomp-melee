@@ -2,7 +2,9 @@
 
 #include "lbcardnew.static.h"
 
-#include <strtoul.h> // IWYU pragma: keep
+#include <ctype.h>
+#include <stdlib.h>
+#include <string.h>
 #include <dolphin/card.h>
 #include <baselib/hsd_3A94.h>
 #include <sysdolphin/baselib/hsd_3B27.h>
@@ -318,7 +320,8 @@ struct SnapshotNode {
     u16 blocks;
 };
 
-inline void setup_card_entries(void* ctx, void* icon, struct CardEntry* entry)
+static inline void setup_card_entries(void* ctx, void* icon,
+                                      struct CardEntry* entry)
 {
     int i;
 
@@ -623,6 +626,7 @@ int lb_8001B14C(void)
     int count;
     int i;
     struct SnapshotNode** scan;
+    static size_t const nodes_len = 127;
 
     head = NULL;
     disk_id = DVDGetCurrentDiskID();
@@ -633,7 +637,7 @@ int lb_8001B14C(void)
     if (_p(free_files) != NULL) {
         *_p(free_files) = _p(unused_files);
     }
-    nodes = HSD_MemAlloc(0x5F4);
+    nodes = HSD_MemAlloc(sizeof(*nodes) * nodes_len);
     node = nodes;
     company = (char*) stat[0].company;
     game = (char*) stat[0].gameName;
@@ -730,7 +734,7 @@ int lb_8001B760(int result)
     return result;
 }
 
-inline struct CardTask* setup_task(int a, int b)
+static inline struct CardTask* setup_task(int a, int b)
 {
     struct CardTask* task = lb_80019C38();
     task->x0 = a;
@@ -738,7 +742,8 @@ inline struct CardTask* setup_task(int a, int b)
     return task;
 }
 
-inline void lb_8001A4CC_dontinline(const char* filename, void* file_entries)
+static inline void lb_8001A4CC_dontinline(const char* filename,
+                                          void* file_entries)
 {
     lb_8001A4CC(filename, file_entries);
 }
@@ -847,10 +852,10 @@ int lb_8001BB48(int chan, char* filename, void* file_entries, void* save_data,
     return lb_80019CB0(0x10);
 }
 
-inline int lb_8001BB48_inline(int chan, char* filename, void* file_entries,
-                              void* save_data, const char* write_buf,
-                              int write_offset, int write_len,
-                              UNK_T status_out)
+static inline int lb_8001BB48_inline(int chan, char* filename,
+                                     void* file_entries, void* save_data,
+                                     const char* write_buf, int write_offset,
+                                     int write_len, UNK_T status_out)
 {
     int new_var;
     lb_80019EF0(chan, save_data, status_out, 0);
@@ -1143,6 +1148,6 @@ void lb_8001C5A4(void)
 void lb_8001C5BC(void)
 {
     hsd_803B2374();
-    lb_80019EF0(NULL, NULL, NULL, NULL);
+    lb_80019EF0(0, NULL, NULL, NULL);
     _p(x8AC) = 0;
 }

@@ -22,7 +22,7 @@
 
 #include <baselib/forward.h>
 
-#include <dolphin/card/CARDBios.h>
+#include <dolphin/card.h>
 #include <dolphin/dvd.h>
 #include <dolphin/gx.h>
 #include <dolphin/os.h>
@@ -39,7 +39,6 @@
 #include <baselib/sislib.h>
 #include <baselib/video.h>
 
-extern GXRenderModeObj GXNtsc480IntDf;
 extern PadLibData HSD_PadLibData;
 extern s32* seed_ptr;
 
